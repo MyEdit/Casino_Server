@@ -1,4 +1,5 @@
 QT -= gui
+QT += sql
 
 CONFIG += c++11 console
 CONFIG -= app_bundle
@@ -15,9 +16,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        main.cpp
+        Database/databasemanager.cpp \
+    Network/PacketsActions/p_authorization.cpp \
+        Network/networkserver.cpp \
+        main.cpp \
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+LIBS += -lws2_32
+
+HEADERS += \
+    Constants.h \
+    Database/databasemanager.h \
+    Network/PacketTypes.h \
+    Network/PacketsActions/p_authorization.h \
+    Network/networkserver.h \
+    Utils/Message.h \

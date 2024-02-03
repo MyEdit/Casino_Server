@@ -1,8 +1,11 @@
-#include <QCoreApplication>
+#include <Network/networkserver.h>
 
-int main(int argc, char *argv[])
+NetworkServer network;
+
+int main()
 {
-    QCoreApplication a(argc, argv);
+    network.init();
+    network.startListening();
 
-    return a.exec();
+    return 0;
 }
