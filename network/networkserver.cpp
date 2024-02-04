@@ -136,7 +136,8 @@ void NetworkServer::sendToAllClient(QString message)
 }
 
 //Парс и получение пакета от клиента с неизвестной длинной
-QString NetworkServer::getMessageFromClient(QSharedPointer<SOCKET> clientSocket) {
+QString NetworkServer::getMessageFromClient(QSharedPointer<SOCKET> clientSocket)
+{
     int size;
     recv(*clientSocket, (char*)&size, sizeof(int), 0);
     QByteArray buffer(size, 0);

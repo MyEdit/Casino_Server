@@ -29,16 +29,20 @@ QString DatabaseManager::executeQuery(QString executequery)
         return nullptr;
 
     close();
-
     return query.value(0).toString();
 }
 
 bool DatabaseManager::executeQueryWithoutResponce(QString executequery)
 {
+    open();
     QSqlQuery query(executequery, *db);
 
     if (!query.exec())
+    {
+        close();
         return false;
+    }
 
+    close();
     return true;
 }

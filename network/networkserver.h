@@ -36,7 +36,7 @@ public:
     static void sendToAllClient(QString message);
 
     template<typename T>
-    void sendToClient(QSharedPointer<SOCKET> client, const T data, int size)
+    static void sendToClient(QSharedPointer<SOCKET> client, const T data, int size)
     {
         send(*client, (char*)data, size, 0);
     }

@@ -18,7 +18,6 @@ private:
 
 public:
     DatabaseManager();
-
     QString executeQuery(QString executequery);
     bool executeQueryWithoutResponce(QString executequery);
 };
