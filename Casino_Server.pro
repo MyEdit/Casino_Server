@@ -18,6 +18,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         Database/databasemanager.cpp \
     Network/PacketsActions/p_authorization.cpp \
+    Network/PacketsActions/p_sendmodel.cpp \
         Network/networkserver.cpp \
         main.cpp \
 
@@ -33,5 +34,6 @@ HEADERS += \
     Database/databasemanager.h \
     Network/PacketTypes.h \
     Network/PacketsActions/p_authorization.h \
+    Network/PacketsActions/p_sendmodel.h \
     Network/networkserver.h \
     Utils/Message.h \

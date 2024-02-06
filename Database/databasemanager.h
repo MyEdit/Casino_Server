@@ -7,6 +7,7 @@
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 #include <QVariant>
+#include <QSqlTableModel>
 
 class DatabaseManager
 {
@@ -20,6 +21,7 @@ public:
     DatabaseManager();
     QString executeQuery(QString executequery);
     bool executeQueryWithoutResponce(QString executequery);
+    QSharedPointer<QSqlTableModel> getModel(QString tableName);
 };
 
 #endif // DATABASEMANAGER_H

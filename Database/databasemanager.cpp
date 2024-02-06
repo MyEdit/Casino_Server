@@ -46,3 +46,10 @@ bool DatabaseManager::executeQueryWithoutResponce(QString executequery)
     close();
     return true;
 }
+
+QSharedPointer<QSqlTableModel> DatabaseManager::getModel(QString tableName)
+{
+    QSharedPointer<QSqlTableModel> model(new QSqlTableModel(nullptr, *db));
+    model->setTable(tableName);
+    return model;
+}

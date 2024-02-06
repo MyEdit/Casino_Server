@@ -84,6 +84,11 @@ void NetworkServer::packetHandler(PacketTypes packettype, QSharedPointer<SOCKET>
             P_Authorization::authorizeClient(clientSocket);
             break;
         }
+        case(PacketTypes::P_SendModel):
+        {
+            P_SendModel::getTypeModel(clientSocket);
+            break;
+        }
         case(PacketTypes::P_Notification):
         {
             break;
@@ -97,10 +102,6 @@ void NetworkServer::packetHandler(PacketTypes packettype, QSharedPointer<SOCKET>
             break;
         }
         case(PacketTypes::P_ConnectPlayerToTable):
-        {
-            break;
-        }
-        case(PacketTypes::P_SendModel):
         {
             break;
         }

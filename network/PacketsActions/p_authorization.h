@@ -6,10 +6,11 @@
 
 class P_Authorization
 {
-public:
-    friend class NetworkServer;
 private:
     static void authorizeClient(QSharedPointer<SOCKET> clientSocket);
+
+public:
+    friend class NetworkServer;
 };
 
 #endif // P_AUTHORIZATION_H

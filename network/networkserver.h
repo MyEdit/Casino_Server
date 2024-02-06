@@ -11,6 +11,7 @@
 #include <qdebug.h>
 #include <Network/PacketTypes.h>
 #include <Network/PacketsActions/p_authorization.h>
+#include <Network/PacketsActions/p_sendmodel.h>
 #include <Utils/Message.h>
 
 class NetworkServer
@@ -38,10 +39,11 @@ public:
     template<typename T>
     static void sendToClient(QSharedPointer<SOCKET> client, const T data, int size)
     {
-        send(*client, (char*)data, size, 0);
+        send(*client, reinterpret_cast<const char*>(data), size, 0);
     }
 
     friend class P_Authorization;
+    friend class P_SendModel;
 };
 
 #endif // NETWORKSERVER_H

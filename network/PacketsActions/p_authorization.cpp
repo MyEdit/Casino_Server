@@ -17,9 +17,7 @@ void P_Authorization::authorizeClient(QSharedPointer<SOCKET> clientSocket)
     }
 
     Message::logInfo("Correct login and password (" + login + ", " + password + ")");
-
     PacketTypes packettype = PacketTypes::P_Authorization;
-    NetworkServer::sendToClient(clientSocket, (char*)&packettype, sizeof(PacketTypes));
-
+    NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
     NetworkServer::addConnect(clientSocket, login);
 }
