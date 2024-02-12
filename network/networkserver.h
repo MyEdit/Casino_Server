@@ -1,18 +1,18 @@
-#ifndef NETWORKSERVER_H
+п»ї#ifndef NETWORKSERVER_H
 #define NETWORKSERVER_H
 
-#include <winsock2.h> // [Для себя] Для работы нужно добавить LIBS += -lws2_32 в .pro файл
+#include <winsock2.h> // [РґР»СЏ СЃРµР±СЏ] РґР»СЏ СЂР°Р±РѕС‚С‹ РЅСѓР¶РЅРѕ РґРѕР±Р°РІРёС‚СЊ LIBS += -lws2_32 РІ .pro С„Р°Р№Р»
 #include <thread>
 #include <Ws2tcpip.h>
-#include <string>
-#include <Constants.h>
-#include <qmutex.h>
+#include <QString>
+#include "Constants.h"
+#include <QMutex>
 #include <QSharedPointer>
-#include <qdebug.h>
-#include <Network/PacketTypes.h>
-#include <Network/PacketsActions/p_authorization.h>
-#include <Network/PacketsActions/p_sendmodel.h>
-#include <Utils/Message.h>
+#include "Network/PacketTypes.h"
+#include "Network/PacketsActions/p_authorization.h"
+#include "Network/PacketsActions/p_sendmodel.h"
+#include "Network/PacketsActions/p_query.h"
+#include "Utils/Message.h"
 
 class NetworkServer
 {

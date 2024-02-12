@@ -1,8 +1,8 @@
-#ifndef P_AUTHORIZATION_H
+﻿#ifndef P_AUTHORIZATION_H
 #define P_AUTHORIZATION_H
 
-#include <Network/networkserver.h>
-#include <Database/databasemanager.h>
+#include "Network/networkserver.h"
+#include "Database/databasemanager.h"
 
 class P_Authorization
 {

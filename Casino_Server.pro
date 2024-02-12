@@ -16,11 +16,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        Database/databasemanager.cpp \
+    Database/databasemanager.cpp \
     Network/PacketsActions/p_authorization.cpp \
+    Network/PacketsActions/p_query.cpp \
     Network/PacketsActions/p_sendmodel.cpp \
-        Network/networkserver.cpp \
-        main.cpp \
+    Network/networkserver.cpp \
+    Utils/serializer.cpp \
+    Commands/commandmanager.cpp \
+    main.cpp \
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -34,6 +37,9 @@ HEADERS += \
     Database/databasemanager.h \
     Network/PacketTypes.h \
     Network/PacketsActions/p_authorization.h \
+    Network/PacketsActions/p_query.h \
     Network/PacketsActions/p_sendmodel.h \
     Network/networkserver.h \
-    Utils/Message.h \
+    Utils/Message.h \ \
+    Utils/serializer.h \
+    Commands/commandmanager.h

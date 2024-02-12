@@ -1,4 +1,4 @@
-#ifndef DATABASEMANAGER_H
+﻿#ifndef DATABASEMANAGER_H
 #define DATABASEMANAGER_H
 
 #include <QString>
@@ -8,6 +8,7 @@
 #include <QtSql/QSqlQuery>
 #include <QVariant>
 #include <QSqlTableModel>
+#include "Utils/Message.h"
 
 class DatabaseManager
 {

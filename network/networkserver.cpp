@@ -1,14 +1,14 @@
-#include "networkserver.h"
+п»ї#include "networkserver.h"
 
 QMap<QSharedPointer<SOCKET>, QString> Conections{};
 QMutex m_mutex{};
 
-//Инициилизация
+//РРЅРёС†РёРёР»РёР·Р°С†РёСЏ
 bool NetworkServer::init()
 {
     WSAData wsaData;
-    WORD DLLVersion = MAKEWORD(2, 1); //Запрашиваемая версия библиотеки winsock
-    if (WSAStartup(DLLVersion, &wsaData) != 0) //Загрузка библиотеки winsock
+    WORD DLLVersion = MAKEWORD(2, 1); //Р—Р°РїСЂР°С€РёРІР°РµРјР°СЏ РІРµСЂСЃРёСЏ Р±РёР±Р»РёРѕС‚РµРєРё winsock
+    if (WSAStartup(DLLVersion, &wsaData) != 0) //Р—Р°РіСЂСѓР·РєР° Р±РёР±Р»РёРѕС‚РµРєРё winsock
     {
         Message::logError("WSA library failed to load!");
         return false;
@@ -17,19 +17,19 @@ bool NetworkServer::init()
     return true;
 }
 
-//Заполняет информацию об адресе сервера
+//Р—Р°РїРѕР»РЅСЏРµС‚ РёРЅС„РѕСЂРјР°С†РёСЋ РѕР± Р°РґСЂРµСЃРµ СЃРµСЂРІРµСЂР°
 void NetworkServer::configuration()
 {
     sizeofaddr = sizeof(serverAddress);
     serverAddress.sin_addr.s_addr = inet_addr(ADDRESS);
     serverAddress.sin_port = htons(PORT);
-    serverAddress.sin_family = AF_INET; //Интернет протокол
+    serverAddress.sin_family = AF_INET; //РРЅС‚РµСЂРЅРµС‚ РїСЂРѕС‚РѕРєРѕР»
 
     serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-    bind(serverSocket, (SOCKADDR*)&serverAddress, sizeofaddr); //Привязываю адрес сокету
+    bind(serverSocket, (SOCKADDR*)&serverAddress, sizeofaddr); //РџСЂРёРІСЏР·С‹РІР°СЋ Р°РґСЂРµСЃ СЃРѕРєРµС‚Сѓ
 }
 
-//Прослушивает порт
+//РџСЂРѕСЃР»СѓС€РёРІР°РµС‚ РїРѕСЂС‚
 void NetworkServer::startListening()
 {
     if (!serverAddress.sin_port)
@@ -38,11 +38,15 @@ void NetworkServer::startListening()
         return;
     }
 
-    listen(serverSocket, MAXCONNECTIONS); //Слушаем порт для ожидания коннекта с клиентом
+    listen(serverSocket, MAXCONNECTIONS); //РЎР»СѓС€Р°РµРј РїРѕСЂС‚ РґР»СЏ РѕР¶РёРґР°РЅРёСЏ РєРѕРЅРЅРµРєС‚Р° СЃ РєР»РёРµРЅС‚РѕРј
     Message::logInfo("Listening port started successfully!");
 
-    //Коннектим клиентов
-    while (Conections.size() != MAXCONNECTIONS) {
+    //РљРѕРЅРЅРµРєС‚РёРј РєР»РёРµРЅС‚РѕРІ
+    while (true)
+    {
+        if (Conections.size() >= MAXCONNECTIONS) //РќРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµРј РµСЃР»Рё РґРѕСЃС‚РёРіРЅСѓС‚ РјР°РєСЃРёРјСѓРј СЃРѕРµРґРёРЅРµРЅРёР№
+            continue;
+
         QSharedPointer<SOCKET> clientSocket(new SOCKET);
         *clientSocket = accept(serverSocket, (SOCKADDR*)&serverAddress, &sizeofaddr);
 
@@ -59,7 +63,7 @@ void NetworkServer::startListening()
     }
 }
 
-//В бесконечном цикле ожидает получения сообщения от клиента и вызывает packetHandler
+//Р’ Р±РµСЃРєРѕРЅРµС‡РЅРѕРј С†РёРєР»Рµ РѕР¶РёРґР°РµС‚ РїРѕР»СѓС‡РµРЅРёСЏ СЃРѕРѕР±С‰РµРЅРёСЏ РѕС‚ РєР»РёРµРЅС‚Р° Рё РІС‹Р·С‹РІР°РµС‚ packetHandler
 void NetworkServer::clientHandler(QSharedPointer<SOCKET> clientSocket)
 {
     PacketTypes packettype;
@@ -74,7 +78,7 @@ void NetworkServer::clientHandler(QSharedPointer<SOCKET> clientSocket)
     }
 }
 
-//По мере необходимости будет дополняться
+//РџРѕ РјРµСЂРµ РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё Р±СѓРґРµС‚ РґРѕРїРѕР»РЅСЏС‚СЊСЃСЏ
 void NetworkServer::packetHandler(PacketTypes packettype, QSharedPointer<SOCKET> clientSocket)
 {
     switch(packettype)
@@ -87,6 +91,11 @@ void NetworkServer::packetHandler(PacketTypes packettype, QSharedPointer<SOCKET>
         case(PacketTypes::P_SendModel):
         {
             P_SendModel::getTypeModel(clientSocket);
+            break;
+        }
+        case(PacketTypes::P_QueryWithoutResponce):
+        {
+            P_Query::getResultQuary(clientSocket);
             break;
         }
         case(PacketTypes::P_Notification):
@@ -109,6 +118,10 @@ void NetworkServer::packetHandler(PacketTypes packettype, QSharedPointer<SOCKET>
         {
             break;
         }
+        case(PacketTypes::P_Query):
+        {
+            break;
+        }
         default:
         {
             Message::logWarn("Client send unknown packettype");
@@ -117,15 +130,15 @@ void NetworkServer::packetHandler(PacketTypes packettype, QSharedPointer<SOCKET>
     }
 }
 
-//Отправка пакета подключенному клиенту
+//РћС‚РїСЂР°РІРєР° РїР°РєРµС‚Р° РїРѕРґРєР»СЋС‡РµРЅРЅРѕРјСѓ РєР»РёРµРЅС‚Сѓ
 void NetworkServer::sendToClient(QSharedPointer<SOCKET> client, QString message)
 {
     int message_size = message.size();
-    send(*client, (char*)&message_size, sizeof(int), 0);
-    send(*client, (char*)message.toUtf8().constData(), message_size, 0);
+    send(*client, reinterpret_cast<const char*>(&message_size), sizeof(int), 0);
+    send(*client, reinterpret_cast<const char*>(message.toUtf8().constData()), message_size, 0);
 }
 
-//Отправка пакета всем подключенным клиентам
+//РћС‚РїСЂР°РІРєР° РїР°РєРµС‚Р° РІСЃРµРј РїРѕРґРєР»СЋС‡РµРЅРЅС‹Рј РєР»РёРµРЅС‚Р°Рј
 void NetworkServer::sendToAllClient(QString message)
 {
     QMap<QSharedPointer<SOCKET>, QString>::iterator it;
@@ -136,17 +149,17 @@ void NetworkServer::sendToAllClient(QString message)
     }
 }
 
-//Парс и получение пакета от клиента с неизвестной длинной
+//РџР°СЂСЃ Рё РїРѕР»СѓС‡РµРЅРёРµ РїР°РєРµС‚Р° РѕС‚ РєР»РёРµРЅС‚Р° СЃ РЅРµРёР·РІРµСЃС‚РЅРѕР№ РґР»РёРЅРЅРѕР№
 QString NetworkServer::getMessageFromClient(QSharedPointer<SOCKET> clientSocket)
 {
     int size;
-    recv(*clientSocket, (char*)&size, sizeof(int), 0);
+    recv(*clientSocket, reinterpret_cast<char*>(&size), sizeof(int), 0);
     QByteArray buffer(size, 0);
     recv(*clientSocket, buffer.data(), size, 0);
     return QString(buffer);
 }
 
-//Возвращает IP адрес подключенного клиента
+//Р’РѕР·РІСЂР°С‰Р°РµС‚ IP Р°РґСЂРµСЃ РїРѕРґРєР»СЋС‡РµРЅРЅРѕРіРѕ РєР»РёРµРЅС‚Р°
 QString NetworkServer::getIPAdress(QSharedPointer<SOCKET> client)
 {
     sockaddr_in clientAddress;
@@ -156,21 +169,22 @@ QString NetworkServer::getIPAdress(QSharedPointer<SOCKET> client)
     return inet_ntoa((in_addr)clientAddress.sin_addr);
 }
 
-//Возвращает никнейм подключенного клиента
+//Р’РѕР·РІСЂР°С‰Р°РµС‚ РЅРёРєРЅРµР№Рј РїРѕРґРєР»СЋС‡РµРЅРЅРѕРіРѕ РєР»РёРµРЅС‚Р°
 QString NetworkServer::getNickname(QSharedPointer<SOCKET> clientSocket)
 {
     return Conections[clientSocket];
 }
 
-//Вызывается при дисконнекте клиента
+//Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїСЂРё РґРёСЃРєРѕРЅРЅРµРєС‚Рµ РєР»РёРµРЅС‚Р°
 void NetworkServer::onClientDisconnected(QSharedPointer<SOCKET> clientSocket)
 {
     QMutexLocker locker(&m_mutex);
     Message::logInfo("Client [" + getIPAdress(clientSocket) + "] disconnected!");
+    closesocket(*clientSocket);
     Conections.remove(clientSocket);
 }
 
-//Добавляет клиента в мапу Conections
+//Р”РѕР±Р°РІР»СЏРµС‚ РєР»РёРµРЅС‚Р° РІ РјР°РїСѓ Conections
 void NetworkServer::addConnect(QSharedPointer<SOCKET> clientSocket, QString login)
 {
     QMutexLocker locker(&m_mutex);

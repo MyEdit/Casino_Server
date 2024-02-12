@@ -1,7 +1,7 @@
-#ifndef MESSAGE_H
+﻿#ifndef MESSAGE_H
 #define MESSAGE_H
 
-#include <qdebug.h>
+#include <QDebug>
 
 class Message
 {

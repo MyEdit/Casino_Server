@@ -1,31 +1,36 @@
-#include "p_sendmodel.h"
+п»ї#include "p_sendmodel.h"
 
-static QMap<ModelTypes, QString> tableNames;
+QMap<ModelTypes, QString> P_SendModel::tableNames;
 
-//Получает запрашиваемый тип модели
+//РїРѕР»СѓС‡Р°РµС‚ Р·Р°РїСЂР°С€РёРІР°РµРјС‹Р№ С‚РёРї РјРѕРґРµР»Рё
 void P_SendModel::getTypeModel(QSharedPointer<SOCKET> clientSocket)
-{
+{   
     if (tableNames.size() == 0)
         initMapTableNames();
 
-    QSharedPointer<DatabaseManager> databaseManager;
     ModelTypes modeltype;
-    recv(*clientSocket, (char*)&modeltype, sizeof(ModelTypes), 0);
+    QSharedPointer<DatabaseManager> databaseManager(new DatabaseManager());
+
+    recv(*clientSocket, reinterpret_cast<char*>(&modeltype), sizeof(ModelTypes), 0);
     sendModel(clientSocket, databaseManager->getModel(tableNames[modeltype]), modeltype);
 }
 
-//Отправляет запрошенный тип модели
+//РѕС‚РїСЂР°РІР»СЏРµС‚ Р·Р°РїСЂРѕС€РµРЅРЅС‹Р№ С‚РёРї РјРѕРґРµР»Рё
 void P_SendModel::sendModel(QSharedPointer<SOCKET> clientSocket, QSharedPointer<QSqlTableModel> model, ModelTypes modeltype)
 {
     PacketTypes packettype = PacketTypes::P_SendModel;
+    QByteArray jsonData = Serializer::serializeDataModel(model);
+    int dataSize = jsonData.size();
+
     NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
     NetworkServer::sendToClient(clientSocket, &modeltype, sizeof(ModelTypes));
-    NetworkServer::sendToClient(clientSocket, &model, sizeof(QSqlTableModel));
+    NetworkServer::sendToClient(clientSocket, &dataSize, sizeof(int));
+    NetworkServer::sendToClient(clientSocket, jsonData.data(), dataSize);
 }
 
-//Инициилизирует мапу ModelTypes -> ИмяТаблицы
+//РёРЅРёС†РёРёР»РёР·РёСЂСѓРµС‚ РјР°РїСѓ ModelTypes -> РёРјСЏ С‚Р°Р±Р»РёС†С‹
 void P_SendModel::initMapTableNames()
 {
-    tableNames.insert(ModelTypes::Users, "Users");
-    tableNames.insert(ModelTypes::Tables, "Tables");
+    tableNames.insert(ModelTypes::Users, "users");
+    tableNames.insert(ModelTypes::ExistingTables, "ExistingTables_pred");
 }
