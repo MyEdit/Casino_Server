@@ -4,32 +4,25 @@ QMap<std::string, std::function<void(std::vector<std::string>)>> CommandManager:
 
 void CommandManager::init()
 {
+    registerCommands();
+
+    for(Command* command : commands)
+    {
+        commandActions.insert(command->getCommand(), [&](std::vector<std::string> args)
+        {
+            command->execute(args);
+        });
+    }
+
     std::thread handler(CommandHandler);
     handler.detach();
-
-    //TODO: Создать классы самих команд (CommandBan, CommandKick, CommandHelp, CommandAddBalance) и из них как то
-    //по хорошему в автоматическом режиме вытягивать функции к которым нужно обращаться при вводе этой команды
-    //и соответственно кидать их в commandActions
 
     Message::logInfo("CommandManager started successfully!");
 }
 
-void CommandManager::CommandHandler()
+void CommandManager::registerCommands()
 {
-    std::string command;
-
-    while(true)
-    {
-        std::getline(std::cin, command);
-        std::vector<std::string> args = parseCommand(command);
-
-        if (!commandActions.contains(args[0]))
-        {
-            Message::logInfo("Unknown command, type /help for help");
-            continue;
-        }
-        commandActions[args[0]](args);
-    }
+    commands.push_back(new CommandHelp());
 }
 
 std::vector<std::string> CommandManager::parseCommand(std::string command)
@@ -42,6 +35,25 @@ std::vector<std::string> CommandManager::parseCommand(std::string command)
     {
         args.push_back(argument);
     }
+
     return args;
+}
+
+void CommandManager::CommandHandler()
+{
+    std::string command;
+
+    while(true)
+    {
+        std::getline(std::cin, command);
+        std::vector<std::string> args = parseCommand(command);
+
+        if (args.size() == 0 || !commandActions.contains(args[0]))
+        {
+            Message::logInfo(Command::getErrorMessage());
+            continue;
+        }
+        commandActions[args[0]](args);
+    }
 }
 

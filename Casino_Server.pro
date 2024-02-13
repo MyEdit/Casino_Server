@@ -23,6 +23,7 @@ SOURCES += \
     Network/networkserver.cpp \
     Utils/serializer.cpp \
     Commands/commandmanager.cpp \
+    Commands/commandhelp.cpp \
     main.cpp \
 
 # Default rules for deployment.
@@ -40,6 +41,8 @@ HEADERS += \
     Network/PacketsActions/p_query.h \
     Network/PacketsActions/p_sendmodel.h \
     Network/networkserver.h \
-    Utils/Message.h \ \
+    Utils/Message.h \
     Utils/serializer.h \
-    Commands/commandmanager.h
+    Commands/commandmanager.h \
+    Commands/command.h \
+    Commands/commandhelp.h \
