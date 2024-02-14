@@ -71,11 +71,12 @@ bool DatabaseManager::executeQueryWithoutResponce(QString executequery)
     return true;
 }
 
-QSharedPointer<QSqlTableModel> DatabaseManager::getModel(QString tableName)
+QSharedPointer<QSqlTableModel> DatabaseManager::getModel(QString tableName, int offset)
 {
     open();
     QSharedPointer<QSqlTableModel> model(new QSqlTableModel(nullptr, *db)); //Эта запись эквивалентна этой - QSharedPointer<QSqlTableModel> model = QSharedPointer<QSqlTableModel>::create(nullptr, *db);, единственное отличие в том, что тут мы сразу в конструкторе передаем все параметры
     model->setTable(tableName);
+    model->setFilter(" 1=1 LIMIT 50 OFFSET " + QString::number(offset));
     model->select();
     close();
     return model;

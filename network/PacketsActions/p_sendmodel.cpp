@@ -10,12 +10,15 @@ void P_SendModel::getTypeModel(QSharedPointer<SOCKET> clientSocket)
 
     ModelTypes modeltype;
     ModelLoadingType modelLoadingType;
+    int offset;
 
     QSharedPointer<DatabaseManager> databaseManager(new DatabaseManager());
 
-    recv(*clientSocket, reinterpret_cast<char*>(&modeltype), sizeof(ModelTypes), 0);
     recv(*clientSocket, reinterpret_cast<char*>(&modelLoadingType), sizeof(ModelLoadingType), 0);
-    sendModel(clientSocket, databaseManager->getModel(tableNames[modeltype]), modeltype, modelLoadingType);
+    recv(*clientSocket, reinterpret_cast<char*>(&modeltype), sizeof(ModelTypes), 0);
+    recv(*clientSocket, reinterpret_cast<char*>(&offset), sizeof(int), 0);
+
+    sendModel(clientSocket, databaseManager->getModel(tableNames[modeltype], offset), modeltype, modelLoadingType);
 }
 
 //отправляет запрошенный тип модели
@@ -26,8 +29,8 @@ void P_SendModel::sendModel(QSharedPointer<SOCKET> clientSocket, QSharedPointer<
     int dataSize = jsonData.size();
 
     NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
-    NetworkServer::sendToClient(clientSocket, &modelLoadingType, sizeof(ModelLoadingType));
     NetworkServer::sendToClient(clientSocket, &modeltype, sizeof(ModelTypes));
+    NetworkServer::sendToClient(clientSocket, &modelLoadingType, sizeof(ModelLoadingType));
     NetworkServer::sendToClient(clientSocket, &dataSize, sizeof(int));
     NetworkServer::sendToClient(clientSocket, jsonData.data(), dataSize);
 }
@@ -36,5 +39,5 @@ void P_SendModel::sendModel(QSharedPointer<SOCKET> clientSocket, QSharedPointer<
 void P_SendModel::initMapTableNames()
 {
     tableNames.insert(ModelTypes::Users, "users");
-    tableNames.insert(ModelTypes::ExistingTables, "ExistingTables_pred");
+    tableNames.insert(ModelTypes::ExistingTables, "name"); //заменил для теста загрузок моделей
 }
