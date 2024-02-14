@@ -10,7 +10,7 @@ class P_SendModel
 {
 private:
     static void getTypeModel(QSharedPointer<SOCKET> clientSocket);
-    static void sendModel(QSharedPointer<SOCKET> clientSocket, QSharedPointer<QSqlTableModel> model, ModelTypes modeltype);
+    static void sendModel(QSharedPointer<SOCKET> clientSocket, QSharedPointer<QSqlTableModel> model, ModelTypes modeltype, ModelLoadingType modelLoadingType);
 
 public:
     static QMap<ModelTypes, QString> tableNames;

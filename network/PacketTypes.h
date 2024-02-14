@@ -29,4 +29,11 @@ enum class QueryTypes
     DeleteEntry     //Удалить запись
 };
 
+enum class ModelLoadingType
+{
+    Next,
+    Central,
+    Prev
+};
+
 #endif // PACKET_H
