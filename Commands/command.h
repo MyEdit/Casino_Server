@@ -4,15 +4,21 @@
 #include <vector>
 #include <string>
 #include <QString>
+#include <Utils/Message.h>
 
 class Command
 {
 public:
-    virtual void execute(std::vector<std::string> args) = 0; //Метод с логикой работы команды
-    virtual std::string getCommand() = 0; //Метод возвращающий команду
-    static QString getErrorMessage()
+    virtual void execute(std::vector<std::string> args) = 0;
+    virtual std::string getCommand() = 0;
+    virtual std::string getHelpInfo() = 0;
+    static QString getUnknownCommandMessage()
     {
         return "Unknown command, type /help for help";
+    }
+    static void printErrorMessage()
+    {
+        Message::logError("An error occurred while executing the command");
     }
 };
 

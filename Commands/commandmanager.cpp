@@ -1,6 +1,7 @@
 #include "commandmanager.h"
 
 QMap<std::string, std::function<void(std::vector<std::string>)>> CommandManager::commandActions;
+std::vector<Command*> CommandManager::commands;
 
 void CommandManager::init()
 {
@@ -8,7 +9,7 @@ void CommandManager::init()
 
     for(Command* command : commands)
     {
-        commandActions.insert(command->getCommand(), [&](std::vector<std::string> args)
+        commandActions.insert(command->getCommand(), [command](std::vector<std::string> args)
         {
             command->execute(args);
         });
@@ -23,6 +24,7 @@ void CommandManager::init()
 void CommandManager::registerCommands()
 {
     commands.push_back(new CommandHelp());
+    commands.push_back(new CommandBan());
 }
 
 std::vector<std::string> CommandManager::parseCommand(std::string command)
@@ -50,7 +52,7 @@ void CommandManager::CommandHandler()
 
         if (args.size() == 0 || !commandActions.contains(args[0]))
         {
-            Message::logInfo(Command::getErrorMessage());
+            Message::logInfo(Command::getUnknownCommandMessage());
             continue;
         }
         commandActions[args[0]](args);

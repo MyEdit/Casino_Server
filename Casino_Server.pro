@@ -16,6 +16,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    Commands/commandban.cpp \
     Database/databasemanager.cpp \
     Network/PacketsActions/p_authorization.cpp \
     Network/PacketsActions/p_query.cpp \
@@ -34,6 +35,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 LIBS += -lws2_32
 
 HEADERS += \
+    Commands/commandban.h \
     Constants.h \
     Database/databasemanager.h \
     Network/PacketTypes.h \

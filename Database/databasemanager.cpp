@@ -59,16 +59,10 @@ QString DatabaseManager::executeQuery(QString executequery)
 bool DatabaseManager::executeQueryWithoutResponce(QString executequery)
 {
     open();
-    QSqlQuery query(executequery, *db);
-
-    if (!query.exec())
-    {
-        close();
-        return false;
-    }
-
+    QSqlQuery query(*db);
+    bool success = query.exec(executequery);
     close();
-    return true;
+    return success;
 }
 
 QSharedPointer<QSqlTableModel> DatabaseManager::getModel(QString tableName, int offset)

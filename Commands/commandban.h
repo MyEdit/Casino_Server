@@ -1,11 +1,11 @@
-#ifndef COMMANDHELP_H
-#define COMMANDHELP_H
+#ifndef COMMANDBAN_H
+#define COMMANDBAN_H
 
 #include <Commands/command.h>
 #include <Commands/commandmanager.h>
-#include <Utils/Message.h>
+#include <Database/databasemanager.h>
 
-class CommandHelp : public Command
+class CommandBan : public Command
 {
 public:
     void execute(std::vector<std::string> args) override;
@@ -13,4 +13,4 @@ public:
     std::string getHelpInfo() override;
 };
 
-#endif // COMMANDHELP_H
+#endif // COMMANDBAN_H
