@@ -12,7 +12,7 @@ class P_Query
 
 private:
     static void getResultQuary(QSharedPointer<SOCKET> clientSocket);
-    static void sendResult(QSharedPointer<SOCKET> clientSocket, QString result);
+    static void sendResult(QSharedPointer<SOCKET> clientSocket, QString result, ModelTypes modelTypes);
     static void initMapQuerys();
 
 public:
