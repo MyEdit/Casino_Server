@@ -17,7 +17,7 @@ enum class PacketTypes
 enum class ModelTypes
 {
     Users,
-    ExistingTables
+    ActiveTables
 };
 
 enum class QueryTypes
@@ -34,6 +34,12 @@ enum class ModelLoadingType
     Next,
     Central,
     Prev
+};
+
+enum class Roles
+{
+    Admin = 1,
+    TableManager = 2
 };
 
 #endif // PACKET_H
