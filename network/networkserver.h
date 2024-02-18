@@ -27,7 +27,6 @@ private:
     static void clientHandler(QSharedPointer<SOCKET> clientSocket);
     static void addConnect(QSharedPointer<SOCKET> clientSocket, QString login);
     static QString getIPAdress(QSharedPointer<SOCKET> client);
-    static QString getNickname(QSharedPointer<SOCKET> clientSocket);
     static QString getMessageFromClient(QSharedPointer<SOCKET> clientSocket);
 
 public:
@@ -35,6 +34,8 @@ public:
     void startListening();
     static void sendToClient(QSharedPointer<SOCKET> client, QString message);
     static void sendToAllClient(QString message);
+    static QString getNickname(QSharedPointer<SOCKET> clientSocket);
+    static QSharedPointer<SOCKET> getSocketByNickname(QString nickname);
 
     template<typename T>
     static void sendToClient(QSharedPointer<SOCKET> client, const T data, int size)

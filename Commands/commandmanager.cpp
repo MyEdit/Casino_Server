@@ -25,6 +25,7 @@ void CommandManager::registerCommands()
 {
     commands.push_back(new CommandHelp());
     commands.push_back(new CommandBan());
+    commands.push_back(new CommandNotification());
 }
 
 std::vector<std::string> CommandManager::parseCommand(std::string command)

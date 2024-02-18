@@ -98,7 +98,7 @@ void NetworkServer::packetHandler(PacketTypes packettype, QSharedPointer<SOCKET>
             P_Query::getResultQuary(clientSocket);
             break;
         }
-        case(PacketTypes::P_Notification):
+        case(PacketTypes::P_Notification): //TODO: Возможно потом убрать вовсе отсюда, это больше для клиента
         {
             break;
         }
@@ -172,7 +172,21 @@ QString NetworkServer::getIPAdress(QSharedPointer<SOCKET> client)
 //Возвращает никнейм подключенного клиента
 QString NetworkServer::getNickname(QSharedPointer<SOCKET> clientSocket)
 {
+    QMutexLocker locker(&m_mutex);
     return Conections[clientSocket];
+}
+
+QSharedPointer<SOCKET> NetworkServer::getSocketByNickname(QString nickname)
+{
+    QMutexLocker locker(&m_mutex);
+    for (auto it = Conections.begin(); it != Conections.end(); ++it)
+    {
+        if (it.value() == nickname)
+        {
+            return it.key();
+        }
+    }
+    return nullptr;
 }
 
 //Вызывается при дисконнекте клиента

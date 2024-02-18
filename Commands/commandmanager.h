@@ -8,6 +8,7 @@
 #include <Commands/command.h>
 #include <Commands/commandhelp.h>
 #include <Commands/commandban.h>
+#include <Commands/commandnotification.h>
 
 class CommandManager
 {
