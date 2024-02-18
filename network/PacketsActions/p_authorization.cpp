@@ -1,4 +1,4 @@
-#include "p_authorization.h"
+﻿#include "p_authorization.h"
 
 //Вызывается при получении пакета на авторизацию
 void P_Authorization::authorizeClient(QSharedPointer<SOCKET> clientSocket)
@@ -12,10 +12,11 @@ void P_Authorization::authorizeClient(QSharedPointer<SOCKET> clientSocket)
     if (responce == nullptr)
     {
         //Тут вызвать уведомление пакетом у юзера о неверном пароле/логине
+        Message::logInfo("Uncorrect login or password (" + login + ", " + password + ")");
         return;
     }
 
-    Message::logInfo("User " + login + " successfully logged");
+    Message::logInfo("Correct login and password (" + login + ", " + password + ")");
     PacketTypes packettype = PacketTypes::P_Authorization;
     //Roles role = static_cast<Roles>(responce.toInt()); //TODO: Отсыл роли клиенту, надо реализовать ее получение на клиенте перед открытием формы чтобы роль закинуть в конструктор формы
     NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
