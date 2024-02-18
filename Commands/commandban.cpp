@@ -2,15 +2,16 @@
 
 void CommandBan::execute(std::vector<std::string> args)
 {
-    if (args.size() != 3)
+    if (args.size() < 3)
     {
-        Message::logInfo(Command::getUnknownCommandMessage());
+        Command::printUnknownCommandMessage();
         return;
     }
 
     QSharedPointer<DatabaseManager> databaseManager(new DatabaseManager());
     QString subQuery = QString("SELECT ID_User FROM Users WHERE Login = '%1'").arg(QString::fromStdString(args[1]));
     QString id_user = databaseManager->executeQuery(subQuery);
+    QString reason = Command::getTextAfterIndex(args, 2);
 
     if (id_user == nullptr)
     {
@@ -18,7 +19,7 @@ void CommandBan::execute(std::vector<std::string> args)
         return;
     }
 
-    QString query = QString("INSERT INTO Banlist (ID_User, Reason) VALUES (%1, '%2')").arg(id_user).arg(QString::fromStdString(args[2]));
+    QString query = QString("INSERT INTO Banlist (ID_User, Reason) VALUES (%1, '%2')").arg(id_user).arg(reason);
 
     if (!databaseManager->executeQueryWithoutResponce(query))
     {

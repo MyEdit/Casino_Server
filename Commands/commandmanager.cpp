@@ -53,7 +53,7 @@ void CommandManager::CommandHandler()
 
         if (args.size() == 0 || !commandActions.contains(args[0]))
         {
-            Message::logInfo(Command::getUnknownCommandMessage());
+            Command::printUnknownCommandMessage();
             continue;
         }
         commandActions[args[0]](args);

@@ -4,7 +4,7 @@ void CommandHelp::execute(std::vector<std::string> args)
 {
     if (args.size() != 1)
     {
-        Message::logInfo(Command::getUnknownCommandMessage());
+        Command::printUnknownCommandMessage();
         return;
     }
 

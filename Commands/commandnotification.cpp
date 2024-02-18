@@ -2,9 +2,9 @@
 
 void CommandNotification::execute(std::vector<std::string> args)
 {
-    if (args.size() != 3)
+    if (args.size() < 3)
     {
-        Message::logInfo(Command::getUnknownCommandMessage());
+        Command::printUnknownCommandMessage();
         return;
     }
 
@@ -16,9 +16,10 @@ void CommandNotification::execute(std::vector<std::string> args)
         return;
     }
 
+    QString message = Command::getTextAfterIndex(args, 2);
     PacketTypes packettype = PacketTypes::P_Notification;
     NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
-    NetworkServer::sendToClient(clientSocket, QString::fromStdString(args[2]));
+    NetworkServer::sendToClient(clientSocket, message);
 
     Message::logInfo("Notification successfully sent to player " + QString::fromStdString(args[1]));
 }
