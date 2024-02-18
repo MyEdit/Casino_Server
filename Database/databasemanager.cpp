@@ -5,8 +5,8 @@ DatabaseManager::DatabaseManager()
 {
     QString connectionName = "Connection_" + QString::number(QRandomGenerator::global()->generate());
     db = QSharedPointer<QSqlDatabase>::create(QSqlDatabase::addDatabase("QSQLITE", connectionName));
-    db->setDatabaseName("D:/C++ Projects/Casino_Server/Database/Database.sqlite");
-//    db->setDatabaseName("Database/Database.sqlite");
+//    db->setDatabaseName("D:/C++ Projects/Casino_Server/Database/Database.sqlite");
+    db->setDatabaseName("Database/Database.sqlite");
 }
 
 void DatabaseManager::open()
