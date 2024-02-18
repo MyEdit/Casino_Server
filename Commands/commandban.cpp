@@ -26,7 +26,7 @@ void CommandBan::execute(std::vector<std::string> args)
         Command::printErrorMessage();
         return;
     }
-
+    NetworkServer::onClientDisconnected(NetworkServer::getSocketByNickname(QString::fromStdString(args[1])));
     Message::logInfo("Player " + QString::fromStdString(args[1]) + " successfully banned");
 }
 
