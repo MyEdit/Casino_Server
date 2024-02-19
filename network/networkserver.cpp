@@ -133,9 +133,9 @@ void NetworkServer::packetHandler(PacketTypes packettype, QSharedPointer<SOCKET>
 //Отправка пакета подключенному клиенту
 void NetworkServer::sendToClient(QSharedPointer<SOCKET> client, QString message)
 {
-    int message_size = message.size();
+    int message_size = message.toUtf8().size();
     send(*client, reinterpret_cast<const char*>(&message_size), sizeof(int), 0);
-    send(*client, reinterpret_cast<const char*>(message.toUtf8().constData()), message_size, 0);
+    send(*client, message.toUtf8().constData(), message_size, 0);
 }
 
 //Отправка пакета всем подключенным клиентам

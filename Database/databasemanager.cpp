@@ -65,13 +65,22 @@ bool DatabaseManager::executeQueryWithoutResponce(QString executequery)
     return success;
 }
 
-QSharedPointer<QSqlTableModel> DatabaseManager::getModel(QString tableName, int offset)
+QSharedPointer<QSqlQueryModel> DatabaseManager::getModel(QString tableName, int offset)
 {
     open();
-    QSharedPointer<QSqlTableModel> model(new QSqlTableModel(nullptr, *db)); //Эта запись эквивалентна этой - QSharedPointer<QSqlTableModel> model = QSharedPointer<QSqlTableModel>::create(nullptr, *db);, единственное отличие в том, что тут мы сразу в конструкторе передаем все параметры
-    model->setTable(tableName);
-    model->setFilter(" 1=1 LIMIT 50 OFFSET " + QString::number(offset));
-    model->select();
+    QSharedPointer<QSqlQueryModel> model(new QSqlTableModel());
+
+    QString request("CREATE TEMPORARY TABLE temp_" + tableName + " AS SELECT ROW_NUMBER() OVER () AS №, sorted_data.* FROM "
+                    "(SELECT * FROM " + tableName + ") AS sorted_data where  1=1 LIMIT 50 OFFSET " + QString::number(offset));
+
+    model->setQuery(request, *db);
+
+    if (!model->lastError().isValid())
+    {
+        QString zapros = "SELECT * FROM temp_" + tableName;
+        model->setQuery(zapros, *db);
+    }
+
     close();
     return model;
 }

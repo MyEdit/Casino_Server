@@ -1,4 +1,4 @@
-#ifndef SERIALIZER_H
+﻿#ifndef SERIALIZER_H
 #define SERIALIZER_H
 
 #include <QByteArray>
@@ -11,7 +11,7 @@
 class Serializer
 {
 public:
-    static QByteArray serializeDataModel(QSharedPointer<QSqlTableModel> model);
+    static QByteArray serializeDataModel(QSharedPointer<QSqlQueryModel> model);
 };
 
 #endif // SERIALIZER_H

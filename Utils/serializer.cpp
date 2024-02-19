@@ -1,6 +1,6 @@
 ﻿#include "serializer.h"
 
-QByteArray Serializer::serializeDataModel(QSharedPointer<QSqlTableModel> model)
+QByteArray Serializer::serializeDataModel(QSharedPointer<QSqlQueryModel> model)
 {
     QJsonArray rowsArray;
     QStringList headers;

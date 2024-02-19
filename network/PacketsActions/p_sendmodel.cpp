@@ -22,7 +22,7 @@ void P_SendModel::getTypeModel(QSharedPointer<SOCKET> clientSocket)
 }
 
 //отправляет запрошенный тип модели
-void P_SendModel::sendModel(QSharedPointer<SOCKET> clientSocket, QSharedPointer<QSqlTableModel> model, ModelTypes modeltype, ModelLoadingType modelLoadingType)
+void P_SendModel::sendModel(QSharedPointer<SOCKET> clientSocket, QSharedPointer<QSqlQueryModel> model, ModelTypes modeltype, ModelLoadingType modelLoadingType)
 {
     PacketTypes packettype = PacketTypes::P_SendModel;
     QByteArray jsonData = Serializer::serializeDataModel(model);

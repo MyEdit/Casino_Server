@@ -36,7 +36,7 @@ void P_Query::sendResult(QSharedPointer<SOCKET> clientSocket, QString result, Mo
 void P_Query::initMapQuerys()
 {
     querys.insert(QueryTypes::CountEntrites, "SELECT COUNT(*) FROM ");
-    querys.insert(QueryTypes::Search, "SELECT numbered_rows.№ FROM (SELECT ROW_NUMBER() OVER (ORDER BY '%2') AS №, * FROM %1) AS numbered_rows WHERE numbered_rows.%2 LIKE '%3");
+    querys.insert(QueryTypes::Search, "SELECT numbered_rows.№ FROM (SELECT ROW_NUMBER() OVER () AS №, * FROM %1) AS numbered_rows WHERE numbered_rows.%2 LIKE '%3");
 }
 
 QString P_Query::distributor(QueryTypes queryTypes, ModelTypes modelTypes, QSharedPointer<SOCKET> clientSocket)
@@ -122,8 +122,13 @@ QString P_Query::deleteEntry(QueryTypes queryTypes, ModelTypes modelTypes, QShar
 QString P_Query::search(QueryTypes queryTypes, ModelTypes modelTypes, QSharedPointer<SOCKET> clientSocket)
 {
     QString query = NetworkServer::getMessageFromClient(clientSocket);
-    QStringList searchList = query.split('/');
-    QString request = querys[queryTypes].arg(P_SendModel::tableNames[modelTypes]).arg(searchList[0]).arg(searchList[1]) + searchList[2] + "'";
+    QStringList searchList = query.split('|');
+
+    QString request;
+
+    if(searchList.size() == 3)
+    request = querys[queryTypes].arg(P_SendModel::tableNames[modelTypes]).arg(searchList[0]).arg(searchList[1]) + searchList[2] + "'";
+
     return request;
 }
 
