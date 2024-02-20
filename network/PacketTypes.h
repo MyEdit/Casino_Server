@@ -17,7 +17,8 @@ enum class PacketTypes
 enum class ModelTypes
 {
     Users,
-    ActiveTables
+    ActiveTables,
+    TestTable
 };
 
 enum class QueryTypes

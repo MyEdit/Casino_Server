@@ -39,5 +39,6 @@ void P_SendModel::sendModel(QSharedPointer<SOCKET> clientSocket, QSharedPointer<
 void P_SendModel::initMapTableNames()
 {
     tableNames.insert(ModelTypes::Users, "Users");
-    tableNames.insert(ModelTypes::ActiveTables, "name");
+    tableNames.insert(ModelTypes::ActiveTables, "ActiveTables");
+    tableNames.insert(ModelTypes::TestTable, "name");
 }
