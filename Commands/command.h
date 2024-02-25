@@ -9,9 +9,9 @@
 class Command
 {
 public:
-    virtual void execute(std::vector<std::string> args) = 0;
-    virtual std::string getCommand() = 0;
-    virtual std::string getHelpInfo() = 0;
+    virtual void execute(QStringList args) = 0;
+    virtual QString getCommand() = 0;
+    virtual QString getHelpInfo() = 0;
 
     static void printUnknownCommandMessage()
     {
@@ -23,12 +23,12 @@ public:
         Message::logError("An error occurred while executing the command");
     }
 
-    static QString getTextAfterIndex(std::vector<std::string>& args, int index)
+    static QString getTextAfterIndex(QStringList &args, int index)
     {
         QString text{};
-        for (size_t i = index; i < args.size(); ++i)
+        for (int i = index; i < args.size(); ++i)
         {
-            text += QString::fromStdString(args[i]) + " ";
+            text += args[i] + " ";
         }
         text.chop(1);
         return text;

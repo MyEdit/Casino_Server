@@ -14,11 +14,11 @@ class CommandManager
 {
 private:
     static std::vector<Command*> commands;
-    static QMap<std::string, std::function<void(std::vector<std::string>)>> commandActions;
+    static QMap<QString, std::function<void(QStringList)>> commandActions;
 
     void registerCommands();
     static void CommandHandler();
-    static std::vector<std::string> parseCommand(std::string command);
+    static QStringList parseCommand(QString command);
 
     friend class CommandHelp;
 

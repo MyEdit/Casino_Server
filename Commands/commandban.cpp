@@ -1,6 +1,6 @@
 #include "commandban.h"
 
-void CommandBan::execute(std::vector<std::string> args)
+void CommandBan::execute(QStringList args)
 {
     if (args.size() < 3)
     {
@@ -9,13 +9,13 @@ void CommandBan::execute(std::vector<std::string> args)
     }
 
     QSharedPointer<DatabaseManager> databaseManager(new DatabaseManager());
-    QString subQuery = QString("SELECT ID_User FROM Users WHERE Login = '%1'").arg(QString::fromStdString(args[1]));
+    QString subQuery = QString("SELECT ID_User FROM Users WHERE Login = '%1'").arg(args[1]);
     QString id_user = databaseManager->executeQuery(subQuery);
     QString reason = Command::getTextAfterIndex(args, 2);
 
     if (id_user == nullptr)
     {
-        Message::logInfo("Player " + QString::fromStdString(args[1]) + " not found");
+        Message::logInfo("Player " + args[1] + " not found");
         return;
     }
 
@@ -26,16 +26,16 @@ void CommandBan::execute(std::vector<std::string> args)
         Command::printErrorMessage();
         return;
     }
-    NetworkServer::onClientDisconnected(NetworkServer::getSocketByNickname(QString::fromStdString(args[1])));
-    Message::logInfo("Player " + QString::fromStdString(args[1]) + " successfully banned");
+    NetworkServer::onClientDisconnected(NetworkServer::getSocketByNickname(args[1]));
+    Message::logInfo("Player " + args[1] + " successfully banned");
 }
 
-std::string CommandBan::getCommand()
+QString CommandBan::getCommand()
 {
     return "/ban";
 }
 
-std::string CommandBan::getHelpInfo()
+QString CommandBan::getHelpInfo()
 {
     return "Type /ban <Nickname> <Reason> to ban player";
 }

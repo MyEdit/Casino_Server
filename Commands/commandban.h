@@ -8,9 +8,9 @@
 class CommandBan : public Command
 {
 public:
-    void execute(std::vector<std::string> args) override;
-    std::string getCommand() override;
-    std::string getHelpInfo() override;
+    void execute(QStringList args) override;
+    QString getCommand() override;
+    QString getHelpInfo() override;
 };
 
 #endif // COMMANDBAN_H

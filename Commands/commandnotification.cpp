@@ -1,6 +1,6 @@
 #include "commandnotification.h"
 
-void CommandNotification::execute(std::vector<std::string> args)
+void CommandNotification::execute(QStringList args)
 {
     if (args.size() < 3)
     {
@@ -8,11 +8,11 @@ void CommandNotification::execute(std::vector<std::string> args)
         return;
     }
 
-    QSharedPointer<SOCKET> clientSocket = NetworkServer::getSocketByNickname(QString::fromStdString(args[1]));
+    QSharedPointer<SOCKET> clientSocket = NetworkServer::getSocketByNickname(args[1]);
 
     if (clientSocket == nullptr)
     {
-        Message::logInfo("Player " + QString::fromStdString(args[1]) + " not found");
+        Message::logInfo("Player " + args[1] + " not found");
         return;
     }
 
@@ -21,15 +21,15 @@ void CommandNotification::execute(std::vector<std::string> args)
     NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
     NetworkServer::sendToClient(clientSocket, message);
 
-    Message::logInfo("Notification successfully sent to player " + QString::fromStdString(args[1]));
+    Message::logInfo("Notification successfully sent to player " + args[1]);
 }
 
-std::string CommandNotification::getCommand()
+QString CommandNotification::getCommand()
 {
     return "/notification";
 }
 
-std::string CommandNotification::getHelpInfo()
+QString CommandNotification::getHelpInfo()
 {
     return "Type /notification <Player> <Message> to send client notifications";
 }

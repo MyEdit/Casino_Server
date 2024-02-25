@@ -1,24 +1,13 @@
 #include "commandmanager.h"
 
-QMap<std::string, std::function<void(std::vector<std::string>)>> CommandManager::commandActions;
+QMap<QString, std::function<void(QStringList)>> CommandManager::commandActions;
 std::vector<Command*> CommandManager::commands;
 
 void CommandManager::init()
 {
     registerCommands();
-
-    for(Command* command : commands)
-    {
-        commandActions.insert(command->getCommand(), [command](std::vector<std::string> args)
-        {
-            command->execute(args);
-        });
-    }
-
     std::thread handler(CommandHandler);
     handler.detach();
-
-    Message::logInfo("CommandManager started successfully!");
 }
 
 void CommandManager::registerCommands()
@@ -26,20 +15,20 @@ void CommandManager::registerCommands()
     commands.push_back(new CommandHelp());
     commands.push_back(new CommandBan());
     commands.push_back(new CommandNotification());
+
+    for(Command* command : commands)
+    {
+        commandActions.insert(command->getCommand(), [command](QStringList args)
+        {
+            command->execute(args);
+        });
+        Message::logInfo("Command " + command->getCommand() + " successfully registered");
+    }
 }
 
-std::vector<std::string> CommandManager::parseCommand(std::string command)
+QStringList CommandManager::parseCommand(QString command)
 {
-    std::istringstream iss(command);
-    std::vector<std::string> args;
-    std::string argument;
-
-    while (iss >> argument)
-    {
-        args.push_back(argument);
-    }
-
-    return args;
+    return command.split(" ", QString::SkipEmptyParts);
 }
 
 void CommandManager::CommandHandler()
@@ -49,7 +38,7 @@ void CommandManager::CommandHandler()
     while(true)
     {
         std::getline(std::cin, command);
-        std::vector<std::string> args = parseCommand(command);
+        QStringList args = parseCommand(QString::fromStdString(command));
 
         if (args.size() == 0 || !commandActions.contains(args[0]))
         {

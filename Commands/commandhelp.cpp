@@ -1,6 +1,6 @@
 #include "commandhelp.h"
 
-void CommandHelp::execute(std::vector<std::string> args)
+void CommandHelp::execute(QStringList args)
 {
     if (args.size() != 1)
     {
@@ -12,19 +12,19 @@ void CommandHelp::execute(std::vector<std::string> args)
 
     for(Command* command : CommandManager::commands)
     {
-        if (!command->getHelpInfo().empty())
-            message += QString::fromStdString(command->getHelpInfo()) + "\n";
+        if (!command->getHelpInfo().isNull())
+            message += command->getHelpInfo() + "\n";
     }
 
     Message::logInfo(message);
 }
 
-std::string CommandHelp::getCommand()
+QString CommandHelp::getCommand()
 {
     return "/help";
 }
 
-std::string CommandHelp::getHelpInfo()
+QString CommandHelp::getHelpInfo()
 {
-    return "";
+    return NULL;
 }
