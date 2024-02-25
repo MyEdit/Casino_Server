@@ -5,8 +5,8 @@ DatabaseManager::DatabaseManager()
 {
     QString connectionName = "Connection_" + QString::number(QRandomGenerator::global()->generate());
     db = QSharedPointer<QSqlDatabase>::create(QSqlDatabase::addDatabase("QSQLITE", connectionName));
-//    db->setDatabaseName("D:/C++ Projects/Casino_Server/Database/Database.sqlite");
-    db->setDatabaseName("Database/Database.sqlite");
+    db->setDatabaseName("D:/C++ Projects/Casino_Server/Database/Database.sqlite");
+//    db->setDatabaseName("Database/Database.sqlite");
 }
 
 void DatabaseManager::open()
@@ -19,22 +19,6 @@ void DatabaseManager::close()
     db->close();
 }
 
-//А для чего запрашивать целую модель если цель этой функции возврат одной строки?
-/*
-QString DatabaseManager::executeQuery(QString executequery)
-{
-    open();
-    QSqlQueryModel query;
-
-    query.setQuery(executequery, *db);
-
-    if (query.lastError().isValid())
-        qDebug() << query.lastError(); //А если все таки произошла ошибка, мы получим лишь сообщение в консоль которую не факт что в реальных условиях мониторят 24/7 и отправим клиенту неопределенное сообщение в виде ответа, при парсе которого он скорее всего крашнется
-
-    close();
-    return query.data(query.index(0, 0)).toString();
-}
-*/
 QString DatabaseManager::executeQuery(QString executequery)
 {
     open();

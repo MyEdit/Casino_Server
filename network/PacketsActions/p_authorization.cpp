@@ -11,15 +11,23 @@ void P_Authorization::authorizeClient(QSharedPointer<SOCKET> clientSocket)
 
     if (responce == nullptr)
     {
-        //Тут вызвать уведомление пакетом у юзера о неверном пароле/логине
-        Message::logInfo("Uncorrect login or password (" + login + ", " + password + ")");
-        return;
+        query = QString("SELECT ID_Role FROM Users WHERE Login = '%1' AND Password = '%2'").arg(login).arg(password);
+        responce = databaseManager->executeQuery(query);
+
+        if (responce == nullptr)
+        {
+            //TODO: Тут отправляется уведомление, а на клиенте обрабатывается всегда как TypeMessage::Information, нужно дополнительно передавать тип уведомления
+            PacketTypes packettype = PacketTypes::P_Notification;
+            NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
+            NetworkServer::sendToClient(clientSocket, "Uncorrect login or password");
+            return;
+        }
     }
 
-    Message::logInfo("Correct login and password (" + login + ", " + password + ")");
+    Message::logInfo("User " + login + " successfully logged");
     PacketTypes packettype = PacketTypes::P_Authorization;
-    //Roles role = static_cast<Roles>(responce.toInt()); //TODO: Отсыл роли клиенту, надо реализовать ее получение на клиенте перед открытием формы чтобы роль закинуть в конструктор формы
+    Roles role = static_cast<Roles>(responce.toInt());
     NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
-    //NetworkServer::sendToClient(clientSocket, &role, sizeof(Roles)); //TODO: Отсыл роли клиенту, надо реализовать ее получение на клиенте перед открытием формы чтобы роль закинуть в конструктор формы
+    NetworkServer::sendToClient(clientSocket, &role, sizeof(Roles));
     NetworkServer::addConnect(clientSocket, login);
 }
