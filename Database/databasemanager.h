@@ -22,7 +22,7 @@ public:
     DatabaseManager();
     QString executeQuery(QString executequery);
     bool executeQueryWithoutResponce(QString executequery);
-    QSharedPointer<QSqlQueryModel> getModel(QString tableName, int offset);
+    QSharedPointer<QSqlQueryModel> getModel(QString tableName, int offset, QString sort);
 };
 
 #endif // DATABASEMANAGER_H

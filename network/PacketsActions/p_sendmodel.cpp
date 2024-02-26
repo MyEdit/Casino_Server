@@ -17,8 +17,9 @@ void P_SendModel::getTypeModel(QSharedPointer<SOCKET> clientSocket)
     recv(*clientSocket, reinterpret_cast<char*>(&modelLoadingType), sizeof(ModelLoadingType), 0);
     recv(*clientSocket, reinterpret_cast<char*>(&modeltype), sizeof(ModelTypes), 0);
     recv(*clientSocket, reinterpret_cast<char*>(&offset), sizeof(int), 0);
+    QString sort = NetworkServer::getMessageFromClient(clientSocket);
 
-    sendModel(clientSocket, databaseManager->getModel(tableNames[modeltype], offset), modeltype, modelLoadingType);
+    sendModel(clientSocket, databaseManager->getModel(tableNames[modeltype], offset, sort), modeltype, modelLoadingType);
 }
 
 //отправляет запрошенный тип модели

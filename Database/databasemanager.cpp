@@ -5,8 +5,8 @@ DatabaseManager::DatabaseManager()
 {
     QString connectionName = "Connection_" + QString::number(QRandomGenerator::global()->generate());
     db = QSharedPointer<QSqlDatabase>::create(QSqlDatabase::addDatabase("QSQLITE", connectionName));
-    db->setDatabaseName("D:/C++ Projects/Casino_Server/Database/Database.sqlite");
-//    db->setDatabaseName("Database/Database.sqlite");
+//    db->setDatabaseName("D:/C++ Projects/Casino_Server/Database/Database.sqlite");
+    db->setDatabaseName("Database/Database.sqlite");
 }
 
 void DatabaseManager::open()
@@ -49,12 +49,12 @@ bool DatabaseManager::executeQueryWithoutResponce(QString executequery)
     return success;
 }
 
-QSharedPointer<QSqlQueryModel> DatabaseManager::getModel(QString tableName, int offset)
+QSharedPointer<QSqlQueryModel> DatabaseManager::getModel(QString tableName, int offset, QString sort)
 {
     open();
     QSharedPointer<QSqlQueryModel> model(new QSqlTableModel());
 
-    QString request("CREATE TEMPORARY TABLE temp_" + tableName + " AS SELECT ROW_NUMBER() OVER () AS №, sorted_data.* FROM "
+    QString request("CREATE TEMPORARY TABLE temp_" + tableName + " AS SELECT ROW_NUMBER() OVER (" + sort + ") AS №, sorted_data.* FROM "
                     "(SELECT * FROM " + tableName + ") AS sorted_data where  1=1 LIMIT 50 OFFSET " + QString::number(offset));
 
     model->setQuery(request, *db);
