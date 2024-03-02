@@ -2,9 +2,6 @@
 
 void P_Query::getResultQuary(QSharedPointer<SOCKET> clientSocket)
 {
-    if(P_SendModel::tableNames.isEmpty())
-        P_SendModel::initMapTableNames();
-
     QSharedPointer<DatabaseManager> databaseManager(new DatabaseManager());
 
     QueryTypes queryTypes;

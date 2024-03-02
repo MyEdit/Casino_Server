@@ -13,8 +13,6 @@ private:
     static void sendModel(QSharedPointer<SOCKET> clientSocket, QSharedPointer<QSqlQueryModel> model, ModelTypes modeltype, ModelLoadingType modelLoadingType);
 
 public:
-    static QMap<ModelTypes, QString> tableNames;
-    static void initMapTableNames();
     friend class NetworkServer;
 };
 

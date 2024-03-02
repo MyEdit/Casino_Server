@@ -1,13 +1,9 @@
 ﻿#include "p_sendmodel.h"
 
-QMap<ModelTypes, QString> P_SendModel::tableNames;
 
 //получает запрашиваемый тип модели
 void P_SendModel::getTypeModel(QSharedPointer<SOCKET> clientSocket)
 {   
-    if (tableNames.size() == 0)
-        initMapTableNames();
-
     ModelTypes modeltype;
     ModelLoadingType modelLoadingType;
     int offset;
@@ -17,9 +13,10 @@ void P_SendModel::getTypeModel(QSharedPointer<SOCKET> clientSocket)
     recv(*clientSocket, reinterpret_cast<char*>(&modelLoadingType), sizeof(ModelLoadingType), 0);
     recv(*clientSocket, reinterpret_cast<char*>(&modeltype), sizeof(ModelTypes), 0);
     recv(*clientSocket, reinterpret_cast<char*>(&offset), sizeof(int), 0);
+    QString tableName = NetworkServer::getMessageFromClient(clientSocket);
     QString sort = NetworkServer::getMessageFromClient(clientSocket);
 
-    sendModel(clientSocket, databaseManager->getModel(tableNames[modeltype], offset, sort), modeltype, modelLoadingType);
+    sendModel(clientSocket, databaseManager->getModel(tableName, offset, sort), modeltype, modelLoadingType);
 }
 
 //отправляет запрошенный тип модели
@@ -34,12 +31,4 @@ void P_SendModel::sendModel(QSharedPointer<SOCKET> clientSocket, QSharedPointer<
     NetworkServer::sendToClient(clientSocket, &modelLoadingType, sizeof(ModelLoadingType));
     NetworkServer::sendToClient(clientSocket, &dataSize, sizeof(int));
     NetworkServer::sendToClient(clientSocket, jsonData.data(), dataSize);
-}
-
-//инициилизирует мапу ModelTypes -> имя таблицы
-void P_SendModel::initMapTableNames()
-{
-    tableNames.insert(ModelTypes::Users, "Users");
-    tableNames.insert(ModelTypes::ActiveTables, "ActiveTables");
-    tableNames.insert(ModelTypes::TestTable, "name");
 }
