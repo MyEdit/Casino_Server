@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     Commands/commandban.cpp \
+    Commands/commandlist.cpp \
     Commands/commandnotification.cpp \
     Database/databasemanager.cpp \
     Network/PacketsActions/p_authorization.cpp \
@@ -39,6 +40,7 @@ LIBS += -lws2_32
 
 HEADERS += \
     Commands/commandban.h \
+    Commands/commandlist.h \
     Commands/commandnotification.h \
     Constants.h \
     Database/databasemanager.h \

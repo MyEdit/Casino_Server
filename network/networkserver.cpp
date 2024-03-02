@@ -205,3 +205,9 @@ void NetworkServer::addConnect(QSharedPointer<SOCKET> clientSocket, QString logi
     QMutexLocker locker(&m_mutex);
     Conections.insert(clientSocket, login);
 }
+
+QList<QString> NetworkServer::getOnlineUsers()
+{
+    QMutexLocker locker(&m_mutex);
+    return Conections.values();
+}

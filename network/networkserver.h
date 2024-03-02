@@ -34,9 +34,10 @@ public:
     void startListening();
     static void sendToClient(QSharedPointer<SOCKET> client, QString message);
     static void sendToAllClient(QString message);
+    static void onClientDisconnected(QSharedPointer<SOCKET> client);
     static QString getNickname(QSharedPointer<SOCKET> clientSocket);
     static QSharedPointer<SOCKET> getSocketByNickname(QString nickname);
-    static void onClientDisconnected(QSharedPointer<SOCKET> client);
+    static QList<QString> getOnlineUsers();
 
     template<typename T>
     static void sendToClient(QSharedPointer<SOCKET> client, const T data, int size)

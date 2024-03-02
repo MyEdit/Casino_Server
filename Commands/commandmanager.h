@@ -9,6 +9,7 @@
 #include <Commands/commandhelp.h>
 #include <Commands/commandban.h>
 #include <Commands/commandnotification.h>
+#include <Commands/commandlist.h>
 
 class CommandManager
 {
@@ -24,6 +25,7 @@ private:
 
 public:
     void init();
+    static void registerCommand(Command* command);
 };
 
 #endif // COMMANDMANAGER_H
