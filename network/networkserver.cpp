@@ -98,10 +98,6 @@ void NetworkServer::packetHandler(PacketTypes packettype, QSharedPointer<SOCKET>
             P_Query::getResultQuary(clientSocket);
             break;
         }
-        case(PacketTypes::P_Notification): //TODO: Возможно потом убрать вовсе отсюда, это больше для клиента
-        {
-            break;
-        }
         case(PacketTypes::P_DeleteTable):
         {
             break;

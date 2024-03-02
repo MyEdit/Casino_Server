@@ -3,7 +3,8 @@
 
 #include <Commands/command.h>
 #include <Commands/commandmanager.h>
-#include <network/networkserver.h>
+#include <Network/networkserver.h>
+#include <Network/PacketsActions/p_notification.h>
 #include <Utils/Message.h>
 #include <QString>
 

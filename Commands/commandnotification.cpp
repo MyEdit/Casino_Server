@@ -17,9 +17,7 @@ void CommandNotification::execute(QStringList args)
     }
 
     QString message = Command::getTextAfterIndex(args, 2);
-    PacketTypes packettype = PacketTypes::P_Notification;
-    NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
-    NetworkServer::sendToClient(clientSocket, message);
+    P_Notification::sendNotification(clientSocket, TypeMessage::Information, message);
 
     Message::logInfo("Notification successfully sent to player " + args[1]);
 }

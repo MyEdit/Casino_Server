@@ -39,6 +39,13 @@ enum class ModelLoadingType
     Prev
 };
 
+enum class TypeMessage
+{
+    Information,
+    Warning,
+    Error
+};
+
 enum class Roles
 {
     Admin = 1,

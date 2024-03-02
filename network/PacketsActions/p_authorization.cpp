@@ -16,10 +16,7 @@ void P_Authorization::authorizeClient(QSharedPointer<SOCKET> clientSocket)
 
         if (responce == nullptr)
         {
-            //TODO: Тут отправляется уведомление, а на клиенте обрабатывается всегда как TypeMessage::Information, нужно дополнительно передавать тип уведомления
-            PacketTypes packettype = PacketTypes::P_Notification;
-            NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
-            NetworkServer::sendToClient(clientSocket, "Uncorrect login or password");
+            P_Notification::sendNotification(clientSocket, TypeMessage::Error, "Uncorrect login or password");
             return;
         }
     }
