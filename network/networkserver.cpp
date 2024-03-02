@@ -98,6 +98,11 @@ void NetworkServer::packetHandler(PacketTypes packettype, QSharedPointer<SOCKET>
             P_Query::getResultQuary(clientSocket);
             break;
         }
+        case(PacketTypes::P_Reconnection):
+        {
+            P_Reconnection::reconnectClient(clientSocket);
+            break;
+        }
         case(PacketTypes::P_DeleteTable):
         {
             break;

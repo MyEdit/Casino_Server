@@ -22,6 +22,7 @@ SOURCES += \
     Network/PacketsActions/p_authorization.cpp \
     Network/PacketsActions/p_notification.cpp \
     Network/PacketsActions/p_query.cpp \
+    Network/PacketsActions/p_reconnection.cpp \
     Network/PacketsActions/p_sendmodel.cpp \
     Network/networkserver.cpp \
     Utils/serializer.cpp \
@@ -45,6 +46,7 @@ HEADERS += \
     Network/PacketsActions/p_authorization.h \
     Network/PacketsActions/p_notification.h \
     Network/PacketsActions/p_query.h \
+    Network/PacketsActions/p_reconnection.h \
     Network/PacketsActions/p_sendmodel.h \
     Network/networkserver.h \
     Utils/Message.h \

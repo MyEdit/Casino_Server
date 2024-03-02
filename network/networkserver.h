@@ -12,15 +12,16 @@
 #include "Network/PacketsActions/p_authorization.h"
 #include "Network/PacketsActions/p_sendmodel.h"
 #include "Network/PacketsActions/p_query.h"
+#include "Network/PacketsActions/p_reconnection.h"
 #include "Utils/Message.h"
 
 class NetworkServer
 {
-private:
     SOCKADDR_IN serverAddress;
     SOCKET serverSocket;
     int sizeofaddr;
 
+private:
     void configuration();
     static void packetHandler(PacketTypes packettype, QSharedPointer<SOCKET> clientSocket);
     static void clientHandler(QSharedPointer<SOCKET> clientSocket);
@@ -46,6 +47,7 @@ public:
     friend class P_Authorization;
     friend class P_SendModel;
     friend class P_Query;
+    friend class P_Reconnection;
 };
 
 #endif // NETWORKSERVER_H

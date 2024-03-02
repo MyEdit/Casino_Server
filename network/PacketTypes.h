@@ -11,7 +11,8 @@ enum class PacketTypes
     P_SendModel,
     P_SendTables,
     P_QueryWithoutResponce,
-    P_Query
+    P_Query,
+    P_Reconnection
 };
 
 enum class ModelTypes
