@@ -20,7 +20,9 @@ enum class ModelTypes
     Users,
     ActiveTables,
     StuffUsers,
-    Banlist
+    Banlist,
+    Credits,
+    Payments
 };
 
 enum class QueryTypes
