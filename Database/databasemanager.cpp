@@ -61,8 +61,8 @@ QSharedPointer<QSqlQueryModel> DatabaseManager::getModel(QString tableName, int 
 
     if (!model->lastError().isValid())
     {
-        QString zapros = "SELECT * FROM temp_" + tableName;
-        model->setQuery(zapros, *db);
+        QString query = "SELECT * FROM temp_" + tableName;
+        model->setQuery(query, *db);
     }
 
     close();

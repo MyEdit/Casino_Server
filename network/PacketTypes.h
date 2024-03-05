@@ -5,8 +5,6 @@ enum class PacketTypes
 {
     P_Authorization,
     P_Notification,
-    P_DeleteTable,
-    P_AddTable,
     P_ConnectPlayerToTable,
     P_SendModel,
     P_SendTables,
@@ -51,9 +49,10 @@ enum class TypeMessage
 
 enum class Roles
 {
+    None = -1,
     Admin = 1,
     TableManager = 2,
-    User = 3
+    User = 3,
 };
 
 #endif // PACKET_H

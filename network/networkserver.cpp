@@ -52,11 +52,11 @@ void NetworkServer::startListening()
 
         if (clientSocket == 0)
         {
-            Message::logWarn("The client was unable to connect to the server!");
+            Message::logWarn("The client was unable to connect to the server");
         }
         else
         {
-            Message::logInfo("Client [" + getIPAdress(clientSocket) + "] connected!");
+            Message::logInfo("Client [" + getIPAdress(clientSocket) + "] connected");
             std::thread handler(clientHandler, clientSocket);
             handler.detach();
         }
@@ -95,20 +95,12 @@ void NetworkServer::packetHandler(PacketTypes packettype, QSharedPointer<SOCKET>
         }
         case(PacketTypes::P_QueryWithoutResponce):
         {
-            P_Query::getResultQuary(clientSocket);
+            P_Query::getResultQuary(clientSocket); //TODO: Ошибка, этот метод должен вызываться при PacketTypes::P_Query
             break;
         }
         case(PacketTypes::P_Reconnection):
         {
             P_Reconnection::reconnectClient(clientSocket);
-            break;
-        }
-        case(PacketTypes::P_DeleteTable):
-        {
-            break;
-        }
-        case(PacketTypes::P_AddTable):
-        {
             break;
         }
         case(PacketTypes::P_ConnectPlayerToTable):
@@ -194,7 +186,7 @@ QSharedPointer<SOCKET> NetworkServer::getSocketByNickname(QString nickname)
 void NetworkServer::onClientDisconnected(QSharedPointer<SOCKET> clientSocket)
 {
     QMutexLocker locker(&m_mutex);
-    Message::logInfo("Client [" + getIPAdress(clientSocket) + "] disconnected!");
+    Message::logInfo("Client [" + getIPAdress(clientSocket) + "] disconnected");
     closesocket(*clientSocket);
     Conections.remove(clientSocket);
 }
