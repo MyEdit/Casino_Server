@@ -12,6 +12,7 @@
 #include "Network/PacketsActions/p_authorization.h"
 #include "Network/PacketsActions/p_sendmodel.h"
 #include "Network/PacketsActions/p_query.h"
+#include "Network/PacketsActions/p_querywithoutresponce.h"
 #include "Network/PacketsActions/p_reconnection.h"
 #include "Utils/Message.h"
 
@@ -27,7 +28,6 @@ private:
     static void clientHandler(QSharedPointer<SOCKET> clientSocket);
     static void addConnect(QSharedPointer<SOCKET> clientSocket, QString login);
     static QString getIPAdress(QSharedPointer<SOCKET> client);
-    static QString getMessageFromClient(QSharedPointer<SOCKET> clientSocket);
 
 public:
     bool init();
@@ -36,6 +36,7 @@ public:
     static void sendToAllClient(QString message);
     static void onClientDisconnected(QSharedPointer<SOCKET> client);
     static QString getNickname(QSharedPointer<SOCKET> clientSocket);
+    static QString getMessageFromClient(QSharedPointer<SOCKET> clientSocket);
     static QSharedPointer<SOCKET> getSocketByNickname(QString nickname);
     static QList<QString> getOnlineUsers();
 
