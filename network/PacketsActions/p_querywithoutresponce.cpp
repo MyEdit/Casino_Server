@@ -2,7 +2,7 @@
 
 QMap<QueryTypes, QString> P_QueryWithoutResponce::typeQueryWithoutResponce;
 
-void P_QueryWithoutResponce::executeQuary(QSharedPointer<SOCKET> clientSocket)
+void P_QueryWithoutResponce::executeQuery(QSharedPointer<SOCKET> clientSocket)
 {
     QSharedPointer<DatabaseManager> databaseManager(new DatabaseManager());
 

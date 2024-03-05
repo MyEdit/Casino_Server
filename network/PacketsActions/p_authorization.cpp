@@ -1,6 +1,5 @@
 ﻿#include "p_authorization.h"
 
-//Вызывается при получении пакета на авторизацию
 void P_Authorization::authorizeClient(QSharedPointer<SOCKET> clientSocket)
 {
     QSharedPointer<DatabaseManager> databaseManager(new DatabaseManager());
@@ -8,7 +7,7 @@ void P_Authorization::authorizeClient(QSharedPointer<SOCKET> clientSocket)
     QString password = NetworkServer::getMessageFromClient(clientSocket);
     QString query = QString("SELECT ID_Role FROM StuffUsers WHERE Login = '%1' AND Password = '%2'").arg(login).arg(password);
     QString responce = databaseManager->executeQuery(query);
-    QString fio;
+    QString fullName;
 
     if (responce.isEmpty())
     {
@@ -22,11 +21,11 @@ void P_Authorization::authorizeClient(QSharedPointer<SOCKET> clientSocket)
         }
 
         query = QString("SELECT Name FROM Users WHERE Login = '%1' AND Password = '%2'").arg(login).arg(password);
-        fio = databaseManager->executeQuery(query);
+        fullName = databaseManager->executeQuery(query);
     }
 
     query = QString("SELECT Name FROM StuffUsers WHERE Login = '%1' AND Password = '%2'").arg(login).arg(password);
-    fio = databaseManager->executeQuery(query);
+    fullName = databaseManager->executeQuery(query);
 
     Message::logInfo("User " + login + " successfully logged");
     PacketTypes packettype = PacketTypes::P_Authorization;
@@ -34,6 +33,6 @@ void P_Authorization::authorizeClient(QSharedPointer<SOCKET> clientSocket)
 
     NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
     NetworkServer::sendToClient(clientSocket, &role, sizeof(Roles));
-    NetworkServer::sendToClient(clientSocket, fio);
+    NetworkServer::sendToClient(clientSocket, fullName);
     NetworkServer::addConnect(clientSocket, login);
 }

@@ -10,7 +10,7 @@ class P_QueryWithoutResponce
     static QMap<QueryTypes, QString> typeQueryWithoutResponce;
 
 public:
-    static void executeQuary(QSharedPointer<SOCKET> clientSocket);
+    static void executeQuery(QSharedPointer<SOCKET> clientSocket);
     static void executionMessage(QSharedPointer<SOCKET> clientSocket, bool result, QueryTypes queryTypes);
     static void initMapTypeQueryWithoutResponce();
 };
