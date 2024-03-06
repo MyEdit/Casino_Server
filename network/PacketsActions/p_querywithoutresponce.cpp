@@ -5,12 +5,9 @@ QMap<QueryTypes, QString> P_QueryWithoutResponce::typeQueryWithoutResponce;
 void P_QueryWithoutResponce::executeQuery(QSharedPointer<SOCKET> clientSocket)
 {
     QSharedPointer<DatabaseManager> databaseManager(new DatabaseManager());
-
     QueryTypes queryTypes;
-    ModelTypes modelTypes;
 
     recv(*clientSocket, reinterpret_cast<char*>(&queryTypes), sizeof(QueryTypes), 0);
-    recv(*clientSocket, reinterpret_cast<char*>(&modelTypes), sizeof(ModelTypes), 0);
     QString request = NetworkServer::getMessageFromClient(clientSocket);
 
     executionMessage(clientSocket, databaseManager->executeQueryWithoutResponce(request), queryTypes);
