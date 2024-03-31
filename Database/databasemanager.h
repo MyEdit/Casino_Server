@@ -21,6 +21,7 @@ private:
 public:
     DatabaseManager();
     QString executeQuery(QString executequery);
+    bool executeQueryDeleteWithoutResponce(QString executequery);
     bool executeQueryWithoutResponce(QString executequery);
     QSharedPointer<QSqlQueryModel> getModel(QString tableName, int offset, QString sort);
 };

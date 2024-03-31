@@ -10,7 +10,10 @@ void P_QueryWithoutResponce::executeQuery(QSharedPointer<SOCKET> clientSocket)
     recv(*clientSocket, reinterpret_cast<char*>(&queryTypes), sizeof(QueryTypes), 0);
     QString request = NetworkServer::getMessageFromClient(clientSocket);
 
-    executionMessage(clientSocket, databaseManager->executeQueryWithoutResponce(request), queryTypes);
+    if(queryTypes == QueryTypes::DeleteEntry)
+        executionMessage(clientSocket, databaseManager->executeQueryDeleteWithoutResponce(request), queryTypes);
+    else
+        executionMessage(clientSocket, databaseManager->executeQueryWithoutResponce(request), queryTypes);
 }
 
 void P_QueryWithoutResponce::executionMessage(QSharedPointer<SOCKET> clientSocket, bool result, QueryTypes queryTypes)

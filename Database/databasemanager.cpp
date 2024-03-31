@@ -45,6 +45,30 @@ bool DatabaseManager::executeQueryWithoutResponce(QString executequery)
     open();
     QSqlQuery query(*db);
     bool success = query.exec(executequery);
+
+    if (!success)
+        qDebug() << "Ошибка SQL:" << query.lastError().text();
+
+    close();
+    return success;
+}
+
+
+//TODO: это костыль, но как то всё же нужно выполнить запрос на разрешение каскадного удаления(для каждого соединения оно выключено по умолчанию) и сам запрос на удаление
+bool DatabaseManager::executeQueryDeleteWithoutResponce(QString executequery)
+{
+    open();
+    QSqlQuery query(*db);
+
+    //PRAGMA foreign_keys = ON; - для включения каскадного удаления (приколы SQLite, что оно по умолчанию всегда выключено)
+    if (!query.exec("PRAGMA foreign_keys = ON;"))
+        qDebug() << "Ошибка SQL:" << query.lastError().text();
+
+    bool success = query.exec(executequery);
+
+    if (!success)
+        qDebug() << "Ошибка SQL:" << query.lastError().text();
+
     close();
     return success;
 }
