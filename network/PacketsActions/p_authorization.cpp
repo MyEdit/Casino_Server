@@ -23,9 +23,12 @@ void P_Authorization::authorizeClient(QSharedPointer<SOCKET> clientSocket)
         query = QString("SELECT Name FROM Users WHERE Login = '%1' AND Password = '%2'").arg(login).arg(password);
         fullName = databaseManager->executeQuery(query);
     }
+    else
+    {
+        query = QString("SELECT Name FROM StuffUsers WHERE Login = '%1' AND Password = '%2'").arg(login).arg(password);
+        fullName = databaseManager->executeQuery(query);
+    }
 
-    query = QString("SELECT Name FROM StuffUsers WHERE Login = '%1' AND Password = '%2'").arg(login).arg(password);
-    fullName = databaseManager->executeQuery(query);
 
     Message::logInfo("User " + login + " successfully logged");
     PacketTypes packettype = PacketTypes::P_Authorization;
