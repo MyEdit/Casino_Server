@@ -68,9 +68,12 @@ void P_Authorization::authUser(QSharedPointer<User> user, QSharedPointer<SOCKET>
     Message::logInfo("User " + user->getLogin() + " successfully logged");
     PacketTypes packettype = PacketTypes::P_Authorization;
     Roles role = user->getRole();
+    QByteArray byteUser = user->serializeUser();
+    int sizeByteUser = byteUser.size();
 
     NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
     NetworkServer::sendToClient(clientSocket, &role, sizeof(Roles));
-    NetworkServer::sendToClient(clientSocket, user->getName());
-    NetworkServer::addConnect(clientSocket, user->getLogin()); //Сюда сувать не его логин, а его объект
+    NetworkServer::sendToClient(clientSocket, &sizeByteUser, sizeof(int));
+    NetworkServer::sendToClient(clientSocket, byteUser.constData(), sizeByteUser);
+    NetworkServer::addConnect(clientSocket, user);
 }

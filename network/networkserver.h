@@ -15,6 +15,7 @@
 #include "Network/PacketsActions/p_querywithoutresponce.h"
 #include "Network/PacketsActions/p_reconnection.h"
 #include "Utils/Message.h"
+#include "Users/user.h"
 
 class NetworkServer
 {
@@ -26,7 +27,7 @@ private:
     void configuration();
     static void packetHandler(PacketTypes packettype, QSharedPointer<SOCKET> clientSocket);
     static void clientHandler(QSharedPointer<SOCKET> clientSocket);
-    static void addConnect(QSharedPointer<SOCKET> clientSocket, QString login);
+    static void addConnect(QSharedPointer<SOCKET> clientSocket, QSharedPointer<User> user);
     static QString getIPAdress(QSharedPointer<SOCKET> client);
 
 public:

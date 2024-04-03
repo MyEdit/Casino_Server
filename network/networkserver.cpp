@@ -1,6 +1,6 @@
 ﻿#include "networkserver.h"
 
-QMap<QSharedPointer<SOCKET>, QString> Conections{};
+QMap<QSharedPointer<SOCKET>, QSharedPointer<User>> Conections{};
 QMutex m_mutex{};
 
 //Инициилизация
@@ -135,7 +135,7 @@ void NetworkServer::sendToClient(QSharedPointer<SOCKET> client, QString message)
 //Отправка пакета всем подключенным клиентам
 void NetworkServer::sendToAllClient(QString message)
 {
-    QMap<QSharedPointer<SOCKET>, QString>::iterator it;
+    QMap<QSharedPointer<SOCKET>, QSharedPointer<User>>::iterator it;
     for (it = Conections.begin(); it != Conections.end(); ++it)
     {
         QSharedPointer<SOCKET> client = it.key();
@@ -167,7 +167,7 @@ QString NetworkServer::getIPAdress(QSharedPointer<SOCKET> client)
 QString NetworkServer::getNickname(QSharedPointer<SOCKET> clientSocket)
 {
     QMutexLocker locker(&m_mutex);
-    return Conections[clientSocket];
+    return Conections[clientSocket]->getLogin();
 }
 
 QSharedPointer<SOCKET> NetworkServer::getSocketByNickname(QString nickname)
@@ -175,7 +175,7 @@ QSharedPointer<SOCKET> NetworkServer::getSocketByNickname(QString nickname)
     QMutexLocker locker(&m_mutex);
     for (auto it = Conections.begin(); it != Conections.end(); ++it)
     {
-        if (it.value() == nickname)
+        if (it.value()->getLogin() == nickname)
         {
             return it.key();
         }
@@ -193,14 +193,19 @@ void NetworkServer::onClientDisconnected(QSharedPointer<SOCKET> clientSocket)
 }
 
 //Добавляет клиента в мапу Conections
-void NetworkServer::addConnect(QSharedPointer<SOCKET> clientSocket, QString login)
+void NetworkServer::addConnect(QSharedPointer<SOCKET> clientSocket, QSharedPointer<User> user)
 {
     QMutexLocker locker(&m_mutex);
-    Conections.insert(clientSocket, login);
+    Conections.insert(clientSocket, user);
 }
 
 QList<QString> NetworkServer::getOnlineUsers()
 {
     QMutexLocker locker(&m_mutex);
-    return Conections.values();
+
+    QList<QString> users;
+    for (auto it = Conections.begin(); it != Conections.end(); ++it)
+        users.append(it.value()->getLogin());
+
+    return users;
 }

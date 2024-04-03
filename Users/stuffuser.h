@@ -1,4 +1,4 @@
-#ifndef STUFFUSER_H
+﻿#ifndef STUFFUSER_H
 #define STUFFUSER_H
 
 #include "Users/user.h"
@@ -20,6 +20,8 @@ public:
     QString getName() override;
     QString getLogin() override;
     Roles getRole() override;
+    QByteArray serializeUser() override;
+    static QSharedPointer<StuffUser> deserializeUser(const QByteArray& data);
 };
 
 #endif // STUFFUSER_H

@@ -1,4 +1,4 @@
-#ifndef PLAYER_H
+﻿#ifndef PLAYER_H
 #define PLAYER_H
 
 #include "Users/user.h"
@@ -22,6 +22,8 @@ public:
     QString getLogin() override;
     Roles getRole() override;
     double getBalance();
+    QByteArray serializeUser() override;
+    static QSharedPointer<Player> deserializeUser(const QByteArray& data);
 };
 
 #endif // PLAYER_H
