@@ -22,6 +22,8 @@ void P_Authorization::authorizeClient(QSharedPointer<SOCKET> clientSocket)
         onPlayerAuth(responce.toInt(), databaseManager, clientSocket);
         return;
     }
+
+    P_Notification::sendNotification(clientSocket, TypeMessage::Error, "Uncorrect login or password");
 }
 
 void P_Authorization::onPlayerAuth(int ID, QSharedPointer<DatabaseManager> databaseManager, QSharedPointer<SOCKET> clientSocket)
