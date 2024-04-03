@@ -21,7 +21,6 @@ SOURCES += \
     Commands/commandnotification.cpp \
     Database/databasemanager.cpp \
     Games/game.cpp \
-    Games/player.cpp \
     Games/table.cpp \
     Network/PacketsActions/p_authorization.cpp \
     Network/PacketsActions/p_notification.cpp \
@@ -30,6 +29,8 @@ SOURCES += \
     Network/PacketsActions/p_reconnection.cpp \
     Network/PacketsActions/p_sendmodel.cpp \
     Network/networkserver.cpp \
+    Users/player.cpp \
+    Users/stuffuser.cpp \
     Utils/serializer.cpp \
     Commands/commandmanager.cpp \
     Commands/commandhelp.cpp \
@@ -49,7 +50,6 @@ HEADERS += \
     Constants.h \
     Database/databasemanager.h \
     Games/game.h \
-    Games/player.h \
     Games/table.h \
     Network/PacketTypes.h \
     Network/PacketsActions/p_authorization.h \
@@ -59,6 +59,9 @@ HEADERS += \
     Network/PacketsActions/p_reconnection.h \
     Network/PacketsActions/p_sendmodel.h \
     Network/networkserver.h \
+    Users/player.h \
+    Users/stuffuser.h \
+    Users/user.h \
     Utils/Message.h \
     Utils/serializer.h \
     Commands/commandmanager.h \

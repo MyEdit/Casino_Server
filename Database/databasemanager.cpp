@@ -5,8 +5,8 @@ DatabaseManager::DatabaseManager()
 {
     QString connectionName = "Connection_" + QString::number(QRandomGenerator::global()->generate());
     db = QSharedPointer<QSqlDatabase>::create(QSqlDatabase::addDatabase("QSQLITE", connectionName));
-//    db->setDatabaseName("D:/C++ Projects/Casino_Server/Database/Database.sqlite");
-    db->setDatabaseName("Database/Database.sqlite");
+    db->setDatabaseName("D:/C++ Projects/Casino_Server/Database/Database.sqlite");
+    //db->setDatabaseName("Database/Database.sqlite");
 }
 
 void DatabaseManager::open()
@@ -22,9 +22,9 @@ void DatabaseManager::close()
 QString DatabaseManager::executeQuery(QString executequery)
 {
     open();
-    QSqlQuery query(executequery, *db);
+    QSqlQuery query(*db);
 
-    if (!query.exec())
+    if (!query.exec(executequery))
     {
         close();
         return nullptr;
@@ -40,6 +40,26 @@ QString DatabaseManager::executeQuery(QString executequery)
     return query.value(0).toString();
 }
 
+QSharedPointer<QSqlQuery> DatabaseManager::executeQueryObject(QString executequery)
+{
+    open();
+    QSharedPointer<QSqlQuery> query(new QSqlQuery(*db));
+
+    if (!query->exec(executequery))
+    {
+        close();
+        return nullptr;
+    }
+
+    if (!query->next())
+    {
+        close();
+        return nullptr;
+    }
+
+    return query;
+}
+
 bool DatabaseManager::executeQueryWithoutResponce(QString executequery)
 {
     open();
@@ -47,7 +67,7 @@ bool DatabaseManager::executeQueryWithoutResponce(QString executequery)
     bool success = query.exec(executequery);
 
     if (!success)
-        qDebug() << "Ошибка SQL:" << query.lastError().text();
+        Message::logError(query.lastError().text());
 
     close();
     return success;
@@ -62,12 +82,12 @@ bool DatabaseManager::executeQueryDeleteWithoutResponce(QString executequery)
 
     //PRAGMA foreign_keys = ON; - для включения каскадного удаления (приколы SQLite, что оно по умолчанию всегда выключено)
     if (!query.exec("PRAGMA foreign_keys = ON;"))
-        qDebug() << "Ошибка SQL:" << query.lastError().text();
+        Message::logError(query.lastError().text());
 
     bool success = query.exec(executequery);
 
     if (!success)
-        qDebug() << "Ошибка SQL:" << query.lastError().text();
+        Message::logError(query.lastError().text());
 
     close();
     return success;

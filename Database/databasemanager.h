@@ -8,6 +8,7 @@
 #include <QtSql/QSqlQuery>
 #include <QVariant>
 #include <QSqlTableModel>
+#include <QSqlRecord>
 #include "Utils/Message.h"
 
 class DatabaseManager
@@ -24,6 +25,7 @@ public:
     bool executeQueryDeleteWithoutResponce(QString executequery);
     bool executeQueryWithoutResponce(QString executequery);
     QSharedPointer<QSqlQueryModel> getModel(QString tableName, int offset, QString sort);
+    QSharedPointer<QSqlQuery> executeQueryObject(QString executequery);
 };
 
 #endif // DATABASEMANAGER_H

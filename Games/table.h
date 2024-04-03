@@ -3,7 +3,7 @@
 
 #include <QSharedPointer>
 #include <QList>
-#include "Games/player.h"
+#include "Users/player.h"
 #include "Games/game.h"
 
 struct TableSettings

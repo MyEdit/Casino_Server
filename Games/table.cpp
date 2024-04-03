@@ -1,6 +1,6 @@
 #include "table.h"
 
-Table::Table()
+Table::Table(Game game, TableSettings tableSettings)
 {
 
 }
