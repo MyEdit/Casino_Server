@@ -20,6 +20,9 @@ SOURCES += \
     Commands/commandlist.cpp \
     Commands/commandnotification.cpp \
     Database/databasemanager.cpp \
+    Games/game.cpp \
+    Games/player.cpp \
+    Games/table.cpp \
     Network/PacketsActions/p_authorization.cpp \
     Network/PacketsActions/p_notification.cpp \
     Network/PacketsActions/p_query.cpp \
@@ -45,6 +48,9 @@ HEADERS += \
     Commands/commandnotification.h \
     Constants.h \
     Database/databasemanager.h \
+    Games/game.h \
+    Games/player.h \
+    Games/table.h \
     Network/PacketTypes.h \
     Network/PacketsActions/p_authorization.h \
     Network/PacketsActions/p_notification.h \
