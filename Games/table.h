@@ -1,4 +1,4 @@
-#ifndef TABLE_H
+﻿#ifndef TABLE_H
 #define TABLE_H
 
 #include <QSharedPointer>
@@ -6,17 +6,34 @@
 #include "Users/player.h"
 #include "Games/game.h"
 
+//Перенеси бы в отдельный файл
 struct TableSettings
 {
     int ID;
     double minBet;
     double stepBet;
     double minBalance;
+
+    QByteArray serializeTableSettings() const
+    {
+        QByteArray data;
+        QDataStream stream(&data, QIODevice::WriteOnly);
+        stream << ID << minBet << stepBet << minBalance;
+        return data;
+    }
+
+    static TableSettings deserializeTableSettings(const QByteArray& data)
+    {
+        QDataStream stream(data);
+        TableSettings settings;
+        stream >> settings.ID >> settings.minBet >> settings.stepBet >> settings.minBalance;
+        return settings;
+    }
 };
 
 class Table
 {
-    static QList<Table> tables;
+    static QList<QSharedPointer<Table>> tables;
 
     Game game{};
     TableSettings tableSettings{};
@@ -28,6 +45,8 @@ public:
     //GETTERS
     TableSettings getSettings();
     Game getGame();
+    static QList<QSharedPointer<Table>> getTables();
+    static void addTables(QSharedPointer<Table> table);
 
     //METHODS
     bool canPlayerJoin(QSharedPointer<Player>);
@@ -35,6 +54,8 @@ public:
     void startGame();
     void joinPlayer(Player player);
     void leavePlayer(Player player);
+    QByteArray serializeTable();
+    static QSharedPointer<Table> deserializeTable(const QByteArray& data);
 };
 
 #endif // TABLE_H

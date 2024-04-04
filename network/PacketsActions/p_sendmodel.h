@@ -5,6 +5,7 @@
 #include "Database/databasemanager.h"
 #include "Utils/Message.h"
 #include "Utils/serializer.h"
+#include <QSharedPointer>
 
 class P_SendModel
 {

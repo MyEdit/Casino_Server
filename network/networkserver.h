@@ -14,6 +14,7 @@
 #include "Network/PacketsActions/p_query.h"
 #include "Network/PacketsActions/p_querywithoutresponce.h"
 #include "Network/PacketsActions/p_reconnection.h"
+#include "Network/PacketsActions/p_sendtables.h"
 #include "Utils/Message.h"
 #include "Users/user.h"
 

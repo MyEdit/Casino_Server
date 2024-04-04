@@ -109,6 +109,7 @@ void NetworkServer::packetHandler(PacketTypes packettype, QSharedPointer<SOCKET>
         }
         case(PacketTypes::P_SendTables):
         {
+            P_SendTables::sendTables(clientSocket);
             break;
         }
         case(PacketTypes::P_Query):
