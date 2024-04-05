@@ -13,9 +13,9 @@ void P_Reconnection::reconnectClient(QSharedPointer<SOCKET> clientSocket)
 
     QSharedPointer<User> user;
     if(role == Roles::User)
-        user = Player::deserializeUser(byteUser);
+        user = QSharedPointer<Player>::create(byteUser);
     else
-        user = StuffUser::deserializeUser(byteUser);
+        user = QSharedPointer<StuffUser>::create(byteUser);
 
     NetworkServer::addConnect(clientSocket, user);
 }

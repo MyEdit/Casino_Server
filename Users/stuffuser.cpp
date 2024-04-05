@@ -8,6 +8,21 @@ StuffUser::StuffUser(int ID, QString name, QString login, Roles role)
     this->role = role;
 }
 
+StuffUser::StuffUser(const QByteArray& data)
+{
+    QDataStream stream(data);
+    int ID;
+    QString name, login;
+    int roleInt;
+    stream >> ID >> name >> login >> roleInt;
+    Roles role = static_cast<Roles>(roleInt);
+
+    this->ID = ID;
+    this->name = name;
+    this->login = login;
+    this->role = role;
+}
+
 int StuffUser::getID()
 {
     return this->ID;
@@ -25,18 +40,6 @@ QString StuffUser::getLogin()
 Roles StuffUser::getRole()
 {
     return this->role;
-}
-
-QSharedPointer<StuffUser> StuffUser::deserializeUser(const QByteArray& data)
-{
-    QDataStream stream(data);
-    int id;
-    QString name, login;
-    int roleInt;
-    stream >> id >> name >> login >> roleInt;
-    Roles role = static_cast<Roles>(roleInt);
-
-    return QSharedPointer<StuffUser>::create(id, name, login, role);
 }
 
 QByteArray StuffUser::serializeUser()

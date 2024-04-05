@@ -9,6 +9,23 @@ Player::Player(int ID, QString name, double balance, QString login, Roles role)
     this->role = role;
 }
 
+Player::Player(const QByteArray& data)
+{
+    QDataStream stream(data);
+    int ID;
+    QString name, login;
+    double balance;
+    int roleInt;
+    stream >> ID >> name >> balance >> login >> roleInt;
+    Roles role = static_cast<Roles>(roleInt);
+
+    this->ID = ID;
+    this->name = name;
+    this->balance = balance;
+    this->login = login;
+    this->role = role;
+}
+
 int Player::getID()
 {
     return this->ID;
@@ -31,19 +48,6 @@ Roles Player::getRole()
 double Player::getBalance()
 {
     return this->balance;
-}
-
-QSharedPointer<Player> Player::deserializeUser(const QByteArray& data)
-{
-    QDataStream stream(data);
-    int id;
-    QString name, login;
-    double balance;
-    int roleInt;
-    stream >> id >> name >> balance >> login >> roleInt;
-    Roles role = static_cast<Roles>(roleInt);
-
-    return QSharedPointer<Player>::create(id, name, balance, login, role);
 }
 
 QByteArray Player::serializeUser()

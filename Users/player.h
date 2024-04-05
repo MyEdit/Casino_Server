@@ -15,6 +15,7 @@ class Player : public User
 
 public:
     Player(int ID, QString name, double balance, QString login, Roles role);
+    Player(const QByteArray& data);
 
     //GETTERS
     int getID() override;
@@ -22,8 +23,9 @@ public:
     QString getLogin() override;
     Roles getRole() override;
     double getBalance();
+
+    //METHODS
     QByteArray serializeUser() override;
-    static QSharedPointer<Player> deserializeUser(const QByteArray& data);
 };
 
 #endif // PLAYER_H
