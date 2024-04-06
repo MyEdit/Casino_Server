@@ -7,10 +7,10 @@ void P_SendTables::sendTables(QSharedPointer<SOCKET> clientSocket)
     Table::tables.clear();
 
     QSharedPointer<Table> t1(new Table(Game("Блэкджек"), TableSettings{1, 11, 12, 13, 4}));
-    Table::addTables(t1);
+    Table::addTable(t1);
 
     QSharedPointer<Table> t2(new Table(Game("Покер"), TableSettings{2, 21, 22, 23, 8}));
-    Table::addTables(t2);
+    Table::addTable(t2);
 
     int countTable = Table::tables.size();
 

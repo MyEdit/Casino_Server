@@ -47,7 +47,7 @@ public:
     TableSettings getSettings();
     Game getGame();
     int getCurrentNumPlayer();
-    static void addTables(QSharedPointer<Table> table);
+    static void addTable(QSharedPointer<Table> table);
 
     //METHODS
     bool canPlayerJoin(QSharedPointer<Player>);

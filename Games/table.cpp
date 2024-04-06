@@ -8,7 +8,7 @@ Table::Table(Game game, TableSettings tableSettings)
     this->tableSettings = tableSettings;
 }
 
-void Table::addTables(QSharedPointer<Table> table)
+void Table::addTable(QSharedPointer<Table> table)
 {
     if(!tables.contains(table))
         tables.append(table);
