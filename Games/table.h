@@ -34,8 +34,6 @@ struct TableSettings
 
 class Table
 {
-    static QList<QSharedPointer<Table>> tables;
-
     Game game{};
     TableSettings tableSettings{};
     QList<QSharedPointer<Player>> playes{};
@@ -43,11 +41,12 @@ class Table
 public:
     Table(Game game, TableSettings tableSettings);
 
+    static QList<QSharedPointer<Table>> tables;
+
     //GETTERS
     TableSettings getSettings();
     Game getGame();
     int getCurrentNumPlayer();
-    static QList<QSharedPointer<Table>> getTables();
     static void addTables(QSharedPointer<Table> table);
 
     //METHODS

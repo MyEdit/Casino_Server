@@ -8,11 +8,6 @@ Table::Table(Game game, TableSettings tableSettings)
     this->tableSettings = tableSettings;
 }
 
-QList<QSharedPointer<Table>> Table::getTables()
-{
-    return  tables;
-}
-
 void Table::addTables(QSharedPointer<Table> table)
 {
     if(!tables.contains(table))
