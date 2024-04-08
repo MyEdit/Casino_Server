@@ -7,14 +7,11 @@ class Player : public User
 {
     static QList<Player> players;
 
-    int ID{};
-    QString name{};
-    QString login{};
-    Roles role{};
     double balance{};
 
 public:
-    Player(int ID, QString name, double balance, QString login, Roles role);
+    Player() {}
+    Player(int ID, QString name, double balance, QString login, Roles role, QByteArray photo);
     Player(const QByteArray& data);
 
     //GETTERS
@@ -23,6 +20,7 @@ public:
     QString getLogin() override;
     Roles getRole() override;
     double getBalance();
+    QByteArray getPhoto() override;
 
     //METHODS
     QByteArray serializeUser() override;

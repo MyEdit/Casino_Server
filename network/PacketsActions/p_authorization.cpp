@@ -39,7 +39,8 @@ void P_Authorization::onPlayerAuth(int ID, QSharedPointer<DatabaseManager> datab
                 responce->value(1).toString(), //Name
                 responce->value(3).toDouble(), //Balance
                 responce->value(4).toString(), //Login
-                static_cast<Roles>(responce->value(6).toInt()) //Role
+                static_cast<Roles>(responce->value(6).toInt()), //Role
+                responce->value(7).toByteArray() //Photo
              ));
 
     authUser(user, clientSocket);
@@ -57,7 +58,8 @@ void P_Authorization::onStuffUserAuth(int ID, QSharedPointer<DatabaseManager> da
                 responce->value(0).toInt(), //ID
                 responce->value(1).toString(), //Name
                 responce->value(2).toString(), //Login
-                static_cast<Roles>(responce->value(4).toInt()) //Role
+                static_cast<Roles>(responce->value(4).toInt()), //Role
+                responce->value(5).toByteArray() //Photo
              ));
 
     authUser(user, clientSocket);

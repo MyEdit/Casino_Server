@@ -40,7 +40,7 @@ class Table
 
 public:
     Table(Game game, TableSettings tableSettings);
-
+    Table(const QByteArray& data);
     static QList<QSharedPointer<Table>> tables;
 
     //GETTERS
@@ -56,7 +56,6 @@ public:
     void joinPlayer(Player player);
     void leavePlayer(Player player);
     QByteArray serializeTable();
-    static QSharedPointer<Table> deserializeTable(const QByteArray& data);
 };
 
 #endif // TABLE_H

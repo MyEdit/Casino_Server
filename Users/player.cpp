@@ -1,12 +1,13 @@
 ﻿#include "player.h"
 
-Player::Player(int ID, QString name, double balance, QString login, Roles role)
+Player::Player(int ID, QString name, double balance, QString login, Roles role, QByteArray photo)
 {
     this->ID = ID;
     this->name = name;
     this->balance = balance;
     this->login = login;
     this->role = role;
+    this->photo = photo;
 }
 
 Player::Player(const QByteArray& data)
@@ -16,7 +17,8 @@ Player::Player(const QByteArray& data)
     QString name, login;
     double balance;
     int roleInt;
-    stream >> ID >> name >> balance >> login >> roleInt;
+    QByteArray photo;
+    stream >> ID >> name >> balance >> login >> roleInt >> photo;
     Roles role = static_cast<Roles>(roleInt);
 
     this->ID = ID;
@@ -24,6 +26,7 @@ Player::Player(const QByteArray& data)
     this->balance = balance;
     this->login = login;
     this->role = role;
+    this->photo = photo;
 }
 
 int Player::getID()
@@ -50,6 +53,11 @@ double Player::getBalance()
     return this->balance;
 }
 
+QByteArray Player::getPhoto()
+{
+    return photo;
+}
+
 QByteArray Player::serializeUser()
 {
     QByteArray byteArray;
@@ -59,5 +67,7 @@ QByteArray Player::serializeUser()
     stream << balance;
     stream << login;
     stream << static_cast<int>(role);
+    stream << photo;
     return byteArray;
 }
+

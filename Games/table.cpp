@@ -8,6 +8,27 @@ Table::Table(Game game, TableSettings tableSettings)
     this->tableSettings = tableSettings;
 }
 
+Table::Table(const QByteArray& data)
+{
+    QDataStream stream(data);
+    QByteArray gameData, settingsData;
+    int currentNumPlayer;
+    stream >> gameData >> settingsData >> currentNumPlayer;
+    QSharedPointer<Game> game = Game::deserializeGame(gameData);
+    TableSettings settings = TableSettings::deserializeTableSettings(settingsData);
+
+    for (int i = 0; i < currentNumPlayer; ++i)
+    {
+        QByteArray playerData;
+        stream >> playerData;
+        QSharedPointer<Player> player(new Player(playerData));
+        playes.append(player);
+    }
+
+    this->game = *game.get();
+    this->tableSettings = settings;
+}
+
 void Table::addTable(QSharedPointer<Table> table)
 {
     if(!tables.contains(table))
@@ -21,18 +42,16 @@ QByteArray Table::serializeTable()
     QByteArray gameData = game.serializeGame();
     QByteArray settingsData = tableSettings.serializeTableSettings();
     int currentNumPlayer = playes.size();
-    stream << gameData << settingsData << currentNumPlayer;
-    return data;
-}
 
-QSharedPointer<Table> Table::deserializeTable(const QByteArray& data)
-{
-    QDataStream stream(data);
-    QByteArray gameData, settingsData;
-    stream >> gameData >> settingsData;
-    QSharedPointer<Game> game = Game::deserializeGame(gameData);
-    TableSettings settings = TableSettings::deserializeTableSettings(settingsData);
-    return QSharedPointer<Table>(new Table(*game.get(), settings));
+    stream << gameData << settingsData << currentNumPlayer;
+
+    for (QSharedPointer<Player> player : playes)
+    {
+        QByteArray playerData = player->serializeUser();
+        stream << playerData;
+    }
+
+    return data;
 }
 
 Game Table::getGame()
