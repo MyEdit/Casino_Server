@@ -60,6 +60,10 @@ QSharedPointer<QSqlQuery> DatabaseManager::executeQueryObject(QString executeque
     return query;
 }
 
+QSharedPointer<QSqlQueryModel> DatabaseManager::executeQueryObjects(QString executequery)
+{
+
+}
 bool DatabaseManager::executeQueryWithoutResponce(QString executequery)
 {
     open();

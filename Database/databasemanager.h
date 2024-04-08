@@ -26,6 +26,7 @@ public:
     bool executeQueryWithoutResponce(QString executequery);
     QSharedPointer<QSqlQueryModel> getModel(QString tableName, int offset, QString sort);
     QSharedPointer<QSqlQuery> executeQueryObject(QString executequery);
+    QSharedPointer<QSqlQueryModel> executeQueryObjects(QString executequery);
 };
 
 #endif // DATABASEMANAGER_H

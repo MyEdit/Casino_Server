@@ -6,6 +6,13 @@ void P_SendTables::sendTables(QSharedPointer<SOCKET> clientSocket)
 {
     Table::tables.clear();
 
+//    QSharedPointer<DatabaseManager> databaseManager(new DatabaseManager());
+//    QList<QSharedPointer<QSqlQuery>> responces = databaseManager->executeQueryObjects("SELECT * FROM ActiveTables;");
+
+//    for(QSharedPointer<QSqlQuery> responce : responces)
+//        qDebug() << responce->value(0).toString();
+
+
     QSharedPointer<Table> t1(new Table(Game("Блэкджек"), TableSettings{1, 11, 12, 13, 4}));
     Table::addTable(t1);
 
