@@ -60,10 +60,30 @@ QSharedPointer<QSqlQuery> DatabaseManager::executeQueryObject(QString executeque
     return query;
 }
 
-QSharedPointer<QSqlQueryModel> DatabaseManager::executeQueryObjects(QString executequery)
+QList<QSharedPointer<QSqlRecord>> DatabaseManager::executeQueryObjects(QString executeQuery)
 {
+    open();
+    QSharedPointer<QSqlQuery> query(new QSqlQuery(*db));
 
+    QList<QSharedPointer<QSqlRecord>> result;
+
+    if (!query->exec(executeQuery))
+    {
+        close();
+        return result;
+    }
+
+    while (query->next())
+    {
+        QSharedPointer<QSqlRecord> record(new QSqlRecord(query->record()));
+        result.append(record);
+    }
+
+    close();
+    return result;
 }
+
+
 bool DatabaseManager::executeQueryWithoutResponce(QString executequery)
 {
     open();
