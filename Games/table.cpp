@@ -35,6 +35,16 @@ void Table::addTable(QSharedPointer<Table> table)
         tables.append(table);
 }
 
+bool Table::canPlayerJoin(QSharedPointer<Player> player)
+{
+    if (player->getBalance() < this->tableSettings.minBalance)
+        return false;
+
+    //TODO: Проверять кол-во игроков которые уже за столом
+
+    return true;
+}
+
 QByteArray Table::serializeTable()
 {
     QByteArray data;
@@ -56,10 +66,13 @@ QByteArray Table::serializeTable()
 
 QSharedPointer<Table> Table::getTable(int ID)
 {
-    std::find_if(tables.begin(), tables.end(), [ID](const QSharedPointer<Table>& table)
+    for (QSharedPointer<Table> table : tables)
     {
-        return table->getSettings().ID == ID;
-    });
+        if (table->getSettings().ID == ID)
+        {
+            return table;
+        }
+    }
 
     return nullptr;
 }

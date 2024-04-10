@@ -5,7 +5,7 @@ void P_ConnectPlayerToTable::connectPlayerToTable(QSharedPointer<SOCKET> clientS
     int tableID;
     recv(*clientSocket, reinterpret_cast<char*>(&tableID), sizeof(int), 0);
 
-    QSharedPointer<Player> player = NetworkServer::getUser(clientSocket);
+    QSharedPointer<Player> player = qSharedPointerCast<Player>(NetworkServer::getUser(clientSocket));
     QSharedPointer<Table> table = Table::getTable(tableID);
 
     if (table == nullptr)

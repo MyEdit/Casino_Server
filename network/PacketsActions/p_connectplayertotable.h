@@ -7,10 +7,9 @@ class P_ConnectPlayerToTable
 {
 private:
     static void connectPlayerToTable(QSharedPointer<SOCKET> clientSocket);
-};
 
 public:
     friend class NetworkServer;
-
+};
 
 #endif // P_CONNECTPLAYERTOTABLE_H

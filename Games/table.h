@@ -5,6 +5,7 @@
 #include <QList>
 #include "Users/player.h"
 #include "Games/game.h"
+#include "Utils/Message.h"
 
 //Перенеси бы в отдельный файл
 struct TableSettings
@@ -50,7 +51,7 @@ public:
     static void addTable(QSharedPointer<Table> table);
 
     //METHODS
-    bool canPlayerJoin(QSharedPointer<Player>);
+    bool canPlayerJoin(QSharedPointer<Player> player);
     bool canStartGame();
     void startGame();
     void joinPlayer(Player player);
