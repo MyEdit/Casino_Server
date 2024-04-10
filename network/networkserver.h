@@ -15,6 +15,7 @@
 #include "Network/PacketsActions/p_querywithoutresponce.h"
 #include "Network/PacketsActions/p_reconnection.h"
 #include "Network/PacketsActions/p_sendtables.h"
+#include "Network/PacketsActions/p_connectplayertotable.h"
 #include "Utils/Message.h"
 #include "Users/user.h"
 
@@ -38,6 +39,7 @@ public:
     static void sendToAllClient(QString message);
     static void onClientDisconnected(QSharedPointer<SOCKET> client);
     static QString getNickname(QSharedPointer<SOCKET> clientSocket);
+    static QSharedPointer<User> getUser(QSharedPointer<SOCKET> clientSocket);
     static QString getMessageFromClient(QSharedPointer<SOCKET> clientSocket);
     static QSharedPointer<SOCKET> getSocketByNickname(QString nickname);
     static QList<QString> getOnlineUsers();
@@ -52,6 +54,7 @@ public:
     friend class P_SendModel;
     friend class P_Query;
     friend class P_Reconnection;
+    friend class P_ConnectPlayerToTable;
 };
 
 #endif // NETWORKSERVER_H

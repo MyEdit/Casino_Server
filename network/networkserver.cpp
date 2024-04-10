@@ -105,6 +105,7 @@ void NetworkServer::packetHandler(PacketTypes packettype, QSharedPointer<SOCKET>
         }
         case(PacketTypes::P_ConnectPlayerToTable):
         {
+            P_ConnectPlayerToTable::connectPlayerToTable(clientSocket);
             break;
         }
         case(PacketTypes::P_SendTables):
@@ -169,6 +170,12 @@ QString NetworkServer::getNickname(QSharedPointer<SOCKET> clientSocket)
 {
     QMutexLocker locker(&m_mutex);
     return Conections[clientSocket]->getLogin();
+}
+
+QSharedPointer<User> NetworkServer::getUser(QSharedPointer<SOCKET> clientSocket)
+{
+    QMutexLocker locker(&m_mutex);
+    return Conections.value(clientSocket);
 }
 
 QSharedPointer<SOCKET> NetworkServer::getSocketByNickname(QString nickname)

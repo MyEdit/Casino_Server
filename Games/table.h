@@ -56,6 +56,7 @@ public:
     void joinPlayer(Player player);
     void leavePlayer(Player player);
     QByteArray serializeTable();
+    static QSharedPointer<Table> getTable(int ID);
 };
 
 #endif // TABLE_H

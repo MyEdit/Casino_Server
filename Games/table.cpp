@@ -54,6 +54,16 @@ QByteArray Table::serializeTable()
     return data;
 }
 
+QSharedPointer<Table> Table::getTable(int ID)
+{
+    std::find_if(tables.begin(), tables.end(), [ID](const QSharedPointer<Table>& table)
+    {
+        return table->getSettings().ID == ID;
+    });
+
+    return nullptr;
+}
+
 Game Table::getGame()
 {
     return game;

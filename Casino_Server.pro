@@ -23,6 +23,7 @@ SOURCES += \
     Games/game.cpp \
     Games/table.cpp \
     Network/PacketsActions/p_authorization.cpp \
+    Network/PacketsActions/p_connectplayertotable.cpp \
     Network/PacketsActions/p_notification.cpp \
     Network/PacketsActions/p_query.cpp \
     Network/PacketsActions/p_querywithoutresponce.cpp \
@@ -54,6 +55,7 @@ HEADERS += \
     Games/table.h \
     Network/PacketTypes.h \
     Network/PacketsActions/p_authorization.h \
+    Network/PacketsActions/p_connectplayertotable.h \
     Network/PacketsActions/p_notification.h \
     Network/PacketsActions/p_query.h \
     Network/PacketsActions/p_querywithoutresponce.h \
