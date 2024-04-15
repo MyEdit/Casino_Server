@@ -96,3 +96,9 @@ void Table::joinPlayer(QSharedPointer<Player> player)
 {
     playes.append(player);
 }
+
+void Table::setNewData(Game game, TableSettings tableSettings)
+{
+    this->game = game;
+    this->tableSettings = tableSettings;
+}

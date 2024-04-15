@@ -23,6 +23,11 @@ void P_SendTables::sendTables(QSharedPointer<SOCKET> clientSocket)
             QSharedPointer<Table> table(new Table(Game(nameGame), TableSettings{id, minBet, stepBet, minBalance, maxNumPlayer}));
             Table::addTable(table);
         }
+        else
+        {
+            QSharedPointer<Table> table = Table::getTable(id);
+            table->setNewData(Game(nameGame), TableSettings{id, minBet, stepBet, minBalance, maxNumPlayer});
+        }
     }
 
     int countTable = Table::tables.size();

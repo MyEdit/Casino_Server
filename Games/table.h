@@ -61,6 +61,7 @@ public:
     void joinPlayer(QSharedPointer<Player> player);
     void leavePlayer(QSharedPointer<Player> player);
     QByteArray serializeTable();
+    void setNewData(Game game, TableSettings tableSettings);
 };
 
 #endif // TABLE_H
