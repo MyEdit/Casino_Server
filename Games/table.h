@@ -37,6 +37,8 @@ class Table
 {
     Game game{};
     TableSettings tableSettings{};
+
+    public:
     QList<QSharedPointer<Player>> playes{};
 
 public:
@@ -48,16 +50,17 @@ public:
     TableSettings getSettings();
     Game getGame();
     int getCurrentNumPlayer();
+    static QSharedPointer<Table> getTable(int ID);
+
     static void addTable(QSharedPointer<Table> table);
 
     //METHODS
     bool canPlayerJoin(QSharedPointer<Player> player);
     bool canStartGame();
     void startGame();
-    void joinPlayer(Player player);
-    void leavePlayer(Player player);
+    void joinPlayer(QSharedPointer<Player> player);
+    void leavePlayer(QSharedPointer<Player> player);
     QByteArray serializeTable();
-    static QSharedPointer<Table> getTable(int ID);
 };
 
 #endif // TABLE_H

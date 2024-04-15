@@ -1,4 +1,4 @@
-#include "p_connectplayertotable.h"
+﻿#include "p_connectplayertotable.h"
 
 void P_ConnectPlayerToTable::connectPlayerToTable(QSharedPointer<SOCKET> clientSocket)
 {
@@ -18,6 +18,8 @@ void P_ConnectPlayerToTable::connectPlayerToTable(QSharedPointer<SOCKET> clientS
     {
         P_Notification::sendNotification(clientSocket, TypeMessage::Error, "You can't join this game");
     }
+
+    table->joinPlayer(player);
 
     PacketTypes packettype = PacketTypes::P_ConnectPlayerToTable;
     NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));

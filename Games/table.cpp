@@ -91,3 +91,8 @@ int Table::getCurrentNumPlayer()
 {
     return  playes.size();
 }
+
+void Table::joinPlayer(QSharedPointer<Player> player)
+{
+    playes.append(player);
+}

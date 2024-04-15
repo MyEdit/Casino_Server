@@ -4,7 +4,7 @@ const PacketTypes P_SendTables::packettype = PacketTypes::P_SendTables;
 
 void P_SendTables::sendTables(QSharedPointer<SOCKET> clientSocket)
 {
-    Table::tables.clear();
+//    Table::tables.clear();
 
     QSharedPointer<DatabaseManager> databaseManager(new DatabaseManager());
     QList<QSharedPointer<QSqlRecord>> result = databaseManager->executeQueryObjects("SELECT * FROM ActiveTables");
@@ -18,8 +18,11 @@ void P_SendTables::sendTables(QSharedPointer<SOCKET> clientSocket)
         int maxNumPlayer = responce->value(1).toInt();
         QString nameGame = responce->value(6).toString();
 
-        QSharedPointer<Table> table(new Table(Game(nameGame), TableSettings{id, minBet, stepBet, minBalance, maxNumPlayer}));
-        Table::addTable(table);
+        if(!Table::getTable(id))
+        {
+            QSharedPointer<Table> table(new Table(Game(nameGame), TableSettings{id, minBet, stepBet, minBalance, maxNumPlayer}));
+            Table::addTable(table);
+        }
     }
 
     int countTable = Table::tables.size();
