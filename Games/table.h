@@ -3,6 +3,7 @@
 
 #include <QSharedPointer>
 #include <QList>
+#include <QMutex>
 #include "Users/player.h"
 #include "Games/game.h"
 #include "Utils/Message.h"
@@ -37,20 +38,20 @@ class Table
 {
     Game game{};
     TableSettings tableSettings{};
-
-    public:
     QList<QSharedPointer<Player>> playes{};
+    static QMutex accessTablesMutex;
+    static QList<QSharedPointer<Table>> tables;
 
 public:
     Table(Game game, TableSettings tableSettings);
     Table(const QByteArray& data);
-    static QList<QSharedPointer<Table>> tables;
 
     //GETTERS
     TableSettings getSettings();
     Game getGame();
     int getCurrentNumPlayer();
     static QSharedPointer<Table> getTable(int ID);
+    static QList<QSharedPointer<Table>> getTabels();
 
     static void addTable(QSharedPointer<Table> table);
 

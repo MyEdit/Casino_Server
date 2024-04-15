@@ -30,12 +30,12 @@ void P_SendTables::sendTables(QSharedPointer<SOCKET> clientSocket)
         }
     }
 
-    int countTable = Table::tables.size();
+    int countTable = Table::getTabels().size();
 
     NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
     NetworkServer::sendToClient(clientSocket, &countTable, sizeof(int));
 
-    for(QSharedPointer<Table> table : Table::tables)
+    for(QSharedPointer<Table> table : Table::getTabels())
     {
         QByteArray jsonData = table->serializeTable();
         int dataSize = jsonData.size();

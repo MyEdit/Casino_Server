@@ -1,6 +1,7 @@
 ﻿#include "table.h"
 
 QList<QSharedPointer<Table>> Table::tables;
+QMutex Table::accessTablesMutex;
 
 Table::Table(Game game, TableSettings tableSettings)
 {
@@ -31,6 +32,7 @@ Table::Table(const QByteArray& data)
 
 void Table::addTable(QSharedPointer<Table> table)
 {
+    QMutexLocker locker(&accessTablesMutex);
     if(!tables.contains(table))
         tables.append(table);
 }
@@ -66,6 +68,7 @@ QByteArray Table::serializeTable()
 
 QSharedPointer<Table> Table::getTable(int ID)
 {
+    QMutexLocker locker(&accessTablesMutex);
     for (QSharedPointer<Table> table : tables)
     {
         if (table->getSettings().ID == ID)
@@ -101,4 +104,10 @@ void Table::setNewData(Game game, TableSettings tableSettings)
 {
     this->game = game;
     this->tableSettings = tableSettings;
+}
+
+QList<QSharedPointer<Table>> Table::getTabels()
+{
+    QMutexLocker locker(&accessTablesMutex);
+    return tables;
 }

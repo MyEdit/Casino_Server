@@ -83,46 +83,46 @@ void NetworkServer::packetHandler(PacketTypes packettype, QSharedPointer<SOCKET>
 {
     switch(packettype)
     {
-        case(PacketTypes::P_Authorization):
-        {
-            P_Authorization::authorizeClient(clientSocket);
-            break;
-        }
-        case(PacketTypes::P_SendModel):
-        {
-            P_SendModel::getTypeModel(clientSocket);
-            break;
-        }
-        case(PacketTypes::P_QueryWithoutResponce):
-        {
-            P_QueryWithoutResponce::executeQuery(clientSocket);
-            break;
-        }
-        case(PacketTypes::P_Reconnection):
-        {
-            P_Reconnection::reconnectClient(clientSocket);
-            break;
-        }
-        case(PacketTypes::P_ConnectPlayerToTable):
-        {
-            P_ConnectPlayerToTable::connectPlayerToTable(clientSocket);
-            break;
-        }
-        case(PacketTypes::P_SendTables):
-        {
-            P_SendTables::sendTables(clientSocket);
-            break;
-        }
-        case(PacketTypes::P_Query):
-        {
-            P_Query::getResultQuary(clientSocket);
-            break;
-        }
-        default:
-        {
-            Message::logWarn("Client send unknown packettype");
-            break;
-        }
+    case(PacketTypes::P_Authorization):
+    {
+        P_Authorization::authorizeClient(clientSocket);
+        break;
+    }
+    case(PacketTypes::P_SendModel):
+    {
+        P_SendModel::getTypeModel(clientSocket);
+        break;
+    }
+    case(PacketTypes::P_QueryWithoutResponce):
+    {
+        P_QueryWithoutResponce::executeQuery(clientSocket);
+        break;
+    }
+    case(PacketTypes::P_Reconnection):
+    {
+        P_Reconnection::reconnectClient(clientSocket);
+        break;
+    }
+    case(PacketTypes::P_ConnectPlayerToTable):
+    {
+        P_ConnectPlayerToTable::connectPlayerToTable(clientSocket);
+        break;
+    }
+    case(PacketTypes::P_SendTables):
+    {
+        P_SendTables::sendTables(clientSocket);
+        break;
+    }
+    case(PacketTypes::P_Query):
+    {
+        P_Query::getResultQuary(clientSocket);
+        break;
+    }
+    default:
+    {
+        Message::logWarn("Client send unknown packettype");
+        break;
+    }
     }
 }
 
