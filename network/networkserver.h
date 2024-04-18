@@ -40,6 +40,7 @@ public:
     static void onClientDisconnected(QSharedPointer<SOCKET> client);
     static QString getNickname(QSharedPointer<SOCKET> clientSocket);
     static QSharedPointer<User> getUser(QSharedPointer<SOCKET> clientSocket);
+    static QSharedPointer<SOCKET> getSocketUser(QSharedPointer<User> user);
     static QString getMessageFromClient(QSharedPointer<SOCKET> clientSocket);
     static QSharedPointer<SOCKET> getSocketByNickname(QString nickname);
     static QList<QString> getOnlineUsers();

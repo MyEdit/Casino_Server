@@ -38,7 +38,7 @@ class Table
 {
     Game game{};
     TableSettings tableSettings{};
-    QList<QSharedPointer<Player>> playes{};
+    QList<QSharedPointer<Player>> players{};
     static QMutex accessTablesMutex;
     static QList<QSharedPointer<Table>> tables;
 
@@ -50,6 +50,7 @@ public:
     TableSettings getSettings();
     Game getGame();
     int getCurrentNumPlayer();
+    QList<QSharedPointer<Player>> getPlaers();
     static QSharedPointer<Table> getTable(int ID);
     static QList<QSharedPointer<Table>> getTabels();
 

@@ -178,6 +178,18 @@ QSharedPointer<User> NetworkServer::getUser(QSharedPointer<SOCKET> clientSocket)
     return Conections.value(clientSocket);
 }
 
+QSharedPointer<SOCKET> NetworkServer::getSocketUser(QSharedPointer<User> user)
+{
+    QMutexLocker locker(&m_mutex);
+    for (auto it = Conections.keyValueBegin(); it != Conections.keyValueEnd(); ++it)
+    {
+        if(it.base().value()->getID() == user->getID())
+            return it.base().key();
+    }
+
+    return nullptr;
+}
+
 QSharedPointer<SOCKET> NetworkServer::getSocketByNickname(QString nickname)
 {
     QMutexLocker locker(&m_mutex);
