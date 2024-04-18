@@ -6,11 +6,9 @@
 
 class P_SendTables
 {
-private:
+public:
     const static PacketTypes packettype;
     static void sendTables(QSharedPointer<SOCKET> clientSocket);
-
-public:
     friend class NetworkServer;
 };
 

@@ -20,6 +20,7 @@ void P_ConnectPlayerToTable::connectPlayerToTable(QSharedPointer<SOCKET> clientS
     }
 
     table->joinPlayer(player);
+
     notificationJoining(table, player);
 
     PacketTypes packettype = PacketTypes::P_ConnectPlayerToTable;
@@ -31,10 +32,12 @@ void P_ConnectPlayerToTable::notificationJoining(QSharedPointer<Table> table, QS
 {
     for(QSharedPointer<Player> player : table->getPlaers())
     {
+        QSharedPointer<SOCKET> clientSocket = NetworkServer::getSocketUser(player);
+        P_SendTables::sendTables(clientSocket);
+
         if(player->getLogin() == newPlayer->getLogin())
             continue;
 
-        QSharedPointer<SOCKET> clientSocket = NetworkServer::getSocketUser(player);
         int tableID = table->getSettings().ID;
         PacketTypes packettype = PacketTypes::P_ConnectOtherPlayerToTable;
         NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));

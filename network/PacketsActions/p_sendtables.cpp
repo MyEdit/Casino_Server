@@ -4,8 +4,6 @@ const PacketTypes P_SendTables::packettype = PacketTypes::P_SendTables;
 
 void P_SendTables::sendTables(QSharedPointer<SOCKET> clientSocket)
 {
-//    Table::tables.clear();
-
     QSharedPointer<DatabaseManager> databaseManager(new DatabaseManager());
     QList<QSharedPointer<QSqlRecord>> result = databaseManager->executeQueryObjects("SELECT * FROM ActiveTables");
 
