@@ -28,6 +28,27 @@ void P_ConnectPlayerToTable::connectPlayerToTable(QSharedPointer<SOCKET> clientS
     NetworkServer::sendToClient(clientSocket, &tableID, sizeof(int));
 }
 
+void P_ConnectPlayerToTable::playerLeaveTable(QSharedPointer<SOCKET> clientSocket)
+{
+    int tableID;
+    recv(*clientSocket, reinterpret_cast<char*>(&tableID), sizeof(int), 0);
+
+    qDebug() << tableID;
+
+    QSharedPointer<Player> player = qSharedPointerCast<Player>(NetworkServer::getUser(clientSocket));
+    QSharedPointer<Table> table = Table::getTable(tableID);
+
+    if (table == nullptr)
+    {
+        P_Notification::sendNotification(clientSocket, TypeMessage::Error, "Uncorrect table");
+        return;
+    }
+
+    table->leavePlayer(player);
+
+    notificationJoining(table, player);
+}
+
 void P_ConnectPlayerToTable::notificationJoining(QSharedPointer<Table> table, QSharedPointer<Player> newPlayer)
 {
     for(QSharedPointer<Player> player : table->getPlaers())

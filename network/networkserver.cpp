@@ -108,6 +108,11 @@ void NetworkServer::packetHandler(PacketTypes packettype, QSharedPointer<SOCKET>
         P_ConnectPlayerToTable::connectPlayerToTable(clientSocket);
         break;
     }
+    case(PacketTypes::P_PlayerLeaveTable):
+    {
+        P_ConnectPlayerToTable::playerLeaveTable(clientSocket);
+        break;
+    }
     case(PacketTypes::P_SendTables):
     {
         P_SendTables::sendTables(clientSocket);

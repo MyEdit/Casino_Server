@@ -105,6 +105,18 @@ void Table::joinPlayer(QSharedPointer<Player> player)
     players.append(player);
 }
 
+void Table::leavePlayer(QSharedPointer<Player> player)
+{
+    for(QSharedPointer<Player> p : players)
+    {
+        if(p->getLogin() == player->getLogin())
+        {
+            players.removeOne(p);
+            break;
+        }
+    }
+}
+
 void Table::setNewData(Game game, TableSettings tableSettings)
 {
     this->game = game;
