@@ -7,6 +7,7 @@ Table::Table(Game game, TableSettings tableSettings)
 {
     this->game = game;
     this->tableSettings = tableSettings;
+    createTimer();
 }
 
 Table::Table(const QByteArray& data)
@@ -28,6 +29,96 @@ Table::Table(const QByteArray& data)
 
     this->game = *game.get();
     this->tableSettings = settings;
+    createTimer();
+}
+
+Table::~Table() {}
+
+void Table::createTimer()
+{
+    startGameTimer = QSharedPointer<QTimer>(new QTimer(this));
+    connect(startGameTimer.data(), &QTimer::timeout, this, &Table::updateGameTimer);
+}
+
+void Table::joinPlayer(QSharedPointer<Player> player)
+{
+    players.append(player);
+    checkTimerCondition();
+}
+
+void Table::leavePlayer(QSharedPointer<Player> player)
+{
+    for (QSharedPointer<Player> p : players)
+    {
+        if (p->getLogin() == player->getLogin())
+        {
+            players.removeOne(p);
+            break;
+        }
+    }
+
+    checkTimerCondition();
+}
+
+void Table::checkTimerCondition()
+{
+    if (isGameRunning)
+        return;
+
+    if (!canStartGame() && startGameTimer->isActive()) //Если условие старта игры больше не выплняется
+    {
+        startGameTimer->stop();
+        timeToStart = 10;
+        sendTimerData();
+        return;
+    }
+
+    if (canStartGame() && !startGameTimer->isActive()) //Если условие старта игры начало выполняться
+    {
+        startGameTimer->start(1000);
+        timeToStart = 10;
+        return;
+    }
+}
+
+void Table::updateGameTimer()
+{
+    if (timeToStart > 0) {
+        sendTimerData();
+        --timeToStart;
+    } else {
+        startGame();
+    }
+}
+
+void Table::sendTimerData()
+{
+    for (QSharedPointer<Player> player : this->players)
+    {
+        QSharedPointer<SOCKET> clientSocket = NetworkServer::getSocketUser(player);
+        PacketTypes packettype = PacketTypes::P_UpdateGameTimer;
+        NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
+        NetworkServer::sendToClient(clientSocket, &timeToStart, sizeof(int));
+    }
+}
+
+bool Table::canStartGame()
+{
+    if (this->players.size() < this->game.getMinPlayers())
+        return false;
+
+    return true;
+}
+
+void Table::startGame()
+{
+    isGameRunning = true;
+    Message::logInfo("Game starting");
+}
+
+void Table::stopGame()
+{
+    isGameRunning = false;
 }
 
 void Table::addTable(QSharedPointer<Table> table)
@@ -42,7 +133,8 @@ bool Table::canPlayerJoin(QSharedPointer<Player> player)
     if (player->getBalance() < this->tableSettings.minBalance)
         return false;
 
-    //TODO: Проверять кол-во игроков которые уже за столом
+    if (this->players.size() >= this->tableSettings.maxCountPlayers)
+        return false;
 
     return true;
 }
@@ -95,26 +187,9 @@ int Table::getCurrentNumPlayer()
     return  players.size();
 }
 
-QList<QSharedPointer<Player>> Table::getPlaers()
+QList<QSharedPointer<Player>> Table::getPlayers()
 {
     return players;
-}
-
-void Table::joinPlayer(QSharedPointer<Player> player)
-{
-    players.append(player);
-}
-
-void Table::leavePlayer(QSharedPointer<Player> player)
-{
-    for(QSharedPointer<Player> p : players)
-    {
-        if(p->getLogin() == player->getLogin())
-        {
-            players.removeOne(p);
-            break;
-        }
-    }
 }
 
 void Table::setNewData(Game game, TableSettings tableSettings)

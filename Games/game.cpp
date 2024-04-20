@@ -10,11 +10,15 @@ Game::Game(QString nameGame)
     this->nameGame = nameGame;
 }
 
-QString Game::getNameGame()
+QString Game::getName()
 {
     return nameGame;
 }
 
+int Game::getMinPlayers()
+{
+    return minPlayers;
+}
 
 QByteArray Game::serializeGame()
 {
