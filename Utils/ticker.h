@@ -21,7 +21,7 @@ private:
     static void runTickerLoop();
 
 public:
-    static void addCallback(QSharedPointer<QObject> object, const std::function<void()>& callback);
+    static void addListener(QSharedPointer<QObject> object, const std::function<void()>& callback);
     static void start();
 };
 

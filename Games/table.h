@@ -78,7 +78,7 @@ private:
     void stopGame();
     void startGame();
     void sendTimerData();
-    void setTimer();
+    void setTicker();
     //void onTick();
 
 public slots:
