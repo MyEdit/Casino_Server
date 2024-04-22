@@ -7,7 +7,7 @@ Table::Table(Game game, TableSettings tableSettings)
 {
     this->game = game;
     this->tableSettings = tableSettings;
-    createTimer();
+    setTicker();
 }
 
 Table::Table(const QByteArray& data)
@@ -29,25 +29,51 @@ Table::Table(const QByteArray& data)
 
     this->game = *game.get();
     this->tableSettings = settings;
-    createTimer();
+    setTicker();
 }
 
-Table::~Table() {}
-
-void Table::createTimer()
+void Table::setTicker()
 {
-    startGameTimer = QSharedPointer<QTimer>(new QTimer(this));
-    connect(startGameTimer.data(), &QTimer::timeout, this, &Table::updateGameTimer);
+    Ticker::addListener(QSharedPointer<QObject>(this), std::bind(&Table::onTick, this));
+}
+
+void Table::onTick()
+{
+    if (isGameRunning)
+        return;
+
+    if (!canStartGame()) //Если условие старта игры не выплняется
+    {
+        timeToStart = -1;
+        isGameReady = false;
+        sendTimerData();
+        return;
+    }
+
+    if (canStartGame() && !isGameReady) //Если условие старта игры начало выполняться
+    {
+        timeToStart = 10;
+        isGameReady = true;
+    }
+
+    if (timeToStart > 0)
+    {
+        sendTimerData();
+        --timeToStart;
+    }
+    else
+        startGame();
 }
 
 void Table::joinPlayer(QSharedPointer<Player> player)
 {
+    QMutexLocker locker(&accessTablesMutex);
     players.append(player);
-    checkTimerCondition();
 }
 
 void Table::leavePlayer(QSharedPointer<Player> player)
 {
+    QMutexLocker locker(&accessTablesMutex);
     for (QSharedPointer<Player> p : players)
     {
         if (p->getLogin() == player->getLogin())
@@ -55,39 +81,6 @@ void Table::leavePlayer(QSharedPointer<Player> player)
             players.removeOne(p);
             break;
         }
-    }
-
-    checkTimerCondition();
-}
-
-void Table::checkTimerCondition()
-{
-    if (isGameRunning)
-        return;
-
-    if (!canStartGame() && startGameTimer->isActive()) //Если условие старта игры больше не выплняется
-    {
-        startGameTimer->stop();
-        timeToStart = 10;
-        sendTimerData();
-        return;
-    }
-
-    if (canStartGame() && !startGameTimer->isActive()) //Если условие старта игры начало выполняться
-    {
-        startGameTimer->start(1000);
-        timeToStart = 10;
-        return;
-    }
-}
-
-void Table::updateGameTimer()
-{
-    if (timeToStart > 0) {
-        sendTimerData();
-        --timeToStart;
-    } else {
-        startGame();
     }
 }
 
@@ -112,8 +105,8 @@ bool Table::canStartGame()
 
 void Table::startGame()
 {
-    isGameRunning = true;
     Message::logInfo("Game starting");
+    isGameRunning = true;
 }
 
 void Table::stopGame()

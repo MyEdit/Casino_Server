@@ -8,6 +8,7 @@
 #include "Constants.h"
 #include <QMutex>
 #include <QSharedPointer>
+#include <QtConcurrent/QtConcurrent>
 #include "Network/PacketTypes.h"
 #include "Network/PacketsActions/p_authorization.h"
 #include "Network/PacketsActions/p_sendmodel.h"

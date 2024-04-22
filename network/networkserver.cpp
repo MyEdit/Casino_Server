@@ -57,8 +57,9 @@ void NetworkServer::startListening()
         else
         {
             Message::logInfo("Client [" + getIPAdress(clientSocket) + "] connected");
-            std::thread handler(clientHandler, clientSocket);
-            handler.detach();
+            //std::thread handler(clientHandler, clientSocket);
+            //handler.detach();
+            QtConcurrent::run(clientHandler, clientSocket);
         }
     }
 }

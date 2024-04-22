@@ -4,11 +4,13 @@
 #include <QSharedPointer>
 #include <QList>
 #include <QMutex>
+#include <QString>
 #include "Users/player.h"
 #include "Games/game.h"
 #include "Utils/Message.h"
 #include "QTimer"
 #include "network/networkserver.h"
+#include "Utils/ticker.h"
 
 //Перенеси бы в отдельный файл
 struct TableSettings
@@ -36,23 +38,23 @@ struct TableSettings
     }
 };
 
-class Table  : public QObject
+class Table : public QObject
 {
     Q_OBJECT
 
     Game game{};
     TableSettings tableSettings{};
     QList<QSharedPointer<Player>> players{};
+   // QSharedPointer<Ticker> ticker;
     static QMutex accessTablesMutex;
     static QList<QSharedPointer<Table>> tables;
-    QSharedPointer<QTimer> startGameTimer;
-    int timeToStart;
+    int timeToStart = 10;
     bool isGameRunning = false;
+    bool isGameReady = false;
 
 public:
     Table(Game game, TableSettings tableSettings);
     Table(const QByteArray& data);
-    ~Table();
 
     //GETTERS
     TableSettings getSettings();
@@ -66,7 +68,6 @@ public:
     //METHODS
     bool canPlayerJoin(QSharedPointer<Player> player);
     bool canStartGame();
-    void startGame();
     void joinPlayer(QSharedPointer<Player> player);
     void leavePlayer(QSharedPointer<Player> player);
     void setNewData(Game game, TableSettings tableSettings);
@@ -74,11 +75,14 @@ public:
     static void addTable(QSharedPointer<Table> table);
 
 private:
-    void createTimer();
-    void updateGameTimer();
-    void checkTimerCondition();
     void stopGame();
+    void startGame();
     void sendTimerData();
+    void setTimer();
+    //void onTick();
+
+public slots:
+    void onTick();
 };
 
 #endif // TABLE_H

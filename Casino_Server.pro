@@ -37,6 +37,7 @@ SOURCES += \
     Utils/serializer.cpp \
     Commands/commandmanager.cpp \
     Commands/commandhelp.cpp \
+    Utils/ticker.cpp \
     main.cpp \
 
 # Default rules for deployment.
@@ -71,4 +72,5 @@ HEADERS += \
     Utils/serializer.h \
     Commands/commandmanager.h \
     Commands/command.h \
-    Commands/commandhelp.h \
+    Commands/commandhelp.h \ \
+    Utils/ticker.h
