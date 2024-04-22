@@ -45,7 +45,6 @@ class Table : public QObject
     Game game{};
     TableSettings tableSettings{};
     QList<QSharedPointer<Player>> players{};
-   // QSharedPointer<Ticker> ticker;
     static QMutex accessTablesMutex;
     static QList<QSharedPointer<Table>> tables;
     int timeToStart = 10;
@@ -79,9 +78,6 @@ private:
     void startGame();
     void sendTimerData();
     void setTicker();
-    //void onTick();
-
-public slots:
     void onTick();
 };
 
