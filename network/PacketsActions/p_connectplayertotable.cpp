@@ -32,8 +32,6 @@ void P_ConnectPlayerToTable::playerLeaveTable(QSharedPointer<SOCKET> clientSocke
     int tableID;
     recv(*clientSocket, reinterpret_cast<char*>(&tableID), sizeof(int), 0);
 
-    qDebug() << tableID;
-
     QSharedPointer<Player> player = qSharedPointerCast<Player>(NetworkServer::getUser(clientSocket));
     QSharedPointer<Table> table = Table::getTable(tableID);
 

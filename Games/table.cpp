@@ -56,7 +56,7 @@ void Table::onTick()
         isGameReady = true;
     }
 
-    if (timeToStart > 0)
+    if (timeToStart >= 0)
     {
         sendTimerData();
         --timeToStart;
