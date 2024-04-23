@@ -90,10 +90,11 @@ void Table::sendTimerData()
 {
     for (QSharedPointer<Player> player : this->players)
     {
+        QString time = QString::number(timeToStart);
         QSharedPointer<SOCKET> clientSocket = NetworkServer::getSocketUser(player);
-        PacketTypes packettype = PacketTypes::P_UpdateGameTimer;
+        PacketTypes packettype = PacketTypes::P_UpdateGameProcessing;
         NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
-        NetworkServer::sendToClient(clientSocket, &timeToStart, sizeof(int));
+        NetworkServer::sendToClient(clientSocket, time);
     }
 }
 
@@ -112,6 +113,18 @@ void Table::startGame()
     QSharedPointer<SOCKET> clientSocket = NetworkServer::getSocketUser(players.at(0));
     PacketTypes packettype = PacketTypes::P_StartMove;
     NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
+    NetworkServer::sendToClient(clientSocket, "Ваш");
+
+    for(QSharedPointer<Player> player : players)
+    {
+        if(player->getLogin() == players.at(0)->getLogin())
+            continue;
+
+        QSharedPointer<SOCKET> clientSocket = NetworkServer::getSocketUser(player);
+        PacketTypes packettype = PacketTypes::P_UpdateGameProcessing;
+        NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
+        NetworkServer::sendToClient(clientSocket, players.at(0)->getName());
+    }
 }
 
 void Table::stopGame()

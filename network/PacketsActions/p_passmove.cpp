@@ -21,4 +21,16 @@ void P_PassMove::passMove(QSharedPointer<SOCKET> clientSocket)
     QSharedPointer<SOCKET> clientNextSocket = NetworkServer::getSocketUser(nextPlayer);
     PacketTypes packettype = PacketTypes::P_StartMove;
     NetworkServer::sendToClient(clientNextSocket, &packettype, sizeof(PacketTypes));
+    NetworkServer::sendToClient(clientNextSocket, "Ваш");
+
+    for(QSharedPointer<Player> player : players)
+    {
+        if(player->getLogin() == nextPlayer->getLogin())
+            continue;
+
+        QSharedPointer<SOCKET> clientSocket = NetworkServer::getSocketUser(player);
+        PacketTypes packettype = PacketTypes::P_UpdateGameProcessing;
+        NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
+        NetworkServer::sendToClient(clientSocket, nextPlayer->getName());
+    }
 }
