@@ -26,11 +26,13 @@ SOURCES += \
     Network/PacketsActions/p_authorization.cpp \
     Network/PacketsActions/p_connectplayertotable.cpp \
     Network/PacketsActions/p_notification.cpp \
+    Network/PacketsActions/p_passmove.cpp \
     Network/PacketsActions/p_query.cpp \
     Network/PacketsActions/p_querywithoutresponce.cpp \
     Network/PacketsActions/p_reconnection.cpp \
     Network/PacketsActions/p_sendmodel.cpp \
     Network/PacketsActions/p_sendtables.cpp \
+    Network/PacketsActions/p_takecard.cpp \
     Network/networkserver.cpp \
     Users/player.cpp \
     Users/stuffuser.cpp \
@@ -53,17 +55,21 @@ HEADERS += \
     Commands/commandnotification.h \
     Constants.h \
     Database/databasemanager.h \
+    Games/cardRank.h \
+    Games/cardSuit.h \
     Games/game.h \
     Games/table.h \
     Network/PacketTypes.h \
     Network/PacketsActions/p_authorization.h \
     Network/PacketsActions/p_connectplayertotable.h \
     Network/PacketsActions/p_notification.h \
+    Network/PacketsActions/p_passmove.h \
     Network/PacketsActions/p_query.h \
     Network/PacketsActions/p_querywithoutresponce.h \
     Network/PacketsActions/p_reconnection.h \
     Network/PacketsActions/p_sendmodel.h \
     Network/PacketsActions/p_sendtables.h \
+    Network/PacketsActions/p_takecard.h \
     Network/networkserver.h \
     Users/player.h \
     Users/stuffuser.h \
@@ -74,3 +80,6 @@ HEADERS += \
     Commands/command.h \
     Commands/commandhelp.h \ \
     Utils/ticker.h
+
+DISTFILES += \
+    Database/Database.sqlite

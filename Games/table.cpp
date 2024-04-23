@@ -69,6 +69,7 @@ void Table::joinPlayer(QSharedPointer<Player> player)
 {
     QMutexLocker locker(&accessTablesMutex);
     players.append(player);
+    timeToStart = 10;
 }
 
 void Table::leavePlayer(QSharedPointer<Player> player)
@@ -82,6 +83,7 @@ void Table::leavePlayer(QSharedPointer<Player> player)
             break;
         }
     }
+    timeToStart = 10;
 }
 
 void Table::sendTimerData()
@@ -105,8 +107,11 @@ bool Table::canStartGame()
 
 void Table::startGame()
 {
-    Message::logInfo("Game starting");
     isGameRunning = true;
+
+    QSharedPointer<SOCKET> clientSocket = NetworkServer::getSocketUser(players.at(0));
+    PacketTypes packettype = PacketTypes::P_StartMove;
+    NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
 }
 
 void Table::stopGame()

@@ -9,14 +9,16 @@
 #include <QMutex>
 #include <QSharedPointer>
 #include <QtConcurrent/QtConcurrent>
-#include "Network/PacketTypes.h"
-#include "Network/PacketsActions/p_authorization.h"
-#include "Network/PacketsActions/p_sendmodel.h"
-#include "Network/PacketsActions/p_query.h"
-#include "Network/PacketsActions/p_querywithoutresponce.h"
-#include "Network/PacketsActions/p_reconnection.h"
-#include "Network/PacketsActions/p_sendtables.h"
-#include "Network/PacketsActions/p_connectplayertotable.h"
+#include "network/PacketTypes.h"
+#include "network/PacketsActions/p_authorization.h"
+#include "network/PacketsActions/p_sendmodel.h"
+#include "network/PacketsActions/p_query.h"
+#include "network/PacketsActions/p_querywithoutresponce.h"
+#include "network/PacketsActions/p_reconnection.h"
+#include "network/PacketsActions/p_sendtables.h"
+#include "network/PacketsActions/p_connectplayertotable.h"
+#include "network/PacketsActions/p_takecard.h"
+#include "network/PacketsActions/p_passmove.h"
 #include "Utils/Message.h"
 #include "Users/user.h"
 

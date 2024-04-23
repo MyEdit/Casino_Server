@@ -124,6 +124,16 @@ void NetworkServer::packetHandler(PacketTypes packettype, QSharedPointer<SOCKET>
         P_Query::getResultQuary(clientSocket);
         break;
     }
+    case(PacketTypes::P_TakeCard):
+    {
+        P_TakeCard::takeCard(clientSocket);
+        break;
+    }
+    case(PacketTypes::P_PassMove):
+    {
+        P_PassMove::passMove(clientSocket);
+        break;
+    }
     default:
     {
         Message::logWarn("Client send unknown packettype");
