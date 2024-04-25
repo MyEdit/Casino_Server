@@ -3,7 +3,7 @@
 QList<QSharedPointer<Table>> Table::tables;
 QMutex Table::accessTablesMutex;
 
-Table::Table(Game game, TableSettings tableSettings)
+Table::Table(QSharedPointer<Game> game, TableSettings tableSettings)
 {
     this->game = game;
     this->tableSettings = tableSettings;
@@ -27,7 +27,7 @@ Table::Table(const QByteArray& data)
         players.append(player);
     }
 
-    this->game = *game.get();
+    this->game = game;
     this->tableSettings = settings;
     setTicker();
 }
@@ -100,7 +100,7 @@ void Table::sendTimerData()
 
 bool Table::canStartGame()
 {
-    if (this->players.size() < this->game.getMinPlayers())
+    if (this->players.size() < this->game->getMinPlayers())
         return false;
 
     return true;
@@ -157,7 +157,7 @@ QByteArray Table::serializeTable()
 {
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);
-    QByteArray gameData = game.serializeGame();
+    QByteArray gameData = game->serializeGame();
     QByteArray settingsData = tableSettings.serializeTableSettings();
     int currentNumPlayer = players.size();
 
@@ -172,7 +172,7 @@ QByteArray Table::serializeTable()
     return data;
 }
 
-QSharedPointer<Table> Table::getTable(int ID)
+QSharedPointer<Table> Table::getTable(const int& ID)
 {
     QMutexLocker locker(&accessTablesMutex);
     for (QSharedPointer<Table> table : tables)
@@ -186,7 +186,7 @@ QSharedPointer<Table> Table::getTable(int ID)
     return nullptr;
 }
 
-Game Table::getGame()
+QSharedPointer<Game> Table::getGame()
 {
     return game;
 }
@@ -206,7 +206,7 @@ QList<QSharedPointer<Player>> Table::getPlayers()
     return players;
 }
 
-void Table::setNewData(Game game, TableSettings tableSettings)
+void Table::setNewData(QSharedPointer<Game> game, TableSettings tableSettings)
 {
     this->game = game;
     this->tableSettings = tableSettings;

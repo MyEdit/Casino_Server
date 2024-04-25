@@ -17,6 +17,7 @@ void P_ConnectPlayerToTable::connectPlayerToTable(QSharedPointer<SOCKET> clientS
     if (!table->canPlayerJoin(player))
     {
         P_Notification::sendNotification(clientSocket, TypeMessage::Error, "You can't join this game");
+        return;
     }
 
     table->joinPlayer(player);

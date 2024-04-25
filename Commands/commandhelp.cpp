@@ -1,6 +1,6 @@
 #include "commandhelp.h"
 
-void CommandHelp::execute(QStringList args)
+void CommandHelp::execute(const QStringList& args)
 {
     if (args.size() != 1)
     {
@@ -10,7 +10,7 @@ void CommandHelp::execute(QStringList args)
 
     QString message{"Help by commands:\n"};
 
-    for(Command* command : CommandManager::commands)
+    for(QSharedPointer<Command> command : CommandManager::commands)
     {
         if (!command->getHelpInfo().isNull())
             message += command->getHelpInfo() + "\n";

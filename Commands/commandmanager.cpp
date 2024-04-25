@@ -1,7 +1,7 @@
 #include "commandmanager.h"
 
-QMap<QString, std::function<void(QStringList)>> CommandManager::commandActions;
-std::vector<Command*> CommandManager::commands;
+QMap<QString, std::function<void(QStringList&)>> CommandManager::commandActions;
+std::vector<QSharedPointer<Command>> CommandManager::commands;
 
 void CommandManager::init()
 {
@@ -12,14 +12,15 @@ void CommandManager::init()
 
 void CommandManager::registerCommands()
 {
-    commands.push_back(new CommandHelp());
-    commands.push_back(new CommandBan());
-    commands.push_back(new CommandNotification());
-    commands.push_back(new CommandList());
+    commands.push_back(QSharedPointer<Command>(new CommandHelp));
+    commands.push_back(QSharedPointer<Command>(new CommandHelp()));
+    commands.push_back(QSharedPointer<Command>(new CommandBan()));
+    commands.push_back(QSharedPointer<Command>(new CommandNotification()));
+    commands.push_back(QSharedPointer<Command>(new CommandList()));
 
-    for(Command* command : commands)
+    for(QSharedPointer<Command> command : commands)
     {
-        commandActions.insert(command->getCommand(), [command](QStringList args)
+        commandActions.insert(command->getCommand(), [command](QStringList& args)
         {
             command->execute(args);
         });
@@ -27,7 +28,7 @@ void CommandManager::registerCommands()
     }
 }
 
-QStringList CommandManager::parseCommand(QString command)
+QStringList CommandManager::parseCommand(const QString& command)
 {
     return command.split(" ", QString::SkipEmptyParts);
 }

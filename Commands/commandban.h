@@ -8,7 +8,7 @@
 class CommandBan : public Command
 {
 public:
-    void execute(QStringList args) override;
+    void execute(const QStringList &args) override;
     QString getCommand() override;
     QString getHelpInfo() override;
 };

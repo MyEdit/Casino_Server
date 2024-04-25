@@ -19,7 +19,7 @@ void DatabaseManager::close()
     db->close();
 }
 
-QString DatabaseManager::executeQuery(QString executequery)
+QString DatabaseManager::executeQuery(const QString& executequery)
 {
     open();
     QSqlQuery query(*db);
@@ -40,7 +40,7 @@ QString DatabaseManager::executeQuery(QString executequery)
     return query.value(0).toString();
 }
 
-QSharedPointer<QSqlQuery> DatabaseManager::executeQueryObject(QString executequery)
+QSharedPointer<QSqlQuery> DatabaseManager::executeQueryObject(const QString& executequery)
 {
     open();
     QSharedPointer<QSqlQuery> query(new QSqlQuery(*db));
@@ -60,7 +60,7 @@ QSharedPointer<QSqlQuery> DatabaseManager::executeQueryObject(QString executeque
     return query;
 }
 
-QList<QSharedPointer<QSqlRecord>> DatabaseManager::executeQueryObjects(QString executeQuery)
+QList<QSharedPointer<QSqlRecord>> DatabaseManager::executeQueryObjects(const QString& executeQuery)
 {
     open();
     QSharedPointer<QSqlQuery> query(new QSqlQuery(*db));
@@ -84,7 +84,7 @@ QList<QSharedPointer<QSqlRecord>> DatabaseManager::executeQueryObjects(QString e
 }
 
 
-bool DatabaseManager::executeQueryWithoutResponce(QString executequery)
+bool DatabaseManager::executeQueryWithoutResponce(const QString& executequery)
 {
     open();
     QSqlQuery query(*db);
@@ -99,7 +99,7 @@ bool DatabaseManager::executeQueryWithoutResponce(QString executequery)
 
 
 //TODO: это костыль, но как то всё же нужно выполнить запрос на разрешение каскадного удаления(для каждого соединения оно выключено по умолчанию) и сам запрос на удаление
-bool DatabaseManager::executeQueryDeleteWithoutResponce(QString executequery)
+bool DatabaseManager::executeQueryDeleteWithoutResponce(const QString& executequery)
 {
     open();
     QSqlQuery query(*db);
@@ -117,7 +117,7 @@ bool DatabaseManager::executeQueryDeleteWithoutResponce(QString executequery)
     return success;
 }
 
-QSharedPointer<QSqlQueryModel> DatabaseManager::getModel(QString tableName, int offset, QString sort)
+QSharedPointer<QSqlQueryModel> DatabaseManager::getModel(const QString& tableName, const int& offset, const QString& sort)
 {
     open();
     QSharedPointer<QSqlQueryModel> model(new QSqlTableModel());

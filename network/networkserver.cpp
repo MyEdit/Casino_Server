@@ -57,8 +57,6 @@ void NetworkServer::startListening()
         else
         {
             Message::logInfo("Client [" + getIPAdress(clientSocket) + "] connected");
-            //std::thread handler(clientHandler, clientSocket);
-            //handler.detach();
             QtConcurrent::run(clientHandler, clientSocket);
         }
     }
@@ -79,71 +77,71 @@ void NetworkServer::clientHandler(QSharedPointer<SOCKET> clientSocket)
     }
 }
 
-//По мере необходимости будет дополняться
-void NetworkServer::packetHandler(PacketTypes packettype, QSharedPointer<SOCKET> clientSocket)
+//TODO: Свернуть в мапу указателей на функции
+void NetworkServer::packetHandler(const PacketTypes packettype, QSharedPointer<SOCKET> clientSocket)
 {
     switch(packettype)
     {
-    case(PacketTypes::P_Authorization):
-    {
-        P_Authorization::authorizeClient(clientSocket);
-        break;
-    }
-    case(PacketTypes::P_SendModel):
-    {
-        P_SendModel::getTypeModel(clientSocket);
-        break;
-    }
-    case(PacketTypes::P_QueryWithoutResponce):
-    {
-        P_QueryWithoutResponce::executeQuery(clientSocket);
-        break;
-    }
-    case(PacketTypes::P_Reconnection):
-    {
-        P_Reconnection::reconnectClient(clientSocket);
-        break;
-    }
-    case(PacketTypes::P_ConnectPlayerToTable):
-    {
-        P_ConnectPlayerToTable::connectPlayerToTable(clientSocket);
-        break;
-    }
-    case(PacketTypes::P_PlayerLeaveTable):
-    {
-        P_ConnectPlayerToTable::playerLeaveTable(clientSocket);
-        break;
-    }
-    case(PacketTypes::P_SendTables):
-    {
-        P_SendTables::sendTables(clientSocket);
-        break;
-    }
-    case(PacketTypes::P_Query):
-    {
-        P_Query::getResultQuary(clientSocket);
-        break;
-    }
-    case(PacketTypes::P_TakeCard):
-    {
-        P_TakeCard::takeCard(clientSocket);
-        break;
-    }
-    case(PacketTypes::P_PassMove):
-    {
-        P_PassMove::passMove(clientSocket);
-        break;
-    }
-    default:
-    {
-        Message::logWarn("Client send unknown packettype");
-        break;
-    }
+        case(PacketTypes::P_Authorization):
+        {
+            P_Authorization::authorizeClient(clientSocket);
+            break;
+        }
+        case(PacketTypes::P_SendModel):
+        {
+            P_SendModel::getTypeModel(clientSocket);
+            break;
+        }
+        case(PacketTypes::P_QueryWithoutResponce):
+        {
+            P_QueryWithoutResponce::executeQuery(clientSocket);
+            break;
+        }
+        case(PacketTypes::P_Reconnection):
+        {
+            P_Reconnection::reconnectClient(clientSocket);
+            break;
+        }
+        case(PacketTypes::P_ConnectPlayerToTable):
+        {
+            P_ConnectPlayerToTable::connectPlayerToTable(clientSocket);
+            break;
+        }
+        case(PacketTypes::P_PlayerLeaveTable):
+        {
+            P_ConnectPlayerToTable::playerLeaveTable(clientSocket);
+            break;
+        }
+        case(PacketTypes::P_SendTables):
+        {
+            P_SendTables::sendTables(clientSocket);
+            break;
+        }
+        case(PacketTypes::P_Query):
+        {
+            P_Query::getResultQuary(clientSocket);
+            break;
+        }
+        case(PacketTypes::P_TakeCard):
+        {
+            P_TakeCard::takeCard(clientSocket);
+            break;
+        }
+        case(PacketTypes::P_PassMove):
+        {
+            P_PassMove::passMove(clientSocket);
+            break;
+        }
+        default:
+        {
+            Message::logWarn("Client send unknown packettype");
+            break;
+        }
     }
 }
 
 //Отправка пакета подключенному клиенту
-void NetworkServer::sendToClient(QSharedPointer<SOCKET> client, QString message)
+void NetworkServer::sendToClient(QSharedPointer<SOCKET> client, const QString& message)
 {
     int message_size = message.toUtf8().size();
     send(*client, reinterpret_cast<const char*>(&message_size), sizeof(int), 0);
@@ -151,7 +149,7 @@ void NetworkServer::sendToClient(QSharedPointer<SOCKET> client, QString message)
 }
 
 //Отправка пакета всем подключенным клиентам
-void NetworkServer::sendToAllClient(QString message)
+void NetworkServer::sendToAllClient(const QString& message)
 {
     QMap<QSharedPointer<SOCKET>, QSharedPointer<User>>::iterator it;
     for (it = Conections.begin(); it != Conections.end(); ++it)
@@ -206,7 +204,7 @@ QSharedPointer<SOCKET> NetworkServer::getSocketUser(QSharedPointer<User> user)
     return nullptr;
 }
 
-QSharedPointer<SOCKET> NetworkServer::getSocketByNickname(QString nickname)
+QSharedPointer<SOCKET> NetworkServer::getSocketByNickname(const QString& nickname)
 {
     QMutexLocker locker(&m_mutex);
     for (auto it = Conections.begin(); it != Conections.end(); ++it)

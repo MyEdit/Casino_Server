@@ -12,7 +12,6 @@
 #include "network/networkserver.h"
 #include "Utils/ticker.h"
 
-//Перенеси бы в отдельный файл
 struct TableSettings
 {
     int ID;
@@ -42,9 +41,9 @@ class Table : public QObject
 {
     Q_OBJECT
 
-    Game game{};
-    TableSettings tableSettings{};
-    QList<QSharedPointer<Player>> players{};
+    QSharedPointer<Game> game;
+    TableSettings tableSettings;
+    QList<QSharedPointer<Player>> players;
     static QMutex accessTablesMutex;
     static QList<QSharedPointer<Table>> tables;
     int timeToStart = 10;
@@ -52,24 +51,23 @@ class Table : public QObject
     bool isGameReady = false;
 
 public:
-    Table(Game game, TableSettings tableSettings);
+    Table(QSharedPointer<Game> game, TableSettings tableSettings);
     Table(const QByteArray& data);
 
     //GETTERS
     TableSettings getSettings();
-    Game getGame();
+    QSharedPointer<Game> getGame();
     int getCurrentNumPlayer();
     QList<QSharedPointer<Player>> getPlayers();
-    static QSharedPointer<Table> getTable(int ID);
+    static QSharedPointer<Table> getTable(const int& ID);
     static QList<QSharedPointer<Table>> getTabels();
-
 
     //METHODS
     bool canPlayerJoin(QSharedPointer<Player> player);
     bool canStartGame();
     void joinPlayer(QSharedPointer<Player> player);
     void leavePlayer(QSharedPointer<Player> player);
-    void setNewData(Game game, TableSettings tableSettings);
+    void setNewData(QSharedPointer<Game> game, TableSettings tableSettings);
     QByteArray serializeTable();
     static void addTable(QSharedPointer<Table> table);
 

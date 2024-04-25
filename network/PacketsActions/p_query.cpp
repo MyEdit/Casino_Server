@@ -14,7 +14,7 @@ void P_Query::getResultQuary(QSharedPointer<SOCKET> clientSocket)
     sendResult(clientSocket, databaseManager->executeQuery(request), modelTypes, queryTypes);
 }
 
-void P_Query::sendResult(QSharedPointer<SOCKET> clientSocket, QString result, ModelTypes modelTypes, QueryTypes queryTypes)
+void P_Query::sendResult(QSharedPointer<SOCKET> clientSocket, const QString& result, const ModelTypes modelTypes, const QueryTypes queryTypes)
 {
     PacketTypes packettype = PacketTypes::P_QueryWithoutResponce;
 

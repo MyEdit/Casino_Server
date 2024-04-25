@@ -11,7 +11,7 @@
 class Serializer
 {
 public:
-    static QByteArray serializeDataModel(QSharedPointer<QSqlQueryModel> model);
+    static QByteArray serializeDataModel(const QSharedPointer<QSqlQueryModel> model);
 };
 
 #endif // SERIALIZER_H

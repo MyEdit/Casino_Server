@@ -21,12 +21,12 @@ private:
 
 public:
     DatabaseManager();
-    QString executeQuery(QString executequery);
-    bool executeQueryDeleteWithoutResponce(QString executequery);
-    bool executeQueryWithoutResponce(QString executequery);
-    QSharedPointer<QSqlQueryModel> getModel(QString tableName, int offset, QString sort);
-    QSharedPointer<QSqlQuery> executeQueryObject(QString executequery);
-    QList<QSharedPointer<QSqlRecord>> executeQueryObjects(QString executeQuery);
+    QString executeQuery(const QString& executequery);
+    bool executeQueryDeleteWithoutResponce(const QString& executequery);
+    bool executeQueryWithoutResponce(const QString& executequery);
+    QSharedPointer<QSqlQueryModel> getModel(const QString& tableName, const int& offset, const QString& sort);
+    QSharedPointer<QSqlQuery> executeQueryObject(const QString& executequery);
+    QList<QSharedPointer<QSqlRecord>> executeQueryObjects(const QString& executeQuery);
 };
 
 #endif // DATABASEMANAGER_H

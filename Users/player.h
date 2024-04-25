@@ -11,7 +11,7 @@ class Player : public User
 
 public:
     Player() {}
-    Player(int ID, QString name, double balance, QString login, Roles role, QByteArray photo);
+    Player(const int& ID, const QString& name, const double& balance, const QString& login, const Roles role, const QByteArray& photo);
     Player(const QByteArray& data);
 
     //GETTERS

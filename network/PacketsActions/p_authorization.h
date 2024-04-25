@@ -12,8 +12,8 @@ class P_Authorization
 {
 private:
     static void authorizeClient(QSharedPointer<SOCKET> clientSocket);
-    static void onPlayerAuth(int ID, QSharedPointer<DatabaseManager> databaseManager, QSharedPointer<SOCKET> clientSocket);
-    static void onStuffUserAuth(int ID, QSharedPointer<DatabaseManager> databaseManager, QSharedPointer<SOCKET> clientSocket);
+    static void onPlayerAuth(const int& ID, QSharedPointer<DatabaseManager> databaseManager, QSharedPointer<SOCKET> clientSocket);
+    static void onStuffUserAuth(const int& ID, QSharedPointer<DatabaseManager> databaseManager, QSharedPointer<SOCKET> clientSocket);
     static void authUser(QSharedPointer<User> user, QSharedPointer<SOCKET> clientSocket);
 
 public:

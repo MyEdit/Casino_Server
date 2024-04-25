@@ -1,6 +1,6 @@
 #include "commandnotification.h"
 
-void CommandNotification::execute(QStringList args)
+void CommandNotification::execute(const QStringList& args)
 {
     if (args.size() < 3)
     {

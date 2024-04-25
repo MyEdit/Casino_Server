@@ -10,7 +10,7 @@ class P_Query
 {
 private:
     static void getResultQuary(QSharedPointer<SOCKET> clientSocket);
-    static void sendResult(QSharedPointer<SOCKET> clientSocket, QString result, ModelTypes modelTypes, QueryTypes queryTypes);
+    static void sendResult(QSharedPointer<SOCKET> clientSocket, const QString& result, const ModelTypes modelTypes, const QueryTypes queryTypes);
 
 public:
     friend class NetworkServer;

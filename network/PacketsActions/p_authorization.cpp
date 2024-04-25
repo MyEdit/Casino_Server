@@ -26,7 +26,7 @@ void P_Authorization::authorizeClient(QSharedPointer<SOCKET> clientSocket)
     P_Notification::sendNotification(clientSocket, TypeMessage::Error, "Uncorrect login or password");
 }
 
-void P_Authorization::onPlayerAuth(int ID, QSharedPointer<DatabaseManager> databaseManager, QSharedPointer<SOCKET> clientSocket)
+void P_Authorization::onPlayerAuth(const int& ID, QSharedPointer<DatabaseManager> databaseManager, QSharedPointer<SOCKET> clientSocket)
 {
     QSharedPointer<QSqlQuery> responce = databaseManager->executeQueryObject(QString("SELECT * FROM Users WHERE ID_User = '%1'").arg(ID));
 
@@ -46,7 +46,7 @@ void P_Authorization::onPlayerAuth(int ID, QSharedPointer<DatabaseManager> datab
     authUser(user, clientSocket);
 }
 
-void P_Authorization::onStuffUserAuth(int ID, QSharedPointer<DatabaseManager> databaseManager, QSharedPointer<SOCKET> clientSocket)
+void P_Authorization::onStuffUserAuth(const int& ID, QSharedPointer<DatabaseManager> databaseManager, QSharedPointer<SOCKET> clientSocket)
 {
     QSharedPointer<QSqlQuery> responce = databaseManager->executeQueryObject(QString("SELECT * FROM StuffUsers WHERE ID_StuffUser = '%1'").arg(ID));
 

@@ -1,6 +1,6 @@
 ﻿#include "stuffuser.h"
 
-StuffUser::StuffUser(int ID, QString name, QString login, Roles role, QByteArray photo)
+StuffUser::StuffUser(const int& ID, const QString& name, const QString& login, const Roles role, const QByteArray& photo)
 {
     this->ID = ID;
     this->name = name;

@@ -9,7 +9,8 @@
 class Command
 {
 public:
-    virtual void execute(QStringList args) = 0;
+    virtual ~Command() {}
+    virtual void execute(const QStringList& args) = 0;
     virtual QString getCommand() = 0;
     virtual QString getHelpInfo() = 0;
 
@@ -23,7 +24,7 @@ public:
         Message::logError("An error occurred while executing the command");
     }
 
-    static QString getTextAfterIndex(QStringList &args, int index)
+    static QString getTextAfterIndex(const QStringList &args, const int& index)
     {
         QString text{};
         for (int i = index; i < args.size(); ++i)

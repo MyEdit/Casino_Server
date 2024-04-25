@@ -30,7 +30,7 @@ class NetworkServer
 
 private:
     void configuration();
-    static void packetHandler(PacketTypes packettype, QSharedPointer<SOCKET> clientSocket);
+    static void packetHandler(const PacketTypes packettype, QSharedPointer<SOCKET> clientSocket);
     static void clientHandler(QSharedPointer<SOCKET> clientSocket);
     static void addConnect(QSharedPointer<SOCKET> clientSocket, QSharedPointer<User> user);
     static QString getIPAdress(QSharedPointer<SOCKET> client);
@@ -38,18 +38,18 @@ private:
 public:
     bool init();
     void startListening();
-    static void sendToClient(QSharedPointer<SOCKET> client, QString message);
-    static void sendToAllClient(QString message);
+    static void sendToClient(QSharedPointer<SOCKET> client, const QString& message);
+    static void sendToAllClient(const QString& message);
     static void onClientDisconnected(QSharedPointer<SOCKET> client);
     static QString getNickname(QSharedPointer<SOCKET> clientSocket);
     static QSharedPointer<User> getUser(QSharedPointer<SOCKET> clientSocket);
     static QSharedPointer<SOCKET> getSocketUser(QSharedPointer<User> user);
     static QString getMessageFromClient(QSharedPointer<SOCKET> clientSocket);
-    static QSharedPointer<SOCKET> getSocketByNickname(QString nickname);
+    static QSharedPointer<SOCKET> getSocketByNickname(const QString& nickname);
     static QList<QString> getOnlineUsers();
 
     template<typename T>
-    static void sendToClient(QSharedPointer<SOCKET> client, const T data, int size)
+    static void sendToClient(QSharedPointer<SOCKET> client, const T data, const int& size)
     {
         send(*client, reinterpret_cast<const char*>(data), size, 0);
     }

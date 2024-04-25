@@ -16,7 +16,7 @@ void P_QueryWithoutResponce::executeQuery(QSharedPointer<SOCKET> clientSocket)
         executionMessage(clientSocket, databaseManager->executeQueryWithoutResponce(request), queryTypes);
 }
 
-void P_QueryWithoutResponce::executionMessage(QSharedPointer<SOCKET> clientSocket, bool result, QueryTypes queryTypes)
+void P_QueryWithoutResponce::executionMessage(QSharedPointer<SOCKET> clientSocket, const bool result, const QueryTypes queryTypes)
 {
     if(typeQueryWithoutResponce.isEmpty())
         initMapTypeQueryWithoutResponce();

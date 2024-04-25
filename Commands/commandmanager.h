@@ -14,18 +14,18 @@
 class CommandManager
 {
 private:
-    static std::vector<Command*> commands;
-    static QMap<QString, std::function<void(QStringList)>> commandActions;
+    static std::vector<QSharedPointer<Command>> commands;
+    static QMap<QString, std::function<void(QStringList&)>> commandActions;
 
     void registerCommands();
     static void CommandHandler();
-    static QStringList parseCommand(QString command);
+    static QStringList parseCommand(const QString& command);
 
     friend class CommandHelp;
 
 public:
     void init();
-    static void registerCommand(Command* command);
+    static void registerCommand(QSharedPointer<Command> command);
 };
 
 #endif // COMMANDMANAGER_H

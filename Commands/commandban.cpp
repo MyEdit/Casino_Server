@@ -1,6 +1,6 @@
 #include "commandban.h"
 
-void CommandBan::execute(QStringList args)
+void CommandBan::execute(const QStringList& args)
 {
     if (args.size() < 3)
     {

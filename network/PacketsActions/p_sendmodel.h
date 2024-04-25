@@ -11,7 +11,7 @@ class P_SendModel
 {
 private:
     static void getTypeModel(QSharedPointer<SOCKET> clientSocket);
-    static void sendModel(QSharedPointer<SOCKET> clientSocket, QSharedPointer<QSqlQueryModel> model, ModelTypes modeltype, ModelLoadingType modelLoadingType);
+    static void sendModel(QSharedPointer<SOCKET> clientSocket, QSharedPointer<QSqlQueryModel> model, const ModelTypes modeltype, const ModelLoadingType modelLoadingType);
 
 public:
     friend class NetworkServer;

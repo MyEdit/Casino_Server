@@ -1,6 +1,6 @@
 #include "commandlist.h"
 
-void CommandList::execute(QStringList args)
+void CommandList::execute(const QStringList& args)
 {
     if (args.size() != 1)
     {
