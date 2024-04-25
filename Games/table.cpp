@@ -147,6 +147,9 @@ bool Table::canPlayerJoin(QSharedPointer<Player> player)
     if (this->players.size() >= this->tableSettings.maxCountPlayers)
         return false;
 
+    if (isGameRunning)
+        return false;
+
     return true;
 }
 
