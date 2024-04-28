@@ -68,6 +68,7 @@ public:
     void joinPlayer(QSharedPointer<Player> player);
     void leavePlayer(QSharedPointer<Player> player);
     void setNewData(QSharedPointer<Game> game, TableSettings tableSettings);
+    void updatePlayersList();
     QByteArray serializeTable();
     static void addTable(QSharedPointer<Table> table);
 

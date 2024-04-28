@@ -153,12 +153,27 @@ bool Table::canPlayerJoin(QSharedPointer<Player> player)
     return true;
 }
 
+void Table::updatePlayersList()
+{
+    QList<QSharedPointer<Player>> players;
+
+    for(QSharedPointer<Player> p : this->players)
+    {
+        if(p != nullptr)
+            players.append(p);
+    }
+
+    this->players = players;
+}
+
 QByteArray Table::serializeTable()
 {
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);
     QByteArray gameData = game->serializeGame();
     QByteArray settingsData = tableSettings.serializeTableSettings();
+
+    updatePlayersList();
     int currentNumPlayer = players.size();
 
     stream << gameData << settingsData << currentNumPlayer;
