@@ -2,6 +2,7 @@
 
 const PacketTypes P_SendTables::packettype = PacketTypes::P_SendTables;
 
+//TODO: Убрать обновление столов в один отдельный поток
 void P_SendTables::sendTables(QSharedPointer<SOCKET> clientSocket)
 {
     auto createOrUpdateTable = [](QSharedPointer<Game> game, TableSettings tableSettings)
@@ -29,7 +30,6 @@ void P_SendTables::sendTables(QSharedPointer<SOCKET> clientSocket)
 
         createOrUpdateTable(QSharedPointer<Game>(Game::getGame(nameGame)), TableSettings{id, minBet, stepBet, minBalance, maxNumPlayer});
     }
-
     int countTable = Table::getTabels().size();
 
     NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));

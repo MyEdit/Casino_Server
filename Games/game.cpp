@@ -12,7 +12,12 @@ void Game::registerGame(QSharedPointer<Game> game)
 QSharedPointer<Game> Game::getGame(QString name)
 {
     QMutexLocker locker(&accessGamesMutex);
-    return games[name];
+    QSharedPointer<Game> game = games[name];
+
+    if (game == nullptr)
+        return nullptr;
+
+    return game->getInstance();
 }
 
 QSharedPointer<Game> Game::deserializeGame(const QByteArray& data)
