@@ -18,6 +18,7 @@ public:
     BlackJack();
     virtual ~BlackJack() {};
 
+    QSharedPointer<Game> getInstance();
     QString getName() override;
     int getMinPlayers() override;
     bool canPlayerJoin(QSharedPointer<Player> player) override;

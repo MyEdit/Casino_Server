@@ -23,6 +23,7 @@ public:
     static QSharedPointer<Game> getGame(QString name);
     static QSharedPointer<Game> deserializeGame(const QByteArray& data);
 
+    virtual QSharedPointer<Game> getInstance() = 0;
     virtual QString getName() = 0;
     virtual int getMinPlayers() = 0;
     virtual bool canPlayerJoin(QSharedPointer<Player> player) = 0;

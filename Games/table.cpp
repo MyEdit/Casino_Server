@@ -139,7 +139,7 @@ QByteArray Table::serializeTable()
 {
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);
-    QString gameData = game->getName();
+    QByteArray gameData = game->getName().toUtf8();
     QByteArray settingsData = tableSettings.serializeTableSettings();
 
     updatePlayersList();

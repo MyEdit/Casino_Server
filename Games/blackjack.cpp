@@ -5,6 +5,11 @@ BlackJack::BlackJack()
 
 }
 
+QSharedPointer<Game> BlackJack::getInstance()
+{
+    return qSharedPointerCast<Game>(QSharedPointer<BlackJack>(new BlackJack()));
+}
+
 QString BlackJack::getName()
 {
     return "BlackJack";
