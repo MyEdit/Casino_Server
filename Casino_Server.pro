@@ -21,6 +21,7 @@ SOURCES += \
     Commands/commandlist.cpp \
     Commands/commandnotification.cpp \
     Database/databasemanager.cpp \
+    Games/blackjack.cpp \
     Games/game.cpp \
     Games/table.cpp \
     Network/PacketsActions/p_authorization.cpp \
@@ -55,6 +56,7 @@ HEADERS += \
     Commands/commandnotification.h \
     Constants.h \
     Database/databasemanager.h \
+    Games/blackjack.h \
     Games/cardRank.h \
     Games/cardSuit.h \
     Games/game.h \
