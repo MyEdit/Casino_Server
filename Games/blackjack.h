@@ -4,6 +4,7 @@
 #include "QList"
 #include "QSharedPointer"
 #include "Users/player.h"
+#include "Games/Cards/card.h"
 
 class BlackJack
 {

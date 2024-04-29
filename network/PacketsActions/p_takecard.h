@@ -2,8 +2,8 @@
 #define P_TAKECARD_H
 
 #include "network/networkserver.h"
-#include "Games/cardRank.h"
-#include "Games/cardSuit.h"
+#include "Games/Cards/cardRank.h"
+#include "Games/Cards/cardSuit.h"
 
 class P_TakeCard
 {
