@@ -6,6 +6,9 @@ void P_SendTables::sendTables(QSharedPointer<SOCKET> clientSocket)
 {
     auto createOrUpdateTable = [](QSharedPointer<Game> game, TableSettings tableSettings)
     {
+        if (game == nullptr)
+            return;
+
         if (QSharedPointer<Table> table = Table::getTable(tableSettings.ID))
             table->setNewData(game, tableSettings);
         else
