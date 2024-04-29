@@ -1,31 +1,18 @@
 ﻿#include "game.h"
 
-Game::Game()
-{
+QMap<QString, QSharedPointer<Game>> Game::games;
+QMutex Game::accessGamesMutex;
 
+void Game::registerGame(QSharedPointer<Game> game)
+{
+    QMutexLocker locker(&accessGamesMutex);
+    games.insert(game->getName(), game);
 }
 
-Game::Game(QString nameGame)
+QSharedPointer<Game> Game::getGame(QString name)
 {
-    this->nameGame = nameGame;
-}
-
-QString Game::getName()
-{
-    return nameGame;
-}
-
-int Game::getMinPlayers()
-{
-    return minPlayers;
-}
-
-QByteArray Game::serializeGame()
-{
-    QByteArray data;
-    QDataStream stream(&data, QIODevice::WriteOnly);
-    stream << nameGame;
-    return data;
+    QMutexLocker locker(&accessGamesMutex);
+    return games[name];
 }
 
 QSharedPointer<Game> Game::deserializeGame(const QByteArray& data)
@@ -33,5 +20,5 @@ QSharedPointer<Game> Game::deserializeGame(const QByteArray& data)
     QDataStream stream(data);
     QString nameGame;
     stream >> nameGame;
-    return QSharedPointer<Game>(new Game(nameGame));
+    return Game::getGame(nameGame);
 }

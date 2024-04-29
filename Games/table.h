@@ -37,6 +37,7 @@ struct TableSettings
     }
 };
 
+class Game;
 class Table : public QObject
 {
     Q_OBJECT
@@ -47,7 +48,6 @@ class Table : public QObject
     static QMutex accessTablesMutex;
     static QList<QSharedPointer<Table>> tables;
     int timeToStart = 10;
-    bool isGameRunning = false;
     bool isGameReady = false;
 
 public:
@@ -64,7 +64,6 @@ public:
 
     //METHODS
     bool canPlayerJoin(QSharedPointer<Player> player);
-    bool canStartGame();
     void joinPlayer(QSharedPointer<Player> player);
     void leavePlayer(QSharedPointer<Player> player);
     void setNewData(QSharedPointer<Game> game, TableSettings tableSettings);
@@ -73,8 +72,6 @@ public:
     static void addTable(QSharedPointer<Table> table);
 
 private:
-    void stopGame();
-    void startGame();
     void sendTimerData();
     void setTicker();
     void onTick();

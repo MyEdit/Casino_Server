@@ -9,7 +9,7 @@ void Ticker::addListener(QSharedPointer<QObject> object, const std::function<voi
     callbacks[object] = callback;
 }
 
-void Ticker::start() {
+void Ticker::init() {
     if (tickerThread.isNull())
         tickerThread = QSharedPointer<std::thread>(new std::thread(&Ticker::runTickerLoop));
 }

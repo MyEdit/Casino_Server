@@ -1,28 +1,38 @@
 #ifndef BLACKJACK_H
 #define BLACKJACK_H
 
+#include "Games/game.h"
 #include "QList"
 #include "QSharedPointer"
 #include "Users/player.h"
 #include "Games/Cards/card.h"
+#include "Games/table.h"
 
-class BlackJack
+class BlackJack : public Game
 {
-    int minPlayers{2};
     QList<QSharedPointer<Player>> players{};
+    bool gameRunning {false};
     //QSharedPointer<Deck> deck;
 
 public:
     BlackJack();
+    virtual ~BlackJack() {};
 
-    bool canPlayerJoin(QSharedPointer<Player> player);
-    bool canStartGame();
-    void startGame();
-    void resetDeck(); //Когда игра завершилась, нужно вызвать этот метод и вернуть колоду в дефолтное состояние
+    QString getName() override;
+    int getMinPlayers() override;
+    bool canPlayerJoin(QSharedPointer<Player> player) override;
+    bool canStartGame() override;
+    bool isGameRunning() override;
+    void startGame() override;
+    void stopGame() override;
+    void giveCardToPlayer(QSharedPointer<SOCKET> clientSocket, QSharedPointer<Player> player) override;
+
+private:
+    void notifyOthersTakenCard(QSharedPointer<Player> player);
+    void resetDeck();
 
     //Events
     void onGameFinished();
-    //void onPlayerTakeCard(QSharedPointer<Card> card);
 };
 
 #endif // BLACKJACK_H

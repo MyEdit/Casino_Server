@@ -22,7 +22,7 @@ private:
 
 public:
     static void addListener(QSharedPointer<QObject> object, const std::function<void()>& callback);
-    static void start();
+    static void init();
 };
 
 #endif // TICKER_H

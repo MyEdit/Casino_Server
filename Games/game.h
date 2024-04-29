@@ -6,20 +6,31 @@
 #include <QDataStream>
 #include <QIODevice>
 
+#include <Users/player.h>
+#include <Games/table.h>
+#include <network/networkserver.h>
+
 class Game
 {
-    QString nameGame{};
-    int minPlayers{2}; //У каждой игры свой минимальный лимит игроков для старта, пока вписываю тут. TODO: Нужен отдельный класс для игры BlackJack
+    static QMap<QString, QSharedPointer<Game>> games;
+    static QMutex accessGamesMutex;
 
 public:
-    Game();
-    Game(QString nameGame);
+    Game() {};
+    ~Game() {};
 
-    QString getName();
-    int getMinPlayers();
-
-    QByteArray serializeGame();
+    static void registerGame(QSharedPointer<Game> game);
+    static QSharedPointer<Game> getGame(QString name);
     static QSharedPointer<Game> deserializeGame(const QByteArray& data);
+
+    virtual QString getName() = 0;
+    virtual int getMinPlayers() = 0;
+    virtual bool canPlayerJoin(QSharedPointer<Player> player) = 0;
+    virtual bool canStartGame() = 0;
+    virtual bool isGameRunning() = 0;
+    virtual void startGame() = 0;
+    virtual void stopGame() = 0;
+    virtual void giveCardToPlayer(QSharedPointer<SOCKET> clientSocket, QSharedPointer<Player> player) = 0;
 };
 
 #endif // GAME_H
