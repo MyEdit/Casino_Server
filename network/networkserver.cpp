@@ -175,7 +175,7 @@ QString NetworkServer::getIPAdress(QSharedPointer<SOCKET> client)
     sockaddr_in clientAddress;
     int sizeofaddr = sizeof(clientAddress);
     ZeroMemory(&clientAddress, sizeof (clientAddress));
-    getsockname(*client, (sockaddr*)&clientAddress, &sizeofaddr);
+    getpeername(*client, (sockaddr*)&clientAddress, &sizeofaddr);
     return inet_ntoa((in_addr)clientAddress.sin_addr);
 }
 
