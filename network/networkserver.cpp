@@ -164,6 +164,10 @@ QString NetworkServer::getMessageFromClient(QSharedPointer<SOCKET> clientSocket)
 {
     int size;
     recv(*clientSocket, reinterpret_cast<char*>(&size), sizeof(int), 0);
+
+    if(size == 0)
+        return "";
+
     QByteArray buffer(size, 0);
     recv(*clientSocket, buffer.data(), size, 0);
     return QString(buffer);
