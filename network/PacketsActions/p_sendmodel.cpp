@@ -4,15 +4,11 @@
 //получает запрашиваемый тип модели
 void P_SendModel::getTypeModel(QSharedPointer<SOCKET> clientSocket)
 {   
-    ModelTypes modeltype;
-    ModelLoadingType modelLoadingType;
-    int offset;
-
     QSharedPointer<DatabaseManager> databaseManager(new DatabaseManager());
 
-    recv(*clientSocket, reinterpret_cast<char*>(&modelLoadingType), sizeof(ModelLoadingType), 0);
-    recv(*clientSocket, reinterpret_cast<char*>(&modeltype), sizeof(ModelTypes), 0);
-    recv(*clientSocket, reinterpret_cast<char*>(&offset), sizeof(int), 0);
+    ModelLoadingType modelLoadingType = NetworkServer::getMessageFromClient<ModelLoadingType>(clientSocket);
+    ModelTypes modeltype = NetworkServer::getMessageFromClient<ModelTypes>(clientSocket);
+    int offset = NetworkServer::getMessageFromClient<int>(clientSocket);
     QString tableName = NetworkServer::getMessageFromClient(clientSocket);
     QString sort = NetworkServer::getMessageFromClient(clientSocket);
 

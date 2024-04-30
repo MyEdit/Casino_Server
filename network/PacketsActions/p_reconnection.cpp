@@ -2,14 +2,9 @@
 
 void P_Reconnection::reconnectClient(QSharedPointer<SOCKET> clientSocket)
 {
-    Roles role;
-    int sizeByteUser;
-    QByteArray byteUser;
-
-    recv(*clientSocket, reinterpret_cast<char*>(&role), sizeof(role), 0);
-    recv(*clientSocket, reinterpret_cast<char*>(&sizeByteUser), sizeof(int), 0);
-    byteUser.resize(sizeByteUser);
-    recv(*clientSocket, byteUser.data(), sizeByteUser, 0);
+    Roles role = NetworkServer::getMessageFromClient<Roles>(clientSocket);
+    int sizeByteUser = NetworkServer::getMessageFromClient<int>(clientSocket);
+    QByteArray byteUser = NetworkServer::getMessageFromClient<QByteArray>(clientSocket, sizeByteUser);
 
     QSharedPointer<User> user;
     if(role == Roles::User)

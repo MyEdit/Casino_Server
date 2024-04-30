@@ -4,11 +4,8 @@ void P_Query::getResultQuary(QSharedPointer<SOCKET> clientSocket)
 {
     QSharedPointer<DatabaseManager> databaseManager(new DatabaseManager());
 
-    QueryTypes queryTypes;
-    ModelTypes modelTypes;
-
-    recv(*clientSocket, reinterpret_cast<char*>(&queryTypes), sizeof(QueryTypes), 0);
-    recv(*clientSocket, reinterpret_cast<char*>(&modelTypes), sizeof(ModelTypes), 0);
+    QueryTypes queryTypes = NetworkServer::getMessageFromClient<QueryTypes>(clientSocket);
+    ModelTypes modelTypes = NetworkServer::getMessageFromClient<ModelTypes>(clientSocket);
     QString request = NetworkServer::getMessageFromClient(clientSocket);
 
     sendResult(clientSocket, databaseManager->executeQuery(request), modelTypes, queryTypes);

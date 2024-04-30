@@ -54,6 +54,23 @@ public:
         send(*client, reinterpret_cast<const char*>(data), size, 0);
     }
 
+    template<typename T>
+    static T getMessageFromClient(QSharedPointer<SOCKET> client)
+    {
+        T returnData{};
+        recv(*client, reinterpret_cast<char*>(&returnData), sizeof(T), 0);
+        return returnData;
+    }
+
+    template<typename T>
+    static typename std::enable_if<std::is_same<T, QByteArray>::value, T>::type
+    getMessageFromClient(QSharedPointer<SOCKET> client, int size)
+    {
+        QByteArray returnData(size, 0);
+        recv(*client, returnData.data(), size, 0);
+        return returnData;
+    }
+
     friend class P_Authorization;
     friend class P_SendModel;
     friend class P_Query;

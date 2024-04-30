@@ -2,10 +2,7 @@
 
 void P_PassMove::passMove(QSharedPointer<SOCKET> clientSocket)
 {
-    int tableID;
-
-    recv(*clientSocket, reinterpret_cast<char*>(&tableID), sizeof(int), 0);
-
+    int tableID = NetworkServer::getMessageFromClient<int>(clientSocket);
     QSharedPointer<Player> currentPlayer = qSharedPointerCast<Player>(NetworkServer::getUser(clientSocket));
     QSharedPointer<Table> table = Table::getTable(tableID);
 
