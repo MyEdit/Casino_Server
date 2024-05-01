@@ -2,7 +2,6 @@
 
 void P_ConnectPlayerToTable::connectPlayerToTable(QSharedPointer<SOCKET> clientSocket)
 {
-
     int tableID = NetworkServer::getMessageFromClient<int>(clientSocket);
     QSharedPointer<Player> player = qSharedPointerCast<Player>(NetworkServer::getUser(clientSocket));
     QSharedPointer<Table> table = Table::getTable(tableID);

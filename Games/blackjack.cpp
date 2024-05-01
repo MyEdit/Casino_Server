@@ -1,8 +1,10 @@
 #include "blackjack.h"
 
-BlackJack::BlackJack()
-{
+BlackJack::BlackJack(){}
 
+void BlackJack::setTable(const int& tableID)
+{
+    this->tableID = tableID;
 }
 
 QSharedPointer<Game> BlackJack::getInstance()
@@ -30,7 +32,7 @@ bool BlackJack::canPlayerJoin(QSharedPointer<Player> player)
 
 bool BlackJack::canStartGame()
 {
-    if (this->players.size() < this->getMinPlayers())
+    if (this->getPlayers().size() < this->getMinPlayers())
         return false;
 
     return true;
@@ -45,6 +47,7 @@ void BlackJack::startGame()
 {
     gameRunning = true;
 
+    QList<QSharedPointer<Player>> players = this->getPlayers();
     QSharedPointer<SOCKET> clientSocket = NetworkServer::getSocketUser(players.at(0));
     PacketTypes packettype = PacketTypes::P_StartMove;
     NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
@@ -83,7 +86,7 @@ void BlackJack::giveCardToPlayer(QSharedPointer<SOCKET> clientSocket, QSharedPoi
 
 void BlackJack::notifyOthersTakenCard(QSharedPointer<Player> thisPlayer)
 {
-    for(QSharedPointer<Player> player : this->players)
+    for(QSharedPointer<Player> player : this->getPlayers())
     {
         if(player->getLogin() == thisPlayer->getLogin())
             continue;
@@ -103,4 +106,14 @@ void BlackJack::resetDeck()
 void BlackJack::onGameFinished()
 {
     this->stopGame();
+}
+
+QList<QSharedPointer<Player>> BlackJack::getPlayers()
+{
+    QSharedPointer<Table> table = Table::getTable(this->tableID);
+
+    if (table == nullptr)
+        return QList<QSharedPointer<Player>>();
+
+    return table->getPlayers();
 }

@@ -1,5 +1,5 @@
 ﻿#include <QCoreApplication>
-#include <Network/networkserver.h>
+#include <network/networkserver.h>
 #include <Commands/commandmanager.h>
 #include <Utils/ticker.h>
 #include <Games/blackjack.h>

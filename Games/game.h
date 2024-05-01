@@ -7,7 +7,6 @@
 #include <QIODevice>
 
 #include <Users/player.h>
-#include <Games/table.h>
 #include <network/networkserver.h>
 
 class Game
@@ -32,6 +31,7 @@ public:
     virtual void startGame() = 0;
     virtual void stopGame() = 0;
     virtual void giveCardToPlayer(QSharedPointer<SOCKET> clientSocket, QSharedPointer<Player> player) = 0;
+    virtual void setTable(const int& tableID) = 0;
 };
 
 #endif // GAME_H

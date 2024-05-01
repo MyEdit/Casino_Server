@@ -10,7 +10,7 @@
 
 class BlackJack : public Game
 {
-    QList<QSharedPointer<Player>> players{};
+    int tableID;
     bool gameRunning {false};
     //QSharedPointer<Deck> deck;
 
@@ -27,10 +27,12 @@ public:
     void startGame() override;
     void stopGame() override;
     void giveCardToPlayer(QSharedPointer<SOCKET> clientSocket, QSharedPointer<Player> player) override;
+    void setTable(const int& tableID) override;
 
 private:
     void notifyOthersTakenCard(QSharedPointer<Player> player);
     void resetDeck();
+    QList<QSharedPointer<Player>> getPlayers();
 
     //Events
     void onGameFinished();

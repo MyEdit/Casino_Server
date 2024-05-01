@@ -5,8 +5,9 @@ QMutex Table::accessTablesMutex;
 
 Table::Table(QSharedPointer<Game> game, TableSettings tableSettings)
 {
-    this->game = game;
     this->tableSettings = tableSettings;
+    this->game = game;
+    this->game->setTable(this->tableSettings.ID);
     setTicker();
 }
 
@@ -27,8 +28,9 @@ Table::Table(const QByteArray& data)
         players.append(player);
     }
 
-    this->game = game;
     this->tableSettings = settings;
+    this->game = game;
+    this->game->setTable(this->tableSettings.ID);
     setTicker();
 }
 
