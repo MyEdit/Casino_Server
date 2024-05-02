@@ -122,14 +122,9 @@ void NetworkServer::packetHandler(const PacketTypes packettype, QSharedPointer<S
             P_Query::getResultQuary(clientSocket);
             break;
         }
-        case(PacketTypes::P_TakeCard):
+        case(PacketTypes::P_GamePacket):
         {
-            P_TakeCard::takeCard(clientSocket);
-            break;
-        }
-        case(PacketTypes::P_PassMove):
-        {
-            P_PassMove::passMove(clientSocket);
+            P_GamePacket::onGamePacketReceived(clientSocket);
             break;
         }
         default:

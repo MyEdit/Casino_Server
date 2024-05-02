@@ -54,7 +54,7 @@ void Table::onTick()
 
     if (this->game->canStartGame() && !isGameReady) //Если условие старта игры начало выполняться
     {
-        timeToStart = 10;
+        updateTimer();
         isGameReady = true;
     }
 
@@ -71,7 +71,7 @@ void Table::joinPlayer(QSharedPointer<Player> player)
 {
     QMutexLocker locker(&accessTablesMutex);
     players.append(player);
-    timeToStart = 10;
+    updateTimer();
 }
 
 void Table::leavePlayer(QSharedPointer<Player> player)
@@ -85,6 +85,11 @@ void Table::leavePlayer(QSharedPointer<Player> player)
             break;
         }
     }
+    updateTimer();
+}
+
+void Table::updateTimer()
+{
     timeToStart = 10;
 }
 
@@ -115,7 +120,7 @@ bool Table::canPlayerJoin(QSharedPointer<Player> player)
     if (player->getBalance() < this->tableSettings.minBalance)
         return false;
 
-    if (this->players.size() >= this->tableSettings.maxCountPlayers)
+    if (this->players.size() >= this->game->getMinPlayers())
         return false;
 
     if (!this->game->canPlayerJoin(player))
@@ -194,8 +199,9 @@ QList<QSharedPointer<Player>> Table::getPlayers()
 
 void Table::setNewData(QSharedPointer<Game> game, TableSettings tableSettings)
 {
-    this->game = game;
+    //this->game = game;
     this->tableSettings = tableSettings;
+    //this->game->setTable(this->tableSettings.ID);
 }
 
 QList<QSharedPointer<Table>> Table::getTabels()

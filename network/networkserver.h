@@ -17,8 +17,7 @@
 #include "network/PacketsActions/p_reconnection.h"
 #include "network/PacketsActions/p_sendtables.h"
 #include "network/PacketsActions/p_connectplayertotable.h"
-#include "network/PacketsActions/p_takecard.h"
-#include "network/PacketsActions/p_passmove.h"
+#include "network/PacketsActions/p_gamepacket.h"
 #include "Utils/Message.h"
 #include "Users/user.h"
 
@@ -76,6 +75,7 @@ public:
     friend class P_Query;
     friend class P_Reconnection;
     friend class P_ConnectPlayerToTable;
+    friend class P_GamePacket;
 };
 
 #endif // NETWORKSERVER_H
