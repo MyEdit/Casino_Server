@@ -4,7 +4,6 @@ BlackJack::BlackJack(){}
 
 void BlackJack::setTable(const int& tableID)
 {
-    Message::logInfo("Constuctor");
     this->tableID = tableID;
 }
 
