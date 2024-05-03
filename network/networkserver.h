@@ -18,6 +18,7 @@
 #include "network/PacketsActions/p_sendtables.h"
 #include "network/PacketsActions/p_connectplayertotable.h"
 #include "network/PacketsActions/p_gamepacket.h"
+#include "network/PacketsActions/p_search.h"
 #include "Utils/Message.h"
 #include "Users/user.h"
 

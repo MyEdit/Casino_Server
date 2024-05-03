@@ -127,6 +127,11 @@ void NetworkServer::packetHandler(const PacketTypes packettype, QSharedPointer<S
             P_GamePacket::onGamePacketReceived(clientSocket);
             break;
         }
+        case(PacketTypes::P_Search):
+        {
+            P_Search::getSearchQuary(clientSocket);
+            break;
+        }
         default:
         {
             Message::logWarn("Client send unknown packettype");
