@@ -10,7 +10,7 @@ void P_Search::getSearchQuary(QSharedPointer<SOCKET> clientSocket)
     ModelTypes modelTypes = NetworkServer::getMessageFromClient<ModelTypes>(clientSocket);
 
     SearchManager* manager = new SearchManager(sort, table, where, column, searchText, modelTypes, clientSocket);
-    manager->start();
+    manager->launchSearch();
 }
 
 void P_Search::sendResult(QSharedPointer<SOCKET> clientSocket, const QString& result, const ModelTypes modelTypes)
@@ -26,3 +26,5 @@ void P_Search::sendNotFound(QSharedPointer<SOCKET> clientSocket)
 {
     P_Notification::sendNotification(clientSocket, TypeMessage::Warning, "Данные не найдены");
 }
+
+

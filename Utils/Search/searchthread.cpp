@@ -7,7 +7,7 @@ SearchThread::SearchThread(QString query, bool &found) :
 
 }
 
-void SearchThread::run()
+void SearchThread::process()
 {
     QSharedPointer<DatabaseManager> databaseManager(new DatabaseManager());
     QString result = databaseManager->executeQuery(query);
@@ -18,8 +18,9 @@ void SearchThread::run()
         {
             found = true;;
             emit signalResultSearch(found, result);
-            return;
         }
         emit signalResultSearch(false, "");
     }
+    emit finished();
+//    return;
 }

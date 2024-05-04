@@ -1,17 +1,17 @@
 ﻿#ifndef SEARCHMANAGER_H
 #define SEARCHMANAGER_H
 
-#include <QThread>
+#include <QObject>
 #include <QRegularExpression>
 #include "Utils/Search/searchthread.h"
 #include "network/networkserver.h"
 #include "network/PacketsActions/p_search.h"
 
-class SearchManager : public QThread
+class SearchManager : public QObject
 {
     Q_OBJECT
     int rowCount;
-    QList<QSharedPointer<SearchThread>> searchThreads;
+    QList<SearchThread*> searchThreads;
     QMutex mutex;
     int countThread {QThread::idealThreadCount()};
     QList<bool> results;
@@ -28,13 +28,12 @@ class SearchManager : public QThread
 public:
     explicit SearchManager(const QString& sort, const QString& table, const QString& where, const QString& column, const QString& searchText, ModelTypes modelTypes, QSharedPointer<SOCKET> clientSocket);
     void launchSearch();
-    ~SearchManager() {qDebug() << "ss";}
+    ~SearchManager() {qDebug() << "Менеджер поиска удалён";}
+    void handleSearchResult(bool found, const QString &row);
+    int getRowCount();
 
 private:
-    void run() override;
     void requestRowCount();
-    void terminateSearchThreads();
-    void handleSearchResult(bool found, const QString &row);
 
 signals:
     void onSearchFinished(QSharedPointer<SOCKET>, ModelTypes, bool, int);

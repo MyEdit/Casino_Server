@@ -24,10 +24,18 @@ void SearchManager::launchSearch()
         int limit = rowsPerThread;
 
         QString searchQuery = sampleSearchQuery.arg(sort).arg(table).arg(limit).arg(offset).arg(column).arg(searchText);
-        QSharedPointer<SearchThread> thread(new SearchThread(searchQuery, found));
 
-        connect(thread.get(), &SearchThread::signalResultSearch, this, &SearchManager::handleSearchResult, Qt::DirectConnection);
-        searchThreads.append(thread);
+        QThread* thread = new QThread;
+        SearchThread* worker = new SearchThread(searchQuery, found);
+        worker->moveToThread(thread);
+
+        connect(thread, &QThread::started, worker, &SearchThread::process);
+        connect(worker, &SearchThread::finished, thread, &QThread::quit);
+        connect(worker, &SearchThread::finished, worker, &SearchThread::deleteLater);
+        connect(worker, &SearchThread::signalResultSearch, this, &SearchManager::handleSearchResult,  Qt::DirectConnection);
+        connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+
+        searchThreads.append(worker);
 
         thread->start();
     }
@@ -44,25 +52,9 @@ void SearchManager::requestRowCount()
     rowCount = databaseManager->executeQuery(query).toInt();
 }
 
-void SearchManager::terminateSearchThreads()
-{
-    QMutableListIterator<QSharedPointer<SearchThread>> it(searchThreads);
-    while (it.hasNext())
-    {
-        QSharedPointer<SearchThread> thread = it.next();
-        if (thread.data() != QThread::currentThread())
-        {
-            thread->quit();
-            thread->wait();
-            it.remove();
-            thread->disconnect();
-        }
-    }
-}
-
 void SearchManager::handleSearchResult(bool found, const QString& row)
 {
-    QMutexLocker locker(&mutex);
+    mutex.lock();
     results.push_back(found);
 
     if(results.size() == searchThreads.size() || found)
@@ -72,14 +64,14 @@ void SearchManager::handleSearchResult(bool found, const QString& row)
         else
             P_Search::sendResult(clientSocket, row, modelTypes);
 
-        terminateSearchThreads();
-
-        quit();
-        deleteLater();
+        mutex.unlock();
+        delete this;
+        return;
     }
+    mutex.unlock();
 }
 
-void SearchManager::run()
+int SearchManager::getRowCount()
 {
-    launchSearch();
+    return rowCount;
 }
