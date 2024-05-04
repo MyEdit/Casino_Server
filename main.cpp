@@ -11,8 +11,8 @@ int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
 
-    SetConsoleOutputCP(CP_UTF8);
-    SetConsoleCP(CP_UTF8);
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
 
     //Register default games
     Game::registerGame(QSharedPointer<BlackJack>(new BlackJack()));
