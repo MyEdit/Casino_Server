@@ -35,12 +35,13 @@ QStringList CommandManager::parseCommand(const QString& command)
 
 void CommandManager::CommandHandler()
 {
-    std::string command;
+    QTextStream in(stdin);
+    QString command;
 
     while(true)
     {
-        std::getline(std::cin, command);
-        QStringList args = parseCommand(QString::fromStdString(command));
+        command = in.readLine();
+        QStringList args = parseCommand(command);
 
         if (args.size() == 0 || !commandActions.contains(args[0]))
         {
