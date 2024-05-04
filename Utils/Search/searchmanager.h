@@ -1,4 +1,4 @@
-#ifndef SEARCHMANAGER_H
+﻿#ifndef SEARCHMANAGER_H
 #define SEARCHMANAGER_H
 
 #include <QThread>
@@ -6,8 +6,6 @@
 #include "Utils/Search/searchthread.h"
 #include "network/networkserver.h"
 #include "network/PacketsActions/p_search.h"
-
-class SearchThread;
 
 class SearchManager : public QThread
 {
@@ -37,7 +35,6 @@ private:
     void requestRowCount();
     void terminateSearchThreads();
     void handleSearchResult(bool found, const QString &row);
-    void notFound(bool found);
 
 signals:
     void onSearchFinished(QSharedPointer<SOCKET>, ModelTypes, bool, int);

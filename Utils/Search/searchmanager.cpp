@@ -1,4 +1,4 @@
-#include "searchmanager.h"
+﻿#include "searchmanager.h"
 
 SearchManager::SearchManager(const QString& sort, const QString& table, const QString& where, const QString& column, const QString& searchText, ModelTypes modelTypes, QSharedPointer<SOCKET> clientSocket) :
     sort(sort),
@@ -27,9 +27,8 @@ void SearchManager::launchSearch()
         QSharedPointer<SearchThread> thread(new SearchThread(searchQuery, found));
 
         connect(thread.get(), &SearchThread::signalResultSearch, this, &SearchManager::handleSearchResult, Qt::DirectConnection);
-        connect(thread.get(), &SearchThread::signalNotFound, this, &SearchManager::notFound, Qt::DirectConnection);
-
         searchThreads.append(thread);
+
         thread->start();
     }
 }
@@ -47,13 +46,18 @@ void SearchManager::requestRowCount()
 
 void SearchManager::terminateSearchThreads()
 {
-    for(QSharedPointer<SearchThread> thread : searchThreads)
-        thread->disconnect();
-
-//    for(QSharedPointer<SearchThread> thread : searchThreads)
-//        thread->terminate();
-
-//    searchThreads.clear();
+    QMutableListIterator<QSharedPointer<SearchThread>> it(searchThreads);
+    while (it.hasNext())
+    {
+        QSharedPointer<SearchThread> thread = it.next();
+        if (thread.data() != QThread::currentThread())
+        {
+            thread->quit();
+            thread->wait();
+            it.remove();
+            thread->disconnect();
+        }
+    }
 }
 
 void SearchManager::handleSearchResult(bool found, const QString& row)
@@ -61,18 +65,18 @@ void SearchManager::handleSearchResult(bool found, const QString& row)
     QMutexLocker locker(&mutex);
     results.push_back(found);
 
-    P_Search::sendResult(clientSocket, row, modelTypes);
-    terminateSearchThreads();
-    //delete this;
-}
+    if(results.size() == searchThreads.size() || found)
+    {
+        if(results.size() == searchThreads.size())
+            P_Search::sendNotFound(clientSocket);
+        else
+            P_Search::sendResult(clientSocket, row, modelTypes);
 
-void SearchManager::notFound(bool found)
-{
-    QMutexLocker locker(&mutex);
-    results.push_back(found);
+        terminateSearchThreads();
 
-    if (results.size() == searchThreads.size())
-        P_Search::sendNotFound(clientSocket);
+        quit();
+        deleteLater();
+    }
 }
 
 void SearchManager::run()

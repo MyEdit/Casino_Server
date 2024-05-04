@@ -1,4 +1,4 @@
-#ifndef P_SEARCH_H
+﻿#ifndef P_SEARCH_H
 #define P_SEARCH_H
 
 #include "network/networkserver.h"

@@ -1,4 +1,4 @@
-#include "searchthread.h"
+﻿#include "searchthread.h"
 
 SearchThread::SearchThread(QString query, bool &found) :
     query(query),
@@ -16,10 +16,10 @@ void SearchThread::run()
     {
         if(!result.isEmpty())
         {
-            emit signalResultSearch(true, result);
-            found = true;
+            found = true;;
+            emit signalResultSearch(found, result);
             return;
         }
+        emit signalResultSearch(false, "");
     }
-    emit signalNotFound(false);
 }

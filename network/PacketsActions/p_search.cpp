@@ -1,4 +1,4 @@
-#include "p_search.h"
+﻿#include "p_search.h"
 
 void P_Search::getSearchQuary(QSharedPointer<SOCKET> clientSocket)
 {
@@ -16,7 +16,6 @@ void P_Search::getSearchQuary(QSharedPointer<SOCKET> clientSocket)
 void P_Search::sendResult(QSharedPointer<SOCKET> clientSocket, const QString& result, const ModelTypes modelTypes)
 {
     PacketTypes packettype = PacketTypes::P_Search;
-    qDebug() << result;
 
     NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
     NetworkServer::sendToClient(clientSocket, &modelTypes, sizeof(ModelTypes));

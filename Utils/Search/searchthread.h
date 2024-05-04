@@ -1,4 +1,4 @@
-#ifndef SEARCHTHREAD_H
+﻿#ifndef SEARCHTHREAD_H
 #define SEARCHTHREAD_H
 
 #include <QThread>
@@ -12,13 +12,12 @@ class SearchThread : public QThread
 
 public:
     SearchThread(QString query, bool& found);
-    ~SearchThread() {qDebug() << "aaa";}
+    ~SearchThread() {static int i=1; qDebug() << i++;}
 private:
     void run() override;
 
 signals:
     void signalResultSearch(bool, QString);
-    void signalNotFound(bool);
 };
 
 #endif // SEARCHTHREAD_H
