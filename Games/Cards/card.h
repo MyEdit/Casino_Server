@@ -1,4 +1,4 @@
-#ifndef CARD_H
+﻿#ifndef CARD_H
 #define CARD_H
 
 #include "Games/Cards/cardRank.h"
@@ -10,6 +10,7 @@ class Card
     CardSuit cardSuit;
 
 public:
+    Card() {}
     Card(CardRank cardRank, CardSuit cardSuit);
 
     CardRank getRank() const;

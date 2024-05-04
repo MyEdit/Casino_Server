@@ -1,4 +1,4 @@
-#ifndef BLACKJACK_H
+﻿#ifndef BLACKJACK_H
 #define BLACKJACK_H
 
 #include "Games/game.h"
@@ -7,6 +7,7 @@
 #include "Users/player.h"
 #include "Games/Cards/card.h"
 #include "Games/table.h"
+#include "Games/Cards/deck.h"
 #include "network/networkserver.h"
 
 enum class GamePackets
@@ -23,7 +24,7 @@ class BlackJack : public Game
     int tableID;
     bool gameRunning {false};
     QPair<QSharedPointer<Player>, int> activePlayer;
-    //QSharedPointer<Deck> deck;
+    QSharedPointer<Deck> deck;
 
 public:
     BlackJack();

@@ -22,6 +22,7 @@ SOURCES += \
     Commands/commandnotification.cpp \
     Database/databasemanager.cpp \
     Games/Cards/card.cpp \
+    Games/Cards/deck.cpp \
     Games/blackjack.cpp \
     Games/game.cpp \
     Games/table.cpp \
@@ -62,6 +63,8 @@ HEADERS += \
     Games/Cards/card.h \
     Games/Cards/cardRank.h \
     Games/Cards/cardSuit.h \
+    Games/Cards/constant.h \
+    Games/Cards/deck.h \
     Games/blackjack.h \
     Games/game.h \
     Games/table.h \

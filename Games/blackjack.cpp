@@ -1,6 +1,9 @@
-#include "blackjack.h"
+﻿#include "blackjack.h"
 
-BlackJack::BlackJack(){}
+BlackJack::BlackJack()
+{
+    deck = QSharedPointer<Deck>(new Deck());
+}
 
 void BlackJack::setTable(const int& tableID)
 {
@@ -87,8 +90,10 @@ void BlackJack::stopGame()
 
 void BlackJack::giveCardToPlayer(QSharedPointer<SOCKET> clientSocket, QSharedPointer<Player> player)
 {
-    CardRank rank = CardRank::RANK_9;
-    CardSuit suit = CardSuit::SUIT_DIAMOND;
+    Card card = deck->dealCard();
+
+    CardRank rank = card.getRank();
+    CardSuit suit = card.getSuit();
 
     this->notifyOthersTakenCard(player);
 
@@ -98,6 +103,8 @@ void BlackJack::giveCardToPlayer(QSharedPointer<SOCKET> clientSocket, QSharedPoi
     NetworkServer::sendToClient(clientSocket, &gamePacket, sizeof(GamePackets));
     NetworkServer::sendToClient(clientSocket, &rank, sizeof(CardRank));
     NetworkServer::sendToClient(clientSocket, &suit, sizeof(CardSuit));
+
+    qDebug() << "В этой игре осталось " << deck->getCountCardInDeck() << "карт. tableID: " << tableID;
 }
 
 void BlackJack::notifyOthersTakenCard(QSharedPointer<Player> thisPlayer)
