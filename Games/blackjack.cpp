@@ -120,7 +120,7 @@ void BlackJack::notifyOthersTakenCard(QSharedPointer<Player> thisPlayer)
         QSharedPointer<SOCKET> clientSocket = NetworkServer::getSocketUser(qSharedPointerCast<User>(player));
         NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
         NetworkServer::sendToClient(clientSocket, &gamePacket, sizeof(GamePackets));
-        NetworkServer::sendToClient(clientSocket, player->getLogin());
+        NetworkServer::sendToClient(clientSocket, thisPlayer->getLogin());
     }
 }
 
