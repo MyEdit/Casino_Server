@@ -24,7 +24,7 @@ public:
     QString executeQuery(const QString& executequery);
     bool executeQueryDeleteWithoutResponce(const QString& executequery);
     bool executeQueryWithoutResponce(const QString& executequery);
-    QSharedPointer<QSqlQueryModel> getModel(const QString& tableName, const int& offset, const QString& sort);
+    QSharedPointer<QSqlQueryModel> getModel(const QString& tableName, const int& offset, const QString& sort, const QString &where);
     QSharedPointer<QSqlQuery> executeQueryObject(const QString& executequery);
     QList<QSharedPointer<QSqlRecord>> executeQueryObjects(const QString& executeQuery);
 };

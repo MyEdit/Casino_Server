@@ -1,4 +1,4 @@
-#include "ticker.h"
+﻿#include "ticker.h"
 
 QMutex Ticker::tickerMutex;
 QSharedPointer<std::thread> Ticker::tickerThread;
@@ -25,8 +25,6 @@ void Ticker::runTickerLoop() {
         callbacks.erase(std::remove_if(callbacks.begin(), callbacks.end(), [](const QWeakPointer<std::function<void()>>& func) {
             return !func.lock();
         }), callbacks.end());
-
-        Message::logWarn(QString::number(callbacks.size()));
 
         for(auto func : callbacks)
             (*func.lock())();

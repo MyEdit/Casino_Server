@@ -17,6 +17,8 @@ public:
     {
         static int i = 1;
         qDebug() << "Поток поиска " << i++ << "/" << QThread::idealThreadCount() << " удалён";
+        if(i > QThread::idealThreadCount())
+            i = 1;
     }
 
     void process();
