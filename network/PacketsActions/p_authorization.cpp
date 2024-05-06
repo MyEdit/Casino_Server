@@ -33,11 +33,11 @@ void P_Authorization::onPlayerAuth(const int& ID, QSharedPointer<DatabaseManager
     if (responce == nullptr)
         return;
 
-    responce = databaseManager->executeQueryObject(QString("SELECT * FROM Banlist WHERE ID_User = '%1'").arg(ID));
+    QSharedPointer<QSqlQuery> banResponce = databaseManager->executeQueryObject(QString("SELECT * FROM Banlist WHERE ID_User = '%1'").arg(ID));
 
-    if (responce != nullptr)
+    if (banResponce != nullptr)
     {
-        P_Notification::sendNotification(clientSocket, TypeMessage::Error, "Ваш аккаут был заблокирован по причине: «" + responce->value(2).toString() + "»");
+        P_Notification::sendNotification(clientSocket, TypeMessage::Error, "Ваш аккаут был заблокирован по причине: «" + banResponce->value(2).toString() + "»");
         return;
     }
 
