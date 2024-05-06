@@ -235,7 +235,7 @@ QList<QSharedPointer<Player>> BlackJack::getWinners() const
     return winners;
 }
 
-QList<QSharedPointer<Player>> BlackJack::getPlayers()
+QList<QSharedPointer<Player>> BlackJack::getPlayers() const
 {
     QSharedPointer<Table> table = Table::getTable(this->tableID);
 
