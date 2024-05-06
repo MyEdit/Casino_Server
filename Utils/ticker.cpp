@@ -4,23 +4,27 @@ QMutex Ticker::tickerMutex;
 QSharedPointer<std::thread> Ticker::tickerThread;
 QMap<QSharedPointer<QObject>, std::function<void()>> Ticker::callbacks;
 
-void Ticker::addListener(QSharedPointer<QObject> object, const std::function<void ()> &callback) {
+void Ticker::addListener(QSharedPointer<QObject> object, const std::function<void()> &callback)
+{
     QMutexLocker locker(&tickerMutex);
     callbacks[object] = callback;
 }
 
-void Ticker::init() {
+void Ticker::init()
+{
     if (tickerThread.isNull())
         tickerThread = QSharedPointer<std::thread>(new std::thread(&Ticker::runTickerLoop));
 }
 
 void Ticker::runTickerLoop() {
-    while (true) {
+    while (true)
+    {
         std::this_thread::sleep_for(std::chrono::seconds(1));
         tickerMutex.lock();
-        for (const auto& pair : callbacks) {
+
+        for (const auto& pair : callbacks)
             pair();
-        }
+
         tickerMutex.unlock();
     }
 }

@@ -15,7 +15,9 @@ enum class GamePackets
     P_TakeCard,
     P_TakeCardAnotherPlayer,
     P_PassMove,
-    P_StartMove
+    P_StartMove,
+    P_Win,
+    P_Lose
 };
 
 class NetworkServer;
@@ -24,6 +26,7 @@ class BlackJack : public Game
     int tableID;
     bool gameRunning {false};
     QPair<QSharedPointer<Player>, int> activePlayer;
+    QMap<QSharedPointer<Player>, QList<Card>> playersHands;
     QSharedPointer<Deck> deck;
 
 public:
@@ -47,10 +50,12 @@ private:
     void notifyOthersTakenCard(QSharedPointer<Player> player);
     void passTurnToNextPlayer();
     void resetDeck();
-    QList<QSharedPointer<Player>> getPlayers();
+    QList<QSharedPointer<Player>> getPlayers() const;
+    QList<QSharedPointer<Player>> getWinners() const;
 
     //Events
     void onGameFinished();
+    void onTick();
 };
 
 #endif // BLACKJACK_H

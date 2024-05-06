@@ -15,6 +15,7 @@ public:
 
     CardRank getRank() const;
     CardSuit getSuit() const;
+    int getValue() const;
 
     bool operator < (const Card& card) const
     {

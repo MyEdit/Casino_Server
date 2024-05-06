@@ -2,7 +2,28 @@
 
 BlackJack::BlackJack()
 {
-    deck = QSharedPointer<Deck>(new Deck());
+    this->deck = QSharedPointer<Deck>(new Deck());
+    //Ticker::addListener(QSharedPointer<QObject>(this), std::bind(&BlackJack::onTick, this));
+}
+
+void BlackJack::onTick()
+{
+    if(!this->isGameRunning())
+        return;
+
+    if (this->getPlayers().size() <= 0)
+    {
+        this->stopGame();
+        return;
+    }
+
+    if (!this->canStartGame())
+    {
+        this->onGameFinished();
+        return;
+    }
+
+    //TODO Добавить таймер
 }
 
 void BlackJack::setTable(const int& tableID)
@@ -28,7 +49,7 @@ void BlackJack::onGamePacketReceived(QSharedPointer<SOCKET> clientSocket)
         }
         default:
         {
-            //Message::logWarn(new QString("[" + getName() + "] Client send unknown game packet"));
+            Message::logWarn("[" + getName() + "] Client send unknown game packet");
             break;
         }
     }
@@ -86,15 +107,22 @@ void BlackJack::stopGame()
 {
     this->gameRunning = false;
     this->resetDeck();
+    this->playersHands.clear();
 }
 
 void BlackJack::giveCardToPlayer(QSharedPointer<SOCKET> clientSocket, QSharedPointer<Player> player)
 {
-    Card card = deck->dealCard();
+    if (deck->getCountCardInDeck() <= 0)
+    {
+        P_Notification::sendNotification(clientSocket, TypeMessage::Information, "Deck is empty");
+        return;
+    }
 
+    Card card = deck->dealCard();
     CardRank rank = card.getRank();
     CardSuit suit = card.getSuit();
 
+    this->playersHands[player].append(card);
     this->notifyOthersTakenCard(player);
 
     PacketTypes packettype = PacketTypes::P_GamePacket;
@@ -103,8 +131,6 @@ void BlackJack::giveCardToPlayer(QSharedPointer<SOCKET> clientSocket, QSharedPoi
     NetworkServer::sendToClient(clientSocket, &gamePacket, sizeof(GamePackets));
     NetworkServer::sendToClient(clientSocket, &rank, sizeof(CardRank));
     NetworkServer::sendToClient(clientSocket, &suit, sizeof(CardSuit));
-
-    qDebug() << "В этой игре осталось " << deck->getCountCardInDeck() << "карт. tableID: " << tableID;
 }
 
 void BlackJack::notifyOthersTakenCard(QSharedPointer<Player> thisPlayer)
@@ -131,7 +157,7 @@ void BlackJack::passTurnToNextPlayer()
 
     if (players.size() - 1 < index)
     {
-        this->stopGame();
+        this->onGameFinished();
         return;
     }
 
@@ -159,12 +185,54 @@ void BlackJack::passTurnToNextPlayer()
 
 void BlackJack::resetDeck()
 {
-    //Сбросить колоду в дефолтное состояние
+    deck = QSharedPointer<Deck>(new Deck());
 }
 
 void BlackJack::onGameFinished()
 {
+    PacketTypes packettype = PacketTypes::P_GamePacket;
+    QList<QSharedPointer<Player>> winners = this->getWinners();
+
+    for (QSharedPointer<Player> player : this->playersHands.keys())
+    {
+        QSharedPointer<SOCKET> playerSocket = NetworkServer::getSocketUser(player);
+        GamePackets packetToSend = winners.contains(player) ? GamePackets::P_Win : GamePackets::P_Lose;
+
+        NetworkServer::sendToClient(playerSocket, &packettype, sizeof(PacketTypes));
+        NetworkServer::sendToClient(playerSocket, &packetToSend, sizeof(GamePackets));
+    }
+
     this->stopGame();
+}
+
+QList<QSharedPointer<Player>> BlackJack::getWinners() const
+{
+    QList<QSharedPointer<Player>> winners;
+    int maxPoints = 0;
+
+    for (auto it = playersHands.begin(); it != playersHands.end(); ++it)
+    {
+        int playerPoints = 0;
+
+        for (Card card : it.value())
+            playerPoints += card.getValue();
+
+        if (playerPoints <= 21)
+        {
+            if (playerPoints > maxPoints)
+            {
+                maxPoints = playerPoints;
+                winners.clear();
+                winners.append(it.key());
+            }
+            else if (playerPoints == maxPoints)
+            {
+                winners.append(it.key());
+            }
+        }
+    }
+
+    return winners;
 }
 
 QList<QSharedPointer<Player>> BlackJack::getPlayers()

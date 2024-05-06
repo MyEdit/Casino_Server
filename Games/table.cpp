@@ -64,7 +64,10 @@ void Table::onTick()
         --timeToStart;
     }
     else
+    {
+        isGameReady = false;
         game->startGame();
+    }
 }
 
 void Table::joinPlayer(QSharedPointer<Player> player)

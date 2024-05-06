@@ -9,7 +9,7 @@
 #include <network/networkserver.h>
 #include <Users/player.h>
 
-class Game
+class Game : public QObject
 {
     static QMap<QString, QSharedPointer<Game>> games;
     static QMutex accessGamesMutex;
