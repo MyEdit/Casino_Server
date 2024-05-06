@@ -26,8 +26,6 @@ void Ticker::runTickerLoop() {
             return !func.lock();
         }), callbacks.end());
 
-        Message::logWarn(QString::number(callbacks.size()));
-
         for(auto func : callbacks)
             (*func.lock())();
 
