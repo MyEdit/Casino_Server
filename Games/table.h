@@ -45,6 +45,7 @@ class Table : public QObject
     QSharedPointer<Game> game;
     TableSettings tableSettings;
     QList<QSharedPointer<Player>> players;
+    QSharedPointer<Func> pointerOnTick;
     static QMutex accessTablesMutex;
     static QList<QSharedPointer<Table>> tables;
     int timeToStart = 10;

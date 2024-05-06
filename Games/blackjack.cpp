@@ -3,7 +3,10 @@
 BlackJack::BlackJack()
 {
     this->deck = QSharedPointer<Deck>(new Deck());
-    //Ticker::addListener(QSharedPointer<QObject>(this), std::bind(&BlackJack::onTick, this));
+
+    Ticker::addListener(QWeakPointer<Func>(
+        pointerOnTick = QSharedPointer<Func>::create(std::bind(&BlackJack::onTick, this))
+    ));
 }
 
 void BlackJack::onTick()

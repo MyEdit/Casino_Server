@@ -36,7 +36,9 @@ Table::Table(const QByteArray& data)
 
 void Table::setTicker()
 {
-    Ticker::addListener(QSharedPointer<QObject>(this), std::bind(&Table::onTick, this));
+    Ticker::addListener(QWeakPointer<Func>(
+        pointerOnTick = QSharedPointer<Func>::create(std::bind(&Table::onTick, this))
+    ));
 }
 
 void Table::onTick()

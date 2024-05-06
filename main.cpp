@@ -14,12 +14,13 @@ int main(int argc, char *argv[])
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
 
-    //Register default games
-    Game::registerGame(QSharedPointer<BlackJack>(new BlackJack()));
-
     Ticker::init();
     network.init();
     commandManager.init();
+
+    //Register default games
+    Game::registerGame(QSharedPointer<BlackJack>(new BlackJack()));
+
     network.startListening();
 
     return app.exec();

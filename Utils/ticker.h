@@ -10,18 +10,22 @@
 #include <QMap>
 #include <functional>
 
+typedef std::function<void(void)> Func;
+
 class Ticker : public QObject {
     Q_OBJECT
 
 private:
     static QMutex tickerMutex;
     static QSharedPointer<std::thread> tickerThread;
-    static QMap<QSharedPointer<QObject>, std::function<void()>> callbacks;
+    static QList<QWeakPointer<std::function<void(void)>>> callbacks;
 
     static void runTickerLoop();
 
 public:
-    static void addListener(QSharedPointer<QObject> object, const std::function<void()>& callback);
+    typedef std::function<void(void)> Func;
+
+    static void addListener(const QWeakPointer<std::function<void()>> callback);
     static void init();
 };
 

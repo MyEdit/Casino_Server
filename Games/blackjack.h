@@ -28,6 +28,7 @@ class BlackJack : public Game
     QPair<QSharedPointer<Player>, int> activePlayer;
     QMap<QSharedPointer<Player>, QList<Card>> playersHands;
     QSharedPointer<Deck> deck;
+    QSharedPointer<Func> pointerOnTick;
 
 public:
     BlackJack();
