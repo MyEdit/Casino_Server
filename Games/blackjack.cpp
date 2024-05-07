@@ -196,6 +196,8 @@ void BlackJack::onGameFinished()
     PacketTypes packettype = PacketTypes::P_GamePacket;
     QList<QSharedPointer<Player>> winners = this->getWinners();
 
+    QSharedPointer<DatabaseManager> databaseManager(new DatabaseManager());
+
     for (QSharedPointer<Player> player : this->playersHands.keys())
     {
         QSharedPointer<SOCKET> playerSocket = NetworkServer::getSocketUser(player);
@@ -203,6 +205,18 @@ void BlackJack::onGameFinished()
 
         NetworkServer::sendToClient(playerSocket, &packettype, sizeof(PacketTypes));
         NetworkServer::sendToClient(playerSocket, &packetToSend, sizeof(GamePackets));
+
+        double newBalanse;
+
+        if(packetToSend == GamePackets::P_Win)
+            newBalanse = player->getBalance() + Table::getTable(tableID)->getSettings().minBet;
+        else
+            newBalanse = player->getBalance() - Table::getTable(tableID)->getSettings().minBet;
+
+        QString query = "UPDATE Users SET Balance = '" + QString::number(newBalanse) + "' where ID_User = '" + QString::number(player->getID()) + "'";
+        databaseManager->executeQueryWithoutResponce(query);
+
+        NetworkServer::sendToClient(playerSocket, QString::number(newBalanse));
     }
 
     this->stopGame();
