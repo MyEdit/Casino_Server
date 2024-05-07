@@ -23,6 +23,7 @@ class SearchManager : public QObject
     ModelTypes modelTypes;
     QSharedPointer<SOCKET> clientSocket;
     QString sampleSearchQuery;
+    QString sampleSearchQueryWhere;
     bool found;
 
 public:

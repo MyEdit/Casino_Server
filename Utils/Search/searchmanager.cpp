@@ -11,6 +11,7 @@ SearchManager::SearchManager(const QString& sort, const QString& table, const QS
 {
     requestRowCount();
     sampleSearchQuery = "SELECT numbered_rows.row FROM (SELECT ROW_NUMBER() OVER (%1) AS row, * FROM %2 LIMIT %3 OFFSET %4) AS numbered_rows WHERE numbered_rows.%5 LIKE '%6'";
+    sampleSearchQueryWhere = "SELECT numbered_rows.row FROM (SELECT ROW_NUMBER() OVER (%1) AS row, * FROM %2 WHERE %3 LIMIT %4 OFFSET %5) AS numbered_rows WHERE numbered_rows.%6 LIKE '%7'";
     found = false;
 }
 
@@ -23,7 +24,12 @@ void SearchManager::launchSearch()
         int offset = i * rowsPerThread;
         int limit = rowsPerThread;
 
-        QString searchQuery = sampleSearchQuery.arg(sort).arg(table).arg(limit).arg(offset).arg(column).arg(searchText);
+        QString searchQuery;
+
+        if(where.isEmpty())
+            searchQuery = sampleSearchQuery.arg(sort).arg(table).arg(limit).arg(offset).arg(column).arg(searchText);
+        else
+            searchQuery = sampleSearchQuery.arg(sort).arg(table).arg(where).arg(limit).arg(offset).arg(column).arg(searchText);
 
         QThread* thread = new QThread;
         SearchThread* worker = new SearchThread(searchQuery, found);
