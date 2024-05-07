@@ -38,6 +38,7 @@ struct TableSettings
 };
 
 class Game;
+
 class Table : public QObject
 {
     Q_OBJECT
@@ -61,13 +62,14 @@ public:
     int getCurrentNumPlayer();
     QList<QSharedPointer<Player>> getPlayers();
     static QSharedPointer<Table> getTable(const int& ID);
-    static QList<QSharedPointer<Table>> getTabels();
+    static QList<QSharedPointer<Table>> getCopyListTabels();
+    static QList<QSharedPointer<Table>>& getTabels();
 
     //METHODS
     bool canPlayerJoin(QSharedPointer<Player> player);
     void joinPlayer(QSharedPointer<Player> player);
     void leavePlayer(QSharedPointer<Player> player);
-    void setNewData(QSharedPointer<Game> game, TableSettings tableSettings);
+    void setNewData(TableSettings tableSettings);
     void updatePlayersList();
     void updateTimer();
     QByteArray serializeTable();

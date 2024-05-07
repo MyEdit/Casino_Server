@@ -202,14 +202,18 @@ QList<QSharedPointer<Player>> Table::getPlayers()
     return players;
 }
 
-void Table::setNewData(QSharedPointer<Game> game, TableSettings tableSettings)
+void Table::setNewData(TableSettings tableSettings)
 {
-    //this->game = game;
     this->tableSettings = tableSettings;
-    //this->game->setTable(this->tableSettings.ID);
 }
 
-QList<QSharedPointer<Table>> Table::getTabels()
+QList<QSharedPointer<Table>> Table::getCopyListTabels()
+{
+    QMutexLocker locker(&accessTablesMutex);
+    return tables;
+}
+
+QList<QSharedPointer<Table>>& Table::getTabels()
 {
     QMutexLocker locker(&accessTablesMutex);
     return tables;

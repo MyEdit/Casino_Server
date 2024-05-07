@@ -1,4 +1,4 @@
-#include "commandmanager.h"
+﻿#include "commandmanager.h"
 
 QMap<QString, std::function<void(QStringList&)>> CommandManager::commandActions;
 std::vector<QSharedPointer<Command>> CommandManager::commands;

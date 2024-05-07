@@ -1,7 +1,7 @@
 ﻿#ifndef P_AUTHORIZATION_H
 #define P_AUTHORIZATION_H
 
-#include "Network/networkserver.h"
+#include "network/networkserver.h"
 #include "Network/PacketsActions/p_notification.h"
 #include "Database/databasemanager.h"
 #include "Users/user.h"

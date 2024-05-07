@@ -11,13 +11,15 @@ void P_SendTables::sendTables(QSharedPointer<SOCKET> clientSocket)
             return;
 
         if (QSharedPointer<Table> table = Table::getTable(tableSettings.ID))
-            table->setNewData(game, tableSettings);
+            table->setNewData(tableSettings);
         else
             Table::addTable(QSharedPointer<Table>(new Table(game, tableSettings)));
     };
 
     QSharedPointer<DatabaseManager> databaseManager(new DatabaseManager());
     QList<QSharedPointer<QSqlRecord>> result = databaseManager->executeQueryObjects("SELECT * FROM ActiveTables");
+
+    deleteTable(result);
 
     for(QSharedPointer<QSqlRecord> responce : result)
     {
@@ -30,16 +32,40 @@ void P_SendTables::sendTables(QSharedPointer<SOCKET> clientSocket)
 
         createOrUpdateTable(QSharedPointer<Game>(Game::getGame(nameGame)), TableSettings{id, minBet, stepBet, minBalance, maxNumPlayer});
     }
-    int countTable = Table::getTabels().size();
+
+    int countTable = Table::getCopyListTabels().size();
 
     NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
     NetworkServer::sendToClient(clientSocket, &countTable, sizeof(int));
 
-    for(QSharedPointer<Table> table : Table::getTabels())
+    for(QSharedPointer<Table> table : Table::getCopyListTabels())
     {
         QByteArray jsonData = table->serializeTable();
         int dataSize = jsonData.size();
         NetworkServer::sendToClient(clientSocket, &dataSize, sizeof(int));
         NetworkServer::sendToClient(clientSocket, jsonData.data(), dataSize);
     }
+}
+
+void P_SendTables::deleteTable(const QList<QSharedPointer<QSqlRecord>>& newResult)
+{
+    QList<QSharedPointer<Table>>& oldTables = Table::getTabels();
+
+    for (auto it = oldTables.begin(); it != oldTables.end();)
+    {
+         bool found = false;
+         for (const auto& currentTable : newResult)
+         {
+             if (currentTable->value(0).toInt() == it->get()->getSettings().ID)
+             {
+                 found = true;
+                 break;
+             }
+         }
+
+         if (!found)
+             it = oldTables.erase(it);
+         else
+             ++it;
+     }
 }
