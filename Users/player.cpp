@@ -31,6 +31,7 @@ Player::Player(const QByteArray& data)
 
 int Player::getID()
 {
+    QMutexLocker locker(&accessMutex);
     return this->ID;
 }
 
@@ -50,12 +51,35 @@ Roles Player::getRole()
 
 double Player::getBalance()
 {
+    QMutexLocker locker(&accessMutex);
     return this->balance;
 }
 
 QByteArray Player::getPhoto()
 {
     return photo;
+}
+
+void Player::setBalance(double newBalance)
+{
+    QSharedPointer<DatabaseManager> databaseManager(new DatabaseManager());
+    QSharedPointer<SOCKET> playerSocket = NetworkServer::getSocketByNickname(this->getLogin());
+    QString query = QString("UPDATE Users SET Balance = '%1' WHERE ID_User = '%2'")
+            .arg(newBalance)
+            .arg(ID);
+
+    if (!databaseManager->executeQueryWithoutResponce(query))
+    {
+        Message::logError("Failed to set balance for player: " + this->getLogin());
+        return;
+    }
+
+    PacketTypes packettype = PacketTypes::P_UpdateBalance;
+    NetworkServer::sendToClient(playerSocket, &packettype, sizeof(PacketTypes));
+    NetworkServer::sendToClient(playerSocket, &newBalance, sizeof(double));
+
+    QMutexLocker locker(&accessMutex);
+    this->balance = newBalance;
 }
 
 QByteArray Player::serializeUser()

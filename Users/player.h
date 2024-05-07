@@ -2,11 +2,13 @@
 #define PLAYER_H
 
 #include "Users/user.h"
+#include "Database/databasemanager.h"
+#include "network/networkserver.h"
 
 class Player : public User
 {
     static QList<Player> players;
-
+    QMutex accessMutex;
     double balance{};
 
 public:
@@ -24,6 +26,7 @@ public:
 
     //METHODS
     QByteArray serializeUser() override;
+    void setBalance(double newBalance);
 };
 
 #endif // PLAYER_H

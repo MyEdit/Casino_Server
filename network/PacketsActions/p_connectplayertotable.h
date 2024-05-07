@@ -4,6 +4,7 @@
 #include "Network/networkserver.h"
 #include "Games/table.h"
 
+class Player;
 class Table;
 class P_ConnectPlayerToTable
 {

@@ -9,6 +9,7 @@
 #include <network/networkserver.h>
 #include <Users/player.h>
 
+class Player;
 class Game : public QObject
 {
     static QMap<QString, QSharedPointer<Game>> games;
