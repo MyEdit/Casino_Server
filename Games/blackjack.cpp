@@ -5,20 +5,6 @@ BlackJack::BlackJack()
     this->deck = QSharedPointer<Deck>(new Deck());
 }
 
-void BlackJack::startGame()
-{
-    Game::startGame();
-
-    for (int i = 0; i < 2; ++i)
-    {
-        for (QSharedPointer<Player> player : this->getPlayers())
-        {
-            QSharedPointer<SOCKET> playerSocket = NetworkServer::getSocketUser(player);
-            giveCardToPlayer(playerSocket, player);
-        }
-    }
-}
-
 QSharedPointer<Game> BlackJack::getInstance()
 {
     return QSharedPointer<BlackJack>(new BlackJack());
@@ -32,6 +18,20 @@ QString BlackJack::getName()
 int BlackJack::getMinPlayers()
 {
     return 2;
+}
+
+void BlackJack::startGame()
+{
+    Game::startGame();
+
+    for (int i = 0; i < 2; ++i)
+    {
+        for (QSharedPointer<Player> player : this->getPlayers())
+        {
+            QSharedPointer<SOCKET> playerSocket = NetworkServer::getSocketUser(player);
+            giveCardToPlayer(playerSocket, player);
+        }
+    }
 }
 
 QList<QSharedPointer<Player>> BlackJack::getWinners() const
