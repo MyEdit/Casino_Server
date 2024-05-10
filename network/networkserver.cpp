@@ -240,7 +240,6 @@ bool NetworkServer::addConnect(QSharedPointer<SOCKET> clientSocket, QSharedPoint
         if (pair.get()->getName() == user->getName())
         {
             P_Notification::sendNotification(clientSocket, TypeMessage::Error, "You are logged in another location");
-            onClientDisconnected(clientSocket);
             return false;
         }
     }
