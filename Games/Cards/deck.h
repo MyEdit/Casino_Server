@@ -4,10 +4,11 @@
 #include <array>
 #include <QVector>
 #include "card.h"
-#include "Games/Cards/constant.h"
 
 class Deck
 {
+    static constexpr int deckSize = 52;
+
 public:
     using array_type = std::array<Card, deckSize>;
     using index_type = array_type::size_type;

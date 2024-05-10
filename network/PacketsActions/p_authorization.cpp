@@ -76,6 +76,9 @@ void P_Authorization::onStuffUserAuth(const int& ID, QSharedPointer<DatabaseMana
 
 void P_Authorization::authUser(QSharedPointer<User> user, QSharedPointer<SOCKET> clientSocket)
 {
+    if (!NetworkServer::addConnect(clientSocket, user))
+        return;
+
     Message::logInfo("User " + user->getLogin() + " successfully logged");
     PacketTypes packettype = PacketTypes::P_Authorization;
     Roles role = user->getRole();
@@ -86,5 +89,4 @@ void P_Authorization::authUser(QSharedPointer<User> user, QSharedPointer<SOCKET>
     NetworkServer::sendToClient(clientSocket, &role, sizeof(Roles));
     NetworkServer::sendToClient(clientSocket, &sizeByteUser, sizeof(int));
     NetworkServer::sendToClient(clientSocket, byteUser.constData(), sizeByteUser);
-    NetworkServer::addConnect(clientSocket, user);
 }

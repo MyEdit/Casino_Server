@@ -231,10 +231,22 @@ void NetworkServer::onClientDisconnected(QSharedPointer<SOCKET> clientSocket)
 }
 
 //Добавляет клиента в мапу Conections
-void NetworkServer::addConnect(QSharedPointer<SOCKET> clientSocket, QSharedPointer<User> user)
+bool NetworkServer::addConnect(QSharedPointer<SOCKET> clientSocket, QSharedPointer<User> user)
 {
     QMutexLocker locker(&m_mutex);
+
+    for (const auto& pair : Conections)
+    {
+        if (pair.get()->getName() == user->getName())
+        {
+            P_Notification::sendNotification(clientSocket, TypeMessage::Error, "You are logged in another location");
+            onClientDisconnected(clientSocket);
+            return false;
+        }
+    }
+
     Conections.insert(clientSocket, user);
+    return true;
 }
 
 QList<QString> NetworkServer::getOnlineUsers()

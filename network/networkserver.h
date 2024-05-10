@@ -32,7 +32,7 @@ private:
     void configuration();
     static void packetHandler(const PacketTypes packettype, QSharedPointer<SOCKET> clientSocket);
     static void clientHandler(QSharedPointer<SOCKET> clientSocket);
-    static void addConnect(QSharedPointer<SOCKET> clientSocket, QSharedPointer<User> user);
+    static bool addConnect(QSharedPointer<SOCKET> clientSocket, QSharedPointer<User> user);
     static QString getIPAdress(QSharedPointer<SOCKET> client);
 
 public:

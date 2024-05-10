@@ -125,7 +125,7 @@ bool Table::canPlayerJoin(QSharedPointer<Player> player)
     if (player->getBalance() < this->tableSettings.minBalance)
         return false;
 
-    if (this->players.size() >= this->game->getMinPlayers())
+    if (this->players.size() >= this->getSettings().maxCountPlayers)
         return false;
 
     if (!this->game->canPlayerJoin(player))
@@ -199,6 +199,7 @@ int Table::getCurrentNumPlayer()
 
 QList<QSharedPointer<Player>> Table::getPlayers()
 {
+    QMutexLocker locker(&accessTablesMutex);
     return players;
 }
 

@@ -37,6 +37,7 @@ int Player::getID()
 
 QString Player::getName()
 {
+    QMutexLocker locker(&accessMutex);
     return this->name;
 }
 QString Player::getLogin()
