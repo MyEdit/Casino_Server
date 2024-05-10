@@ -24,11 +24,11 @@ void P_SendTables::sendTables(QSharedPointer<SOCKET> clientSocket)
     for(QSharedPointer<QSqlRecord> responce : result)
     {
         int id = responce->value(0).toInt();
-        double minBet = responce->value(3).toDouble();
-        double stepBet = responce->value(4).toDouble();
-        double minBalance = responce->value(5).toDouble();
+        double minBet = responce->value(2).toDouble();
+        double stepBet = responce->value(3).toDouble();
+        double minBalance = responce->value(4).toDouble();
         int maxNumPlayer = responce->value(1).toInt();
-        QString nameGame = responce->value(6).toString();
+        QString nameGame = responce->value(5).toString();
 
         createOrUpdateTable(QSharedPointer<Game>(Game::getGame(nameGame)), TableSettings{id, minBet, stepBet, minBalance, maxNumPlayer});
     }
