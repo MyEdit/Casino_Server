@@ -16,7 +16,8 @@ enum class PacketTypes
     P_UpdateGameProcessing,
     P_GamePacket,
     P_Search,
-    P_UpdateBalance
+    P_UpdateBalance,
+    P_Update
 };
 
 enum class ModelTypes
@@ -26,7 +27,8 @@ enum class ModelTypes
     StuffUsers,
     Banlist,
     Credits,
-    Payments
+    Payments,
+    Profit
 };
 
 enum class QueryTypes

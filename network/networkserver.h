@@ -47,6 +47,7 @@ public:
     static QString getMessageFromClient(QSharedPointer<SOCKET> clientSocket);
     static QSharedPointer<SOCKET> getSocketByNickname(const QString& nickname);
     static QList<QString> getOnlineUsers();
+    static QList<QSharedPointer<SOCKET>> getAdminSockets();
 
     template<typename T>
     static void sendToClient(QSharedPointer<SOCKET> client, const T data, const int& size)

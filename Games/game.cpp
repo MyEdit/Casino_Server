@@ -5,9 +5,7 @@ QMutex Game::accessGamesMutex;
 
 Game::Game()
 {
-    Ticker::addListener(QWeakPointer<Func>(
-        pointerOnTick = QSharedPointer<Func>::create(std::bind(&Game::onTick, this))
-    ));
+    Ticker::addListener(QWeakPointer<Func>(pointerOnTick = QSharedPointer<Func>::create(std::bind(&Game::onTick, this))));
 }
 
 void Game::registerGame(QSharedPointer<Game> game)
@@ -41,21 +39,21 @@ void Game::onGamePacketReceived(QSharedPointer<SOCKET> clientSocket)
 
     switch(gamePacket)
     {
-        case(GamePackets::P_TakeCard):
-        {
-            this->giveCardToPlayer(clientSocket, qSharedPointerCast<Player>(NetworkServer::getUser(clientSocket)));
-            break;
-        }
-        case(GamePackets::P_PassMove):
-        {
-            this->passTurnToNextPlayer();
-            break;
-        }
-        default:
-        {
-            Message::logWarn("[" + getName() + "] Client send unknown game packet");
-            break;
-        }
+    case(GamePackets::P_TakeCard):
+    {
+        this->giveCardToPlayer(clientSocket, qSharedPointerCast<Player>(NetworkServer::getUser(clientSocket)));
+        break;
+    }
+    case(GamePackets::P_PassMove):
+    {
+        this->passTurnToNextPlayer();
+        break;
+    }
+    default:
+    {
+        Message::logWarn("[" + getName() + "] Client send unknown game packet");
+        break;
+    }
     }
 }
 
@@ -210,7 +208,7 @@ void Game::onGameFinished()
         QSharedPointer<Table> table = Table::getTable(tableID);
         GamePackets packetToSend = winners.contains(player) ? GamePackets::P_Win : GamePackets::P_Lose;
 
-        player->setBalance(packetToSend == GamePackets::P_Lose ? player->getBalance() - table->getSettings().minBet : player->getBalance() + table->getSettings().minBet);
+        packetToSend == GamePackets::P_Lose  ? changingBalanceWhenLos(player, table) : changingBalanceWhenWin(player, table);
 
         NetworkServer::sendToClient(playerSocket, &packettype, sizeof(PacketTypes));
         NetworkServer::sendToClient(playerSocket, &packetToSend, sizeof(GamePackets));
@@ -228,7 +226,8 @@ void Game::handleMultipleWinners(QList<QSharedPointer<Player>> winners)
         QSharedPointer<Table> table = Table::getTable(tableID);
         GamePackets packetToSend = winners.contains(player) ? GamePackets::P_Win : GamePackets::P_Lose;
 
-        player->setBalance(packetToSend == GamePackets::P_Lose ? player->getBalance() - table->getSettings().minBet : player->getBalance());
+        if(packetToSend == GamePackets::P_Lose)
+            changingBalanceWhenLos(player, table);
 
         NetworkServer::sendToClient(playerSocket, &packettype, sizeof(PacketTypes));
         NetworkServer::sendToClient(playerSocket, &packetToSend, sizeof(GamePackets));
@@ -238,6 +237,46 @@ void Game::handleMultipleWinners(QList<QSharedPointer<Player>> winners)
     }
 
     this->startGame();
+}
+
+void Game::changingBalanceWhenWin(QSharedPointer<Player> player, QSharedPointer<Table> table)
+{
+    double winning = table->getSettings().minBet * (table->getPlayers().size() - 1);
+    double commissionCasino = winning * 0.3;
+    winning -= commissionCasino;
+
+    double newBalance = player->getBalance() + winning;
+
+    player->setBalance(newBalance);
+    creditingProfitsCasino(commissionCasino);
+}
+
+void Game::changingBalanceWhenLos(QSharedPointer<Player> player, QSharedPointer<Table> table)
+{
+    int newBalance = player->getBalance() - table->getSettings().minBet;
+    player->setBalance(newBalance);
+}
+
+void Game::creditingProfitsCasino(double commissionCasino)
+{
+    QSharedPointer<DatabaseManager> databaseManager(new DatabaseManager());
+
+    QString data = QDate::currentDate().toString();
+    QString summa = QString::number(commissionCasino);
+    QString tableNum = QString::number(tableID);
+    QString request = "INSERT INTO Profit (Data, Summa, TableNum) VALUES ('" + data + "', '" + summa + "', '" + tableNum + "');";
+
+    QList<QSharedPointer<SOCKET>> adminSockets = NetworkServer::getAdminSockets();
+    for(QSharedPointer<SOCKET> adminSocket : adminSockets)
+    {
+        databaseManager->executeQueryWithoutResponce(request);
+
+        PacketTypes packetTypes = PacketTypes::P_Update;
+        ModelTypes modelTypes = ModelTypes::Profit;
+
+        NetworkServer::sendToClient(adminSocket, &packetTypes, sizeof(PacketTypes));
+        NetworkServer::sendToClient(adminSocket, &modelTypes, sizeof(ModelTypes));
+    }
 }
 
 void Game::startGame()

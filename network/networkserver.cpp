@@ -208,6 +208,19 @@ QSharedPointer<SOCKET> NetworkServer::getSocketUser(QSharedPointer<User> user)
     return nullptr;
 }
 
+QList<QSharedPointer<SOCKET>> NetworkServer::getAdminSockets()
+{
+    QList<QSharedPointer<SOCKET>> adminSockets;
+
+    for (auto it = Conections.keyValueBegin(); it != Conections.keyValueEnd(); ++it)
+    {
+        if (it.base().value()->getRole() == Roles::Admin)
+            adminSockets.append(it.base().key());
+    }
+
+    return adminSockets;
+}
+
 QSharedPointer<SOCKET> NetworkServer::getSocketByNickname(const QString& nickname)
 {
     QMutexLocker locker(&m_mutex);

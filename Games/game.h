@@ -6,6 +6,7 @@
 #include <QDataStream>
 #include <QIODevice>
 #include <QList>
+#include <QDate>
 
 #include "network/networkserver.h"
 #include "Users/player.h"
@@ -15,12 +16,14 @@
 #include "Utils/ticker.h"
 
 class Player;
+class Table;
+
 class Game : public QObject
 {
+protected:
     static QMap<QString, QSharedPointer<Game>> games;
     static QMutex accessGamesMutex;
 
-protected:
     enum class GamePackets
     {
         P_TakeCard,
@@ -41,6 +44,7 @@ protected:
     PacketTypes packettype = PacketTypes::P_GamePacket;
 
     QList<QSharedPointer<Player>> getPlayers() const;
+    void creditingProfitsCasino(double commissionCasino);
     virtual void notifyOthersTakenCard(QSharedPointer<Player> thisPlayer);
     virtual void giveCardToPlayer(QSharedPointer<SOCKET> clientSocket, QSharedPointer<Player> player);
     virtual void passTurnToNextPlayer();
@@ -49,6 +53,8 @@ protected:
     virtual void stopGame();
     virtual void onTick();
     virtual void handleMultipleWinners(QList<QSharedPointer<Player>> winners);
+    virtual void changingBalanceWhenWin(QSharedPointer<Player> player, QSharedPointer<Table> table);
+    virtual void changingBalanceWhenLos(QSharedPointer<Player> player, QSharedPointer<Table> table);
 
 public:
     Game();
