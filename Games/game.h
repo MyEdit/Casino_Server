@@ -42,9 +42,11 @@ protected:
     QSharedPointer<Deck> deck;
     QSharedPointer<Func> pointerOnTick;
     PacketTypes packettype = PacketTypes::P_GamePacket;
+    QMap<GamePackets, std::function<void(QSharedPointer<SOCKET> clientSocket)>> gamePacketFunction;
 
     QList<QSharedPointer<Player>> getPlayers() const;
     void creditingProfitsCasino(double commissionCasino);
+    void initPacketHandlerFunction();
     virtual void notifyOthersTakenCard(QSharedPointer<Player> thisPlayer);
     virtual void giveCardToPlayer(QSharedPointer<SOCKET> clientSocket, QSharedPointer<Player> player);
     virtual void passTurnToNextPlayer();

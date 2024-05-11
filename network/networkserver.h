@@ -27,6 +27,7 @@ class NetworkServer
     SOCKADDR_IN serverAddress;
     SOCKET serverSocket;
     int sizeofaddr;
+    static QMap<PacketTypes, std::function<void(QSharedPointer<SOCKET> clientSocket)>> packetHandlerFunction;
 
 private:
     void configuration();
@@ -34,6 +35,7 @@ private:
     static void clientHandler(QSharedPointer<SOCKET> clientSocket);
     static bool addConnect(QSharedPointer<SOCKET> clientSocket, QSharedPointer<User> user);
     static QString getIPAdress(QSharedPointer<SOCKET> client);
+    void initPacketHandlerFunction();
 
 public:
     bool init();

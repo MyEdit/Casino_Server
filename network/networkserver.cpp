@@ -1,5 +1,6 @@
 ﻿#include "networkserver.h"
 
+QMap<PacketTypes, std::function<void(QSharedPointer<SOCKET> clientSocket)>> NetworkServer::packetHandlerFunction;
 QMap<QSharedPointer<SOCKET>, QSharedPointer<User>> Conections{};
 QMutex m_mutex{};
 
@@ -14,6 +15,10 @@ bool NetworkServer::init()
         return false;
     }
     configuration();
+
+    if(packetHandlerFunction.size() == 0)
+        initPacketHandlerFunction();
+
     return true;
 }
 
@@ -77,67 +82,29 @@ void NetworkServer::clientHandler(QSharedPointer<SOCKET> clientSocket)
     }
 }
 
-//TODO: Свернуть в мапу указателей на функции
+void NetworkServer::initPacketHandlerFunction()
+{
+    packetHandlerFunction =
+    {
+        {PacketTypes::P_Authorization,          [&](QSharedPointer<SOCKET> clientSocket) {P_Authorization::authorizeClient(clientSocket);}},
+        {PacketTypes::P_SendModel,              [&](QSharedPointer<SOCKET> clientSocket) {P_SendModel::getTypeModel(clientSocket);}},
+        {PacketTypes::P_QueryWithoutResponce,   [&](QSharedPointer<SOCKET> clientSocket) {P_QueryWithoutResponce::executeQuery(clientSocket);}},
+        {PacketTypes::P_Reconnection,           [&](QSharedPointer<SOCKET> clientSocket) {P_Reconnection::reconnectClient(clientSocket);}},
+        {PacketTypes::P_ConnectPlayerToTable,   [&](QSharedPointer<SOCKET> clientSocket) {P_ConnectPlayerToTable::connectPlayerToTable(clientSocket);}},
+        {PacketTypes::P_PlayerLeaveTable,       [&](QSharedPointer<SOCKET> clientSocket) {P_ConnectPlayerToTable::playerLeaveTable(clientSocket);}},
+        {PacketTypes::P_SendTables,             [&](QSharedPointer<SOCKET> clientSocket) {P_SendTables::sendTables(clientSocket);}},
+        {PacketTypes::P_Query,                  [&](QSharedPointer<SOCKET> clientSocket) {P_Query::getResultQuary(clientSocket);}},
+        {PacketTypes::P_GamePacket,             [&](QSharedPointer<SOCKET> clientSocket) {P_GamePacket::onGamePacketReceived(clientSocket);}},
+        {PacketTypes::P_Search,                 [&](QSharedPointer<SOCKET> clientSocket) {P_Search::getSearchQuary(clientSocket);}},
+    };
+}
+
 void NetworkServer::packetHandler(const PacketTypes packettype, QSharedPointer<SOCKET> clientSocket)
 {
-    switch(packettype)
-    {
-        case(PacketTypes::P_Authorization):
-        {
-            P_Authorization::authorizeClient(clientSocket);
-            break;
-        }
-        case(PacketTypes::P_SendModel):
-        {
-            P_SendModel::getTypeModel(clientSocket);
-            break;
-        }
-        case(PacketTypes::P_QueryWithoutResponce):
-        {
-            P_QueryWithoutResponce::executeQuery(clientSocket);
-            break;
-        }
-        case(PacketTypes::P_Reconnection):
-        {
-            P_Reconnection::reconnectClient(clientSocket);
-            break;
-        }
-        case(PacketTypes::P_ConnectPlayerToTable):
-        {
-            P_ConnectPlayerToTable::connectPlayerToTable(clientSocket);
-            break;
-        }
-        case(PacketTypes::P_PlayerLeaveTable):
-        {
-            P_ConnectPlayerToTable::playerLeaveTable(clientSocket);
-            break;
-        }
-        case(PacketTypes::P_SendTables):
-        {
-            P_SendTables::sendTables(clientSocket);
-            break;
-        }
-        case(PacketTypes::P_Query):
-        {
-            P_Query::getResultQuary(clientSocket);
-            break;
-        }
-        case(PacketTypes::P_GamePacket):
-        {
-            P_GamePacket::onGamePacketReceived(clientSocket);
-            break;
-        }
-        case(PacketTypes::P_Search):
-        {
-            P_Search::getSearchQuary(clientSocket);
-            break;
-        }
-        default:
-        {
-            Message::logWarn("Client send unknown packettype");
-            break;
-        }
-    }
+    if(packetHandlerFunction.contains(packettype))
+        packetHandlerFunction[packettype](clientSocket);
+    else
+        Message::logWarn("Client send unknown packettype");
 }
 
 //Отправка пакета подключенному клиенту

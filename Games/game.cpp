@@ -6,6 +6,7 @@ QMutex Game::accessGamesMutex;
 Game::Game()
 {
     Ticker::addListener(QWeakPointer<Func>(pointerOnTick = QSharedPointer<Func>::create(std::bind(&Game::onTick, this))));
+    initPacketHandlerFunction();
 }
 
 void Game::registerGame(QSharedPointer<Game> game)
@@ -33,28 +34,23 @@ QSharedPointer<Game> Game::deserializeGame(const QByteArray& data)
     return Game::getGame(nameGame);
 }
 
+void Game::initPacketHandlerFunction()
+{
+    gamePacketFunction =
+    {
+        {GamePackets::P_TakeCard,   [&](QSharedPointer<SOCKET> clientSocket) {this->giveCardToPlayer(clientSocket, qSharedPointerCast<Player>(NetworkServer::getUser(clientSocket)));}},
+        {GamePackets::P_PassMove,   [&](QSharedPointer<SOCKET> clientSocket) {Q_UNUSED(clientSocket); this->passTurnToNextPlayer();}},
+    };
+}
+
 void Game::onGamePacketReceived(QSharedPointer<SOCKET> clientSocket)
 {
     GamePackets gamePacket = NetworkServer::getMessageFromClient<GamePackets>(clientSocket);
 
-    switch(gamePacket)
-    {
-    case(GamePackets::P_TakeCard):
-    {
-        this->giveCardToPlayer(clientSocket, qSharedPointerCast<Player>(NetworkServer::getUser(clientSocket)));
-        break;
-    }
-    case(GamePackets::P_PassMove):
-    {
-        this->passTurnToNextPlayer();
-        break;
-    }
-    default:
-    {
+    if(gamePacketFunction.contains(gamePacket))
+        gamePacketFunction[gamePacket](clientSocket);
+    else
         Message::logWarn("[" + getName() + "] Client send unknown game packet");
-        break;
-    }
-    }
 }
 
 void Game::onTick()
