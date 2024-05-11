@@ -53,19 +53,22 @@ void P_SendTables::deleteTable(const QList<QSharedPointer<QSqlRecord>>& newResul
 
     for (auto it = oldTables.begin(); it != oldTables.end();)
     {
-         bool found = false;
-         for (const auto& currentTable : newResult)
-         {
-             if (currentTable->value(0).toInt() == it->get()->getSettings().ID)
-             {
-                 found = true;
-                 break;
-             }
-         }
+        bool found = false;
+        for (const auto& currentTable : newResult)
+        {
+            if (currentTable->value(0).toInt() == it->get()->getSettings().ID)
+            {
+                found = true;
+                break;
+            }
+        }
 
-         if (!found)
-             it = oldTables.erase(it);
-         else
-             ++it;
-     }
+        if (!found)
+        {
+            it->get()->throwOutPlayers();
+            oldTables.erase(it);
+        }
+        else
+            ++it;
+    }
 }

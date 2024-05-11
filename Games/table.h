@@ -74,6 +74,7 @@ public:
     void updateTimer();
     QByteArray serializeTable();
     static void addTable(QSharedPointer<Table> table);
+    void throwOutPlayers();
 
 private:
     void sendTimerData();

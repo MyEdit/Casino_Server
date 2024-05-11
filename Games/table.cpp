@@ -36,9 +36,7 @@ Table::Table(const QByteArray& data)
 
 void Table::setTicker()
 {
-    Ticker::addListener(QWeakPointer<Func>(
-        pointerOnTick = QSharedPointer<Func>::create(std::bind(&Table::onTick, this))
-    ));
+    Ticker::addListener(QWeakPointer<Func>( pointerOnTick = QSharedPointer<Func>::create(std::bind(&Table::onTick, this)) ));
 }
 
 void Table::onTick()
@@ -115,6 +113,16 @@ void Table::addTable(QSharedPointer<Table> table)
     QMutexLocker locker(&accessTablesMutex);
     if(!tables.contains(table))
         tables.append(table);
+}
+
+void Table::throwOutPlayers()
+{
+    for (QSharedPointer<Player> player : this->players)
+    {
+        QSharedPointer<SOCKET> clientSocket = NetworkServer::getSocketUser(player);
+        PacketTypes packettype = PacketTypes::P_PlayerLeaveTable;
+        NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
+    }
 }
 
 bool Table::canPlayerJoin(QSharedPointer<Player> player)
