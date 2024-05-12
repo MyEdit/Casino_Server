@@ -48,6 +48,9 @@ class Table : public QObject
     QList<QSharedPointer<Player>> players;
     QSharedPointer<Func> pointerOnTick;
     static QMutex accessTablesMutex;
+    static QMutex accessGameMutex;
+    static QMutex accessTableSettingMutex;
+    static QMutex accessPlayerMutex;
     static QList<QSharedPointer<Table>> tables;
     int timeToStart = 10;
     bool isGameReady = false;
@@ -74,7 +77,6 @@ public:
     void updateTimer();
     QByteArray serializeTable();
     static void addTable(QSharedPointer<Table> table);
-    void throwOutPlayers();
 
 private:
     void sendTimerData();

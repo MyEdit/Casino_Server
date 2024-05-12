@@ -2,6 +2,9 @@
 
 QList<QSharedPointer<Table>> Table::tables;
 QMutex Table::accessTablesMutex;
+QMutex Table::accessGameMutex;
+QMutex Table::accessTableSettingMutex;
+QMutex Table::accessPlayerMutex;
 
 Table::Table(QSharedPointer<Game> game, TableSettings tableSettings)
 {
@@ -41,10 +44,10 @@ void Table::setTicker()
 
 void Table::onTick()
 {
-    if (game->isGameRunning())
+    if (getGame()->isGameRunning())
         return;
 
-    if (!this->game->canStartGame()) //Если условие старта игры не выплняется
+    if (!getGame()->canStartGame()) //Если условие старта игры не выплняется
     {
         timeToStart = -1;
         isGameReady = false;
@@ -52,7 +55,7 @@ void Table::onTick()
         return;
     }
 
-    if (this->game->canStartGame() && !isGameReady) //Если условие старта игры начало выполняться
+    if (getGame()->canStartGame() && !isGameReady) //Если условие старта игры начало выполняться
     {
         updateTimer();
         isGameReady = true;
@@ -66,7 +69,7 @@ void Table::onTick()
     else
     {
         isGameReady = false;
-        game->startGame();
+        getGame()->startGame();
     }
 }
 
@@ -79,8 +82,7 @@ void Table::joinPlayer(QSharedPointer<Player> player)
 
 void Table::leavePlayer(QSharedPointer<Player> player)
 {
-    QMutexLocker locker(&accessTablesMutex);
-    for (QSharedPointer<Player> p : players)
+    for (QSharedPointer<Player> p : getPlayers())
     {
         if (p->getLogin() == player->getLogin())
         {
@@ -98,7 +100,7 @@ void Table::updateTimer()
 
 void Table::sendTimerData()
 {
-    for (QSharedPointer<Player> player : this->players)
+    for (QSharedPointer<Player> player : getPlayers())
     {
         QString time = QString::number(timeToStart);
         QSharedPointer<SOCKET> clientSocket = NetworkServer::getSocketUser(player);
@@ -115,28 +117,18 @@ void Table::addTable(QSharedPointer<Table> table)
         tables.append(table);
 }
 
-void Table::throwOutPlayers()
-{
-    for (QSharedPointer<Player> player : this->players)
-    {
-        QSharedPointer<SOCKET> clientSocket = NetworkServer::getSocketUser(player);
-        PacketTypes packettype = PacketTypes::P_PlayerLeaveTable;
-        NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
-    }
-}
-
 bool Table::canPlayerJoin(QSharedPointer<Player> player)
 {
-    if (game->isGameRunning())
+    if (getGame()->isGameRunning())
         return false;
 
-    if (player->getBalance() < this->tableSettings.minBalance)
+    if (player->getBalance() < getSettings().minBalance)
         return false;
 
-    if (this->players.size() >= this->getSettings().maxCountPlayers)
+    if (getPlayers().size() >= getSettings().maxCountPlayers)
         return false;
 
-    if (!this->game->canPlayerJoin(player))
+    if (!getGame()->canPlayerJoin(player))
         return false;
 
     return true;
@@ -144,6 +136,7 @@ bool Table::canPlayerJoin(QSharedPointer<Player> player)
 
 void Table::updatePlayersList()
 {
+    QMutexLocker locker(&accessTablesMutex);
     QList<QSharedPointer<Player>> players;
 
     for(QSharedPointer<Player> p : this->players)
@@ -192,27 +185,31 @@ QSharedPointer<Table> Table::getTable(const int& ID)
 
 QSharedPointer<Game> Table::getGame()
 {
+    QMutexLocker locker(&accessGameMutex);
     return game;
 }
 
 TableSettings Table::getSettings()
 {
+    QMutexLocker locker(&accessTableSettingMutex);
     return tableSettings;
 }
 
 int Table::getCurrentNumPlayer()
 {
+    QMutexLocker locker(&accessPlayerMutex);
     return  players.size();
 }
 
 QList<QSharedPointer<Player>> Table::getPlayers()
 {
-    QMutexLocker locker(&accessTablesMutex);
+    QMutexLocker locker(&accessPlayerMutex);
     return players;
 }
 
 void Table::setNewData(TableSettings tableSettings)
 {
+    QMutexLocker locker(&accessTableSettingMutex);
     this->tableSettings = tableSettings;
 }
 

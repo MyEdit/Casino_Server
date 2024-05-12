@@ -33,12 +33,12 @@ void P_SendTables::sendTables(QSharedPointer<SOCKET> clientSocket)
         createOrUpdateTable(QSharedPointer<Game>(Game::getGame(nameGame)), TableSettings{id, minBet, stepBet, minBalance, maxNumPlayer});
     }
 
-    int countTable = Table::getCopyListTabels().size();
+    int countTable = Table::getTabels().size();
 
     NetworkServer::sendToClient(clientSocket, &packettype, sizeof(PacketTypes));
     NetworkServer::sendToClient(clientSocket, &countTable, sizeof(int));
 
-    for(QSharedPointer<Table> table : Table::getCopyListTabels())
+    for(QSharedPointer<Table> table : Table::getTabels())
     {
         QByteArray jsonData = table->serializeTable();
         int dataSize = jsonData.size();
@@ -51,7 +51,7 @@ void P_SendTables::deleteTable(const QList<QSharedPointer<QSqlRecord>>& newResul
 {
     QList<QSharedPointer<Table>>& oldTables = Table::getTabels();
 
-    for (auto it = oldTables.begin(); it != oldTables.end();)
+    for (auto it = oldTables.begin(); it != oldTables.end(); it++)
     {
         bool found = false;
         for (const auto& currentTable : newResult)
@@ -64,11 +64,6 @@ void P_SendTables::deleteTable(const QList<QSharedPointer<QSqlRecord>>& newResul
         }
 
         if (!found)
-        {
-            it->get()->throwOutPlayers();
             oldTables.erase(it);
-        }
-        else
-            ++it;
     }
 }

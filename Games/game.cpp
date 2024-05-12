@@ -97,7 +97,9 @@ QList<QSharedPointer<Player>> Game::getPlayers() const
     if (table == nullptr)
         return QList<QSharedPointer<Player>>();
 
-    return table->getPlayers();
+    QList<QSharedPointer<Player>> players = winners.isEmpty() ? table->getPlayers() : this->winners;
+
+    return players;
 }
 
 void Game::setTable(const int& tableID)
@@ -141,7 +143,7 @@ void Game::notifyOthersTakenCard(QSharedPointer<Player> thisPlayer)
 {
     PacketTypes packettype = PacketTypes::P_GamePacket;
     GamePackets gamePacket = GamePackets::P_TakeCardAnotherPlayer;
-    QList<QSharedPointer<Player>> players = winners.isEmpty() ? this->getPlayers() : this->winners;
+    QList<QSharedPointer<Player>> players = getPlayers();
 
     for(QSharedPointer<Player> player : players)
     {
@@ -157,7 +159,7 @@ void Game::notifyOthersTakenCard(QSharedPointer<Player> thisPlayer)
 
 void Game::passTurnToNextPlayer()
 {
-    QList<QSharedPointer<Player>> players = winners.isEmpty() ? this->getPlayers() : this->winners;
+    QList<QSharedPointer<Player>> players = getPlayers();
     int index = this->activePlayer.second + 1;
 
     if (players.size() - 1 < index)
@@ -198,7 +200,7 @@ void Game::onGameFinished()
         return;
     }
 
-    for (QSharedPointer<Player> player : this->playersHands.keys())
+    for (QSharedPointer<Player> player : getPlayers())
     {
         QSharedPointer<SOCKET> playerSocket = NetworkServer::getSocketUser(player);
         QSharedPointer<Table> table = Table::getTable(tableID);
