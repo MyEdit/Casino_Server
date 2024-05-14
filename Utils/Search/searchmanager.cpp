@@ -29,7 +29,7 @@ void SearchManager::launchSearch()
         if(where.isEmpty())
             searchQuery = sampleSearchQuery.arg(sort).arg(table).arg(limit).arg(offset).arg(column).arg(searchText);
         else
-            searchQuery = sampleSearchQuery.arg(sort).arg(table).arg(where).arg(limit).arg(offset).arg(column).arg(searchText);
+            searchQuery = sampleSearchQueryWhere.arg(sort).arg(table).arg(where).arg(limit).arg(offset).arg(column).arg(searchText);
 
         QThread* thread = new QThread;
         SearchThread* worker = new SearchThread(searchQuery, found);
