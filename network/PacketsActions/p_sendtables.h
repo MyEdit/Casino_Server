@@ -9,7 +9,6 @@ class P_SendTables
 public:
     const static PacketTypes packettype;
     static void sendTables(QSharedPointer<SOCKET> clientSocket);
-    static void deleteTable(const QList<QSharedPointer<QSqlRecord> > &newResult);
 
     friend class NetworkServer;
 };

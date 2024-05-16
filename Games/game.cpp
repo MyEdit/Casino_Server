@@ -26,6 +26,26 @@ QSharedPointer<Game> Game::getGame(QString name)
     return game->getInstance();
 }
 
+void Game::onTick()
+{
+    if(!this->isGameRunning())
+        return;
+
+    if (this->getPlayers().size() <= 0)
+    {
+        this->stopGame();
+        return;
+    }
+
+    if (!this->canStartGame())
+    {
+        this->onGameFinished();
+        return;
+    }
+
+    //TODO Добавить таймер
+}
+
 QSharedPointer<Game> Game::deserializeGame(const QByteArray& data)
 {
     QDataStream stream(data);
@@ -51,26 +71,6 @@ void Game::onGamePacketReceived(QSharedPointer<SOCKET> clientSocket)
         gamePacketFunction[gamePacket](clientSocket);
     else
         Message::logWarn("[" + getName() + "] Client send unknown game packet");
-}
-
-void Game::onTick()
-{
-    if(!this->isGameRunning())
-        return;
-
-    if (this->getPlayers().size() <= 0)
-    {
-        //this->stopGame();
-        return;
-    }
-
-    if (!this->canStartGame())
-    {
-        this->onGameFinished();
-        return;
-    }
-
-    //TODO Добавить таймер
 }
 
 //Особые проверки самой игры на коннект игрока

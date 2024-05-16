@@ -18,14 +18,15 @@ class Ticker : public QObject {
 private:
     static QMutex tickerMutex;
     static QSharedPointer<std::thread> tickerThread;
-    static QList<QWeakPointer<std::function<void(void)>>> callbacks;
+    static QList<QWeakPointer<Func>> callbacks;
+    static QList<QSharedPointer<Func>> getValidCallbacks();
 
     static void runTickerLoop();
 
 public:
     typedef std::function<void(void)> Func;
 
-    static void addListener(const QWeakPointer<std::function<void()>> callback);
+    static void addListener(const QWeakPointer<Func> callback);
     static void init();
 };
 

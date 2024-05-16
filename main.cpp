@@ -2,10 +2,12 @@
 #include <network/networkserver.h>
 #include <Commands/commandmanager.h>
 #include <Utils/ticker.h>
+#include <Utils/updater.h>
 #include <Games/blackjack.h>
 
 NetworkServer network;
 CommandManager commandManager;
+Updater updater;
 
 int main(int argc, char *argv[])
 {
@@ -21,6 +23,7 @@ int main(int argc, char *argv[])
     //Register default games
     Game::registerGame(QSharedPointer<BlackJack>(new BlackJack()));
 
+    updater.init();
     network.startListening();
 
     return app.exec();

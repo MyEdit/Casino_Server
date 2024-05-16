@@ -28,6 +28,8 @@ class NetworkServer
     SOCKET serverSocket;
     int sizeofaddr;
     static QMap<PacketTypes, std::function<void(QSharedPointer<SOCKET> clientSocket)>> packetHandlerFunction;
+    static QMap<QSharedPointer<SOCKET>, QPair<QSharedPointer<User>, QSharedPointer<QMutex>>> Conections;
+    static QMutex m_mutex;
 
 private:
     void configuration();
@@ -41,15 +43,16 @@ public:
     bool init();
     void startListening();
     static void sendToClient(QSharedPointer<SOCKET> client, const QString& message);
-    static void sendToAllClient(const QString& message);
     static void onClientDisconnected(QSharedPointer<SOCKET> client);
     static QString getNickname(QSharedPointer<SOCKET> clientSocket);
     static QSharedPointer<User> getUser(QSharedPointer<SOCKET> clientSocket);
     static QSharedPointer<SOCKET> getSocketUser(QSharedPointer<User> user);
+    static QSharedPointer<QMutex> getClientMutex(QSharedPointer<SOCKET> clientSocket);
     static QString getMessageFromClient(QSharedPointer<SOCKET> clientSocket);
     static QSharedPointer<SOCKET> getSocketByNickname(const QString& nickname);
     static QList<QString> getOnlineUsers();
     static QList<QSharedPointer<SOCKET>> getAdminSockets();
+    static QList<QSharedPointer<SOCKET>> getPlayerSockets();
 
     template<typename T>
     static void sendToClient(QSharedPointer<SOCKET> client, const T data, const int& size)

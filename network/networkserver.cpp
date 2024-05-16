@@ -1,8 +1,8 @@
 ﻿#include "networkserver.h"
 
 QMap<PacketTypes, std::function<void(QSharedPointer<SOCKET> clientSocket)>> NetworkServer::packetHandlerFunction;
-QMap<QSharedPointer<SOCKET>, QSharedPointer<User>> Conections{};
-QMutex m_mutex{};
+QMap<QSharedPointer<SOCKET>, QPair<QSharedPointer<User>, QSharedPointer<QMutex>>> NetworkServer::Conections;
+QMutex NetworkServer::m_mutex;
 
 //Инициилизация
 bool NetworkServer::init()
@@ -62,6 +62,7 @@ void NetworkServer::startListening()
         else
         {
             Message::logInfo("Client [" + getIPAdress(clientSocket) + "] connected");
+
             QtConcurrent::run(clientHandler, clientSocket);
         }
     }
@@ -115,17 +116,6 @@ void NetworkServer::sendToClient(QSharedPointer<SOCKET> client, const QString& m
     send(*client, message.toUtf8().constData(), message_size, 0);
 }
 
-//Отправка пакета всем подключенным клиентам
-void NetworkServer::sendToAllClient(const QString& message)
-{
-    QMap<QSharedPointer<SOCKET>, QSharedPointer<User>>::iterator it;
-    for (it = Conections.begin(); it != Conections.end(); ++it)
-    {
-        QSharedPointer<SOCKET> client = it.key();
-        sendToClient(client, message);
-    }
-}
-
 //Парс и получение пакета от клиента с неизвестной длинной
 QString NetworkServer::getMessageFromClient(QSharedPointer<SOCKET> clientSocket)
 {
@@ -154,13 +144,13 @@ QString NetworkServer::getIPAdress(QSharedPointer<SOCKET> client)
 QString NetworkServer::getNickname(QSharedPointer<SOCKET> clientSocket)
 {
     QMutexLocker locker(&m_mutex);
-    return Conections[clientSocket]->getLogin();
+    return Conections[clientSocket].first->getLogin();
 }
 
 QSharedPointer<User> NetworkServer::getUser(QSharedPointer<SOCKET> clientSocket)
 {
     QMutexLocker locker(&m_mutex);
-    return Conections.value(clientSocket);
+    return Conections.value(clientSocket).first;
 }
 
 QSharedPointer<SOCKET> NetworkServer::getSocketUser(QSharedPointer<User> user)
@@ -168,7 +158,7 @@ QSharedPointer<SOCKET> NetworkServer::getSocketUser(QSharedPointer<User> user)
     QMutexLocker locker(&m_mutex);
     for (auto it = Conections.keyValueBegin(); it != Conections.keyValueEnd(); ++it)
     {
-        if(it.base().value()->getID() == user->getID())
+        if(it.base().value().first->getID() == user->getID())
             return it.base().key();
     }
 
@@ -181,11 +171,24 @@ QList<QSharedPointer<SOCKET>> NetworkServer::getAdminSockets()
 
     for (auto it = Conections.keyValueBegin(); it != Conections.keyValueEnd(); ++it)
     {
-        if (it.base().value()->getRole() == Roles::Admin)
+        if (it.base().value().first->getRole() == Roles::Admin)
             adminSockets.append(it.base().key());
     }
 
     return adminSockets;
+}
+
+QList<QSharedPointer<SOCKET>> NetworkServer::getPlayerSockets()
+{
+    QList<QSharedPointer<SOCKET>> playerSockets;
+
+    for (auto it = Conections.keyValueBegin(); it != Conections.keyValueEnd(); ++it)
+    {
+        if (it.base().value().first->getRole() == Roles::User)
+            playerSockets.append(it.base().key());
+    }
+
+    return playerSockets;
 }
 
 QSharedPointer<SOCKET> NetworkServer::getSocketByNickname(const QString& nickname)
@@ -193,7 +196,7 @@ QSharedPointer<SOCKET> NetworkServer::getSocketByNickname(const QString& nicknam
     QMutexLocker locker(&m_mutex);
     for (auto it = Conections.begin(); it != Conections.end(); ++it)
     {
-        if (it.value()->getLogin() == nickname)
+        if (it.value().first->getLogin() == nickname)
         {
             return it.key();
         }
@@ -217,14 +220,19 @@ bool NetworkServer::addConnect(QSharedPointer<SOCKET> clientSocket, QSharedPoint
 
     for (const auto& pair : Conections)
     {
-        if (pair.get()->getLogin() == user->getLogin())
+        Message::logError(pair.first.get()->getLogin());
+    }
+
+    for (const auto& pair : Conections)
+    {
+        if (pair.first.get()->getLogin() == user->getLogin())
         {
             P_Notification::sendNotification(clientSocket, TypeMessage::Error, "You are logged in another location");
             return false;
         }
     }
 
-    Conections.insert(clientSocket, user);
+    Conections.insert(clientSocket, {user, QSharedPointer<QMutex>(new QMutex)});
     return true;
 }
 
@@ -234,7 +242,13 @@ QList<QString> NetworkServer::getOnlineUsers()
 
     QList<QString> users;
     for (auto it = Conections.begin(); it != Conections.end(); ++it)
-        users.append(it.value()->getLogin());
+        users.append(it.value().first->getLogin());
 
     return users;
+}
+
+QSharedPointer<QMutex> NetworkServer::getClientMutex(QSharedPointer<SOCKET> clientSocket)
+{
+    QMutexLocker locker(&m_mutex);
+    return Conections.value(clientSocket).second;
 }

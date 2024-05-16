@@ -4,8 +4,6 @@
 //получает запрашиваемый тип модели
 void P_SendModel::getTypeModel(QSharedPointer<SOCKET> clientSocket)
 {   
-    QSharedPointer<DatabaseManager> databaseManager(new DatabaseManager());
-
     ModelLoadingType modelLoadingType = NetworkServer::getMessageFromClient<ModelLoadingType>(clientSocket);
     ModelTypes modeltype = NetworkServer::getMessageFromClient<ModelTypes>(clientSocket);
     int offset = NetworkServer::getMessageFromClient<int>(clientSocket);
@@ -13,12 +11,19 @@ void P_SendModel::getTypeModel(QSharedPointer<SOCKET> clientSocket)
     QString sort = NetworkServer::getMessageFromClient(clientSocket);
     QString where = NetworkServer::getMessageFromClient(clientSocket);
 
-    sendModel(clientSocket, databaseManager->getModel(tableName, offset, sort, where), modeltype, modelLoadingType);
+    QtConcurrent::run([=]()
+    {
+        QSharedPointer<DatabaseManager> databaseManager(new DatabaseManager());
+        QSharedPointer<QSqlQueryModel> result = databaseManager->getModel(tableName, offset, sort, where);
+        sendModel(clientSocket, result, modeltype, modelLoadingType);
+    });
 }
 
 //отправляет запрошенный тип модели
 void P_SendModel::sendModel(QSharedPointer<SOCKET> clientSocket, QSharedPointer<QSqlQueryModel> model, const ModelTypes modeltype, const ModelLoadingType modelLoadingType)
 {
+    QMutexLocker locker(NetworkServer::getClientMutex(clientSocket).get());
+
     PacketTypes packettype = PacketTypes::P_SendModel;
     QByteArray jsonData = Serializer::serializeDataModel(model);
     int dataSize = jsonData.size();

@@ -45,6 +45,7 @@ SOURCES += \
     Commands/commandmanager.cpp \
     Commands/commandhelp.cpp \
     Utils/ticker.cpp \
+    Utils/updater.cpp \
     main.cpp \
 
 # Default rules for deployment.
@@ -89,7 +90,8 @@ HEADERS += \
     Commands/commandmanager.h \
     Commands/command.h \
     Commands/commandhelp.h \ \
-    Utils/ticker.h
+    Utils/ticker.h \
+    Utils/updater.h
 
 DISTFILES += \
     Database/Database.sqlite

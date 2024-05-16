@@ -39,7 +39,7 @@ Table::Table(const QByteArray& data)
 
 void Table::setTicker()
 {
-    Ticker::addListener(QWeakPointer<Func>( pointerOnTick = QSharedPointer<Func>::create(std::bind(&Table::onTick, this)) ));
+    Ticker::addListener(QWeakPointer<Func>(pointerOnTick = QSharedPointer<Func>::create(std::bind(&Table::onTick, this))));
 }
 
 void Table::onTick()
@@ -157,8 +157,9 @@ QByteArray Table::serializeTable()
 
     updatePlayersList();
     int currentNumPlayer = players.size();
+    bool isGameRunning = game->isGameRunning();
 
-    stream << gameData << settingsData << currentNumPlayer;
+    stream << gameData << settingsData << currentNumPlayer << isGameRunning;
 
     for (QSharedPointer<Player> player : players)
     {
