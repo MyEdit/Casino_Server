@@ -23,13 +23,16 @@ void Ticker::runTickerLoop()
         std::this_thread::sleep_for(std::chrono::seconds(1));
 
         for(auto func : getValidCallbacks())
-            (*func)();
+        {
+            if(auto localFunc = func.lock())
+                (*localFunc)();
+        }
     }
 }
 
-QList<QSharedPointer<Func>> Ticker::getValidCallbacks()
+QList<QWeakPointer<Func>> Ticker::getValidCallbacks()
 {
-    QList<QSharedPointer<Func>> validCallbacks;
+    QList<QWeakPointer<Func>> validCallbacks;
     QMutexLocker locker(&tickerMutex);
 
     callbacks.erase(std::remove_if(callbacks.begin(), callbacks.end(), [](const QWeakPointer<Func>& func) {

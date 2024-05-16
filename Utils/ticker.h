@@ -1,4 +1,4 @@
-#ifndef TICKER_H
+﻿#ifndef TICKER_H
 #define TICKER_H
 
 #include <QObject>
@@ -19,7 +19,7 @@ private:
     static QMutex tickerMutex;
     static QSharedPointer<std::thread> tickerThread;
     static QList<QWeakPointer<Func>> callbacks;
-    static QList<QSharedPointer<Func>> getValidCallbacks();
+    static QList<QWeakPointer<Func> > getValidCallbacks();
 
     static void runTickerLoop();
 
