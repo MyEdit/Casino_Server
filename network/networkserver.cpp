@@ -90,7 +90,6 @@ void NetworkServer::initPacketHandlerFunction()
         {PacketTypes::P_Authorization,          [&](QSharedPointer<SOCKET> clientSocket) {P_Authorization::authorizeClient(clientSocket);}},
         {PacketTypes::P_SendModel,              [&](QSharedPointer<SOCKET> clientSocket) {P_SendModel::getTypeModel(clientSocket);}},
         {PacketTypes::P_QueryWithoutResponce,   [&](QSharedPointer<SOCKET> clientSocket) {P_QueryWithoutResponce::executeQuery(clientSocket);}},
-        {PacketTypes::P_Reconnection,           [&](QSharedPointer<SOCKET> clientSocket) {P_Reconnection::reconnectClient(clientSocket);}},
         {PacketTypes::P_ConnectPlayerToTable,   [&](QSharedPointer<SOCKET> clientSocket) {P_ConnectPlayerToTable::connectPlayerToTable(clientSocket);}},
         {PacketTypes::P_PlayerLeaveTable,       [&](QSharedPointer<SOCKET> clientSocket) {P_ConnectPlayerToTable::playerLeaveTable(clientSocket);}},
         {PacketTypes::P_SendTables,             [&](QSharedPointer<SOCKET> clientSocket) {P_SendTables::sendTables(clientSocket);}},

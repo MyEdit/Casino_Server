@@ -14,7 +14,6 @@
 #include "network/PacketsActions/p_sendmodel.h"
 #include "network/PacketsActions/p_query.h"
 #include "network/PacketsActions/p_querywithoutresponce.h"
-#include "network/PacketsActions/p_reconnection.h"
 #include "network/PacketsActions/p_sendtables.h"
 #include "network/PacketsActions/p_connectplayertotable.h"
 #include "network/PacketsActions/p_gamepacket.h"

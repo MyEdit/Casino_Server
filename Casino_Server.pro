@@ -32,7 +32,6 @@ SOURCES += \
     Network/PacketsActions/p_notification.cpp \
     Network/PacketsActions/p_query.cpp \
     Network/PacketsActions/p_querywithoutresponce.cpp \
-    Network/PacketsActions/p_reconnection.cpp \
     Network/PacketsActions/p_search.cpp \
     Network/PacketsActions/p_sendmodel.cpp \
     Network/PacketsActions/p_sendtables.cpp \
@@ -75,7 +74,6 @@ HEADERS += \
     Network/PacketsActions/p_notification.h \
     Network/PacketsActions/p_query.h \
     Network/PacketsActions/p_querywithoutresponce.h \
-    Network/PacketsActions/p_reconnection.h \
     Network/PacketsActions/p_search.h \
     Network/PacketsActions/p_sendmodel.h \
     Network/PacketsActions/p_sendtables.h \
