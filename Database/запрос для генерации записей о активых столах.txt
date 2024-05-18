@@ -1,0 +1,18 @@
+WITH RECURSIVE Counter AS (
+    SELECT 1 AS n
+    UNION ALL
+    SELECT n + 1 FROM Counter WHERE n < 400
+)
+
+INSERT INTO ActiveTables (MaxPlayers, MinBet, BetStep, MinBalance, NameGame)
+SELECT 
+    ABS(RANDOM()) % (7 - 2 + 1) + 2 AS MaxPlayers,   -- Случайное целое число от 2 до 7 для MaxPlayers
+    ABS(RANDOM()) % (1000 - 1 + 1) + 1 AS MinBet,        -- Случайное целое число для MinBet (1-1000)
+    ABS(RANDOM()) % (100 - 1 + 1) + 1 AS BetStep,        -- Случайное целое число для BetStep (1-100)
+    ABS(RANDOM()) % (10000 - 1 + 1) + 1 AS MinBalance,   -- Случайное целое число для MinBalance (1-10000)
+    CASE ABS(RANDOM()) % 2                            -- Случайный выбор между "BlackJack" и "Девятка"
+        WHEN 0 THEN 'BlackJack'
+        ELSE 'Девятка'
+    END AS NameGame
+FROM 
+    Counter;
