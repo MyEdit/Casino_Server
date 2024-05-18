@@ -122,7 +122,7 @@ QSharedPointer<QSqlQueryModel> DatabaseManager::getModel(const QString& tableNam
     open();
     QSharedPointer<QSqlQueryModel> model(new QSqlTableModel());
 
-    QString request("CREATE TEMPORARY TABLE temp_" + tableName + " AS SELECT ROW_NUMBER() OVER (" + sort + ") AS №, sorted_data.* FROM "
+    QString request("CREATE TEMPORARY TABLE temp_" + tableName + " AS SELECT ROW_NUMBER() OVER (" + sort + ") AS '', sorted_data.* FROM "
                     "(SELECT * FROM " + tableName + " WHERE 1=1 " + where + ") AS sorted_data where 1=1 LIMIT 50 OFFSET " + QString::number(offset));
 
     model->setQuery(request, *db);

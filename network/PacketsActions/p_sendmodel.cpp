@@ -13,6 +13,7 @@ void P_SendModel::getTypeModel(QSharedPointer<SOCKET> clientSocket)
 
     QtConcurrent::run([=]()
     {
+//        QThread::sleep(3);
         QSharedPointer<DatabaseManager> databaseManager(new DatabaseManager());
         QSharedPointer<QSqlQueryModel> result = databaseManager->getModel(tableName, offset, sort, where);
         sendModel(clientSocket, result, modeltype, modelLoadingType);
