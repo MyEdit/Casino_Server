@@ -93,4 +93,5 @@ HEADERS += \
     Utils/updater.h
 
 DISTFILES += \
-    Database/Database.sqlite
+    Database/Database.sqlite \
+    Docs.yml

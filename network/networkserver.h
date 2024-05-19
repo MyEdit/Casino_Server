@@ -27,7 +27,7 @@ class NetworkServer
     SOCKET serverSocket;
     int sizeofaddr;
     static QMap<PacketTypes, std::function<void(QSharedPointer<SOCKET> clientSocket)>> packetHandlerFunction;
-    static QMap<QSharedPointer<SOCKET>, QPair<QSharedPointer<User>, QSharedPointer<QMutex>>> Conections;
+    static QMap<QSharedPointer<SOCKET>, QPair<QSharedPointer<User>, QSharedPointer<QMutex>>> Conections; //QMap<Сокет, QPair<Пользователь, Его_Личный_Mutex>>
     static QMutex m_mutex;
 
 private:

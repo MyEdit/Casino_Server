@@ -5,7 +5,6 @@ DatabaseManager::DatabaseManager()
 {
     QString connectionName = "Connection_" + QString::number(QRandomGenerator::global()->generate());
     db = QSharedPointer<QSqlDatabase>::create(QSqlDatabase::addDatabase("QSQLITE", connectionName));
-//    db->setDatabaseName("D:/C++ Projects/Casino_Server/Database/Database.sqlite");
     db->setDatabaseName("Database/Database.sqlite");
 }
 
@@ -97,8 +96,6 @@ bool DatabaseManager::executeQueryWithoutResponce(const QString& executequery)
     return success;
 }
 
-
-//TODO: это костыль, но как то всё же нужно выполнить запрос на разрешение каскадного удаления(для каждого соединения оно выключено по умолчанию) и сам запрос на удаление
 bool DatabaseManager::executeQueryDeleteWithoutResponce(const QString& executequery)
 {
     open();

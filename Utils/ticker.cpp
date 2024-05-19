@@ -20,7 +20,8 @@ void Ticker::runTickerLoop()
 {
     while (true)
     {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        //std::this_thread::sleep_for(std::chrono::seconds(1));
+        QThread::sleep(1);
 
         for(auto func : getValidCallbacks())
         {

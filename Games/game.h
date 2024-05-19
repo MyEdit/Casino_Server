@@ -36,7 +36,7 @@ protected:
 
     int tableID;
     bool gameRunning {false};
-    QPair<QSharedPointer<Player>, int> activePlayer;
+    QPair<QSharedPointer<Player>, int> activePlayer; //Pair<Игрок, Его_Индекс>
     QMap<QSharedPointer<Player>, QList<Card>> playersHands;
     QList<QSharedPointer<Player>> winners{};
     QSharedPointer<Deck> deck;
