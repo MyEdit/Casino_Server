@@ -10,6 +10,7 @@
 #include <Commands/commandban.h>
 #include <Commands/commandnotification.h>
 #include <Commands/commandlist.h>
+#include <Commands/commandtableinfo.h>
 
 class CommandManager
 {

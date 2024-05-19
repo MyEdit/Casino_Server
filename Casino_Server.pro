@@ -20,6 +20,7 @@ SOURCES += \
     Commands/commandban.cpp \
     Commands/commandlist.cpp \
     Commands/commandnotification.cpp \
+    Commands/commandtableinfo.cpp \
     Database/databasemanager.cpp \
     Games/Cards/card.cpp \
     Games/Cards/deck.cpp \
@@ -59,6 +60,7 @@ HEADERS += \
     Commands/commandban.h \
     Commands/commandlist.h \
     Commands/commandnotification.h \
+    Commands/commandtableinfo.h \
     Constants.h \
     Database/databasemanager.h \
     Games/Cards/card.h \

@@ -117,3 +117,6 @@ Commands/CommandList:
 #Класс команды /notification
 Commands/CommandNotification:
 
+#Класс команды /tableinfo
+Commands/CommandTableInfo:
+

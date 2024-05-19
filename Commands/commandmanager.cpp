@@ -17,6 +17,7 @@ void CommandManager::registerCommands()
     commands.push_back(QSharedPointer<Command>(new CommandBan()));
     commands.push_back(QSharedPointer<Command>(new CommandNotification()));
     commands.push_back(QSharedPointer<Command>(new CommandList()));
+    commands.push_back(QSharedPointer<Command>(new CommandTableInfo()));
 
     for(QSharedPointer<Command> command : commands)
     {
