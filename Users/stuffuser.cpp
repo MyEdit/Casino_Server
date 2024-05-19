@@ -26,30 +26,6 @@ StuffUser::StuffUser(const QByteArray& data)
     this->photo = photo;
 }
 
-int StuffUser::getID()
-{
-    return this->ID;
-}
-
-QString StuffUser::getName()
-{
-    return this->name;
-}
-QString StuffUser::getLogin()
-{
-    return this->login;
-}
-
-Roles StuffUser::getRole()
-{
-    return this->role;
-}
-
-QByteArray StuffUser::getPhoto()
-{
-    return photo;
-}
-
 QByteArray StuffUser::serializeUser()
 {
     QByteArray byteArray;

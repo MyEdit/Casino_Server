@@ -19,11 +19,11 @@ public:
     virtual ~User() {}
 
     //GETTERS
-    virtual int getID() = 0;
-    virtual QString getName() = 0;
-    virtual QString getLogin() = 0;
-    virtual Roles getRole() = 0;
-    virtual QByteArray getPhoto() = 0;
+    int getID() const;
+    const QString& getName();
+    const QString& getLogin();
+    Roles getRole() const;
+    const QByteArray& getPhoto();
     virtual QByteArray serializeUser() = 0;
 };
 

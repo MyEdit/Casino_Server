@@ -38,6 +38,7 @@ SOURCES += \
     Network/networkserver.cpp \
     Users/player.cpp \
     Users/stuffuser.cpp \
+    Users/user.cpp \
     Utils/Search/searchmanager.cpp \
     Utils/Search/searchthread.cpp \
     Utils/serializer.cpp \

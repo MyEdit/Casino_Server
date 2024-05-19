@@ -17,8 +17,8 @@ Player::Player(const QByteArray& data)
     QString name, login;
     double balance;
     int roleInt;
-    QByteArray photo;
-    stream >> ID >> name >> balance >> login >> roleInt >> photo;
+    QByteArray photoData;
+    stream >> ID >> name >> balance >> login >> roleInt >> photoData;
     Roles role = static_cast<Roles>(roleInt);
 
     this->ID = ID;
@@ -26,39 +26,13 @@ Player::Player(const QByteArray& data)
     this->balance = balance;
     this->login = login;
     this->role = role;
-    this->photo = photo;
-}
-
-int Player::getID()
-{
-    QMutexLocker locker(&accessMutex);
-    return this->ID;
-}
-
-QString Player::getName()
-{
-    QMutexLocker locker(&accessMutex);
-    return this->name;
-}
-QString Player::getLogin()
-{
-    return this->login;
-}
-
-Roles Player::getRole()
-{
-    return this->role;
+    this->photo = photoData;
 }
 
 double Player::getBalance()
 {
     QMutexLocker locker(&accessMutex);
     return this->balance;
-}
-
-QByteArray Player::getPhoto()
-{
-    return photo;
 }
 
 void Player::setBalance(double newBalance)
