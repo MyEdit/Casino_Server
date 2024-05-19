@@ -86,6 +86,7 @@ void Table::leavePlayer(QSharedPointer<Player> player)
     {
         if (p->getLogin() == player->getLogin())
         {
+            game->playerLeave(p);
             players.removeOne(p);
             break;
         }

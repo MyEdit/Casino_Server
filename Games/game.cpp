@@ -200,6 +200,12 @@ void Game::onGameFinished()
         return;
     }
 
+    if(winners.isEmpty())
+    {
+        changingBalanceEveryoneLoses(Table::getTable(tableID));
+        return;
+    }
+
     for (QSharedPointer<Player> player : getPlayers())
     {
         QSharedPointer<SOCKET> playerSocket = NetworkServer::getSocketUser(player);
@@ -253,6 +259,31 @@ void Game::changingBalanceWhenLos(QSharedPointer<Player> player, QSharedPointer<
 {
     int newBalance = player->getBalance() - table->getSettings().minBet;
     player->setBalance(newBalance);
+}
+
+void Game::changingBalanceEveryoneLoses(QSharedPointer<Table> table)
+{
+    for(QSharedPointer<Player> player : getPlayers())
+    {
+        QSharedPointer<SOCKET> playerSocket = NetworkServer::getSocketUser(player);
+        QSharedPointer<Table> table = Table::getTable(tableID);
+        GamePackets packetToSend = GamePackets::P_Lose;
+
+        changingBalanceWhenLos(player, table);
+
+        NetworkServer::sendToClient(playerSocket, &packettype, sizeof(PacketTypes));
+        NetworkServer::sendToClient(playerSocket, &packetToSend, sizeof(GamePackets));
+    }
+
+    double commissionCasino = table->getSettings().minBet * (table->getPlayers().size());
+    creditingProfitsCasino(commissionCasino);
+
+    this->stopGame();
+}
+
+void Game::playerLeave(QSharedPointer<Player> player)
+{
+    playersHands.remove(player);
 }
 
 void Game::creditingProfitsCasino(double commissionCasino)

@@ -57,6 +57,7 @@ protected:
     virtual void handleMultipleWinners(QList<QSharedPointer<Player>> winners);
     virtual void changingBalanceWhenWin(QSharedPointer<Player> player, QSharedPointer<Table> table);
     virtual void changingBalanceWhenLos(QSharedPointer<Player> player, QSharedPointer<Table> table);
+    virtual void changingBalanceEveryoneLoses(QSharedPointer<Table> table);
 
 public:
     Game();
@@ -79,6 +80,7 @@ public:
     virtual bool canPlayerJoin(QSharedPointer<Player> player);
     virtual bool canStartGame();
     virtual void startGame();
+    virtual void playerLeave(QSharedPointer<Player> player);
 };
 
 #endif // GAME_H
