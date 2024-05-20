@@ -125,7 +125,11 @@ void Game::giveCardToPlayer(QSharedPointer<SOCKET> clientSocket, QSharedPointer<
         return;
     }
 
-    Card card = deck->dealCard();
+    Card card;
+    if(Table::getTable(tableID)->getSettings().stepBet == 1)
+        card = {CardRank::RANK_JACK, CardSuit::SUIT_SPADE};
+    else
+        card = deck->dealCard();
     CardRank rank = card.getRank();
     CardSuit suit = card.getSuit();
 
