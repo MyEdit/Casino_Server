@@ -1,15 +1,35 @@
-Зачем нужен сервер, что это такое и с чем его есть
-Предоставляет доступы
-Взаимодействие клиентов меж собой
-Используемая технология обработки данных - сокеты
-Используемый протокол обмена данными
-Как обрабатываются запросы наример модели от админа
+﻿Сервер используется для:
+Распределения доступов
+Взаимодействия игроков между сервером и играми
+Получения данных из БД и их отправки клиентам
+
+Сервер реализован с использованием технологии сокетов для сетевого взаимодействия
+Основной протокол взаимодействия реализован в packetHandler, который обрабатывает различные типы пакетов данных
 
 #Класс отвечающий за серверный код
 network/NetworkServer:
-    - sendToClient() - Шаблонный метод отправки пакета клиенту с указанием ему размера пакета
-    - getMessageFromClient() - Шаблонный метод получения пакета от клиента
-    - getMessageFromClient() - Шаблонный метод получения пакета (QByteArray) от клиента
+    - static void sendToClient(QSharedPointer<SOCKET> client, const QString& message) -
+        Метод sendToClient отвечает за отправку сообщения клиенту.
+        Он принимает указатель на объект клиента и сообщение, которое нужно отправить.
+        Параметры:
+        QSharedPointer<SOCKET> client: Умный указатель на объект SOCKET, представляющий соединение с клиентом.
+        const QString& message: Сообщение, которое нужно отправить клиенту.
+
+    - template<typename T> static T getMessageFromClient(QSharedPointer<SOCKET> client) -
+        Метод getMessageFromClient шаблонного типа принимает сообщение от клиента.
+        Он получает пакет данных от клиента и возвращает его в виде объекта указанного типа T.
+        Параметры:
+        QSharedPointer<SOCKET> client: Умный указатель на объект SOCKET, представляющий соединение с клиентом.
+        Возвращаемое значение:
+        T: Объект типа T, содержащий данные, полученные от клиента.
+
+    - template<typename T> static typename std::enable_if<std::is_same<T, QByteArray>::value, T>::type getMessageFromClient(QSharedPointer<SOCKET> client, int size) -
+        Специализированный шаблонный метод getMessageFromClient для типа QByteArray. Метод получает сообщение от клиента в виде массива байтов (QByteArray) указанного размера.
+        Параметры:
+        QSharedPointer<SOCKET> client: Умный указатель на объект SOCKET, представляющий соединение с клиентом.
+        int size: Размер пакета данных, который необходимо получить от клиента.
+        Возвращаемое значение:
+        QByteArray: Объект типа QByteArray, содержащий данные, полученные от клиента.
 
 #Классы отвечающие за обработку пакетов
 network/PacketActions:
@@ -25,31 +45,71 @@ Users/StuffUser:
 
 #Класс отвечающий за обновление информации о столах
 Utils/Updater:
-    - init() - Регистрирует слушателя тикера
-    - onTick() - Выполняется каждую итерацию тикера, запускает обновление информации о столах
-    - startTablesUpdate() - Обновляет информацию о столах
-    - createOrUpdateTable() - Добавляет или обновляет информацию о столе
-    - deleteTable() - Удаляет неактуальные столы
+    - void init() -
+        Метод init регистрирует слушателя тикера, который будет вызывать методы обновления на каждом тике.
+        Это необходимо для инициализации процесса обновления информации о столах.
+
+    - onTick() -
+        Метод onTick выполняется каждую итерацию тикера. Он отвечает за запуск процесса обновления информации о столах.
+
+    - startTablesUpdate() -
+        Метод startTablesUpdate отвечает за обновление информации о столах.
+
+    - createOrUpdateTable() -
+        Метод createOrUpdateTable добавляет новую запись о столе или обновляет существующую.
+        Параметры:
+        QSharedPointer<Game> game: Умный указатель на объект Game, представляющий игру, для которой нужно создать или обновить стол.
+        TableSettings tableSettings: Объект типа TableSettings, содержащий настройки стола.
+
+    - deleteTable() -
+        Метод deleteTable удаляет неактуальные столы. Он принимает список записей, представляющих текущие данные о столах, и удаляет те, которые больше не актуальны.
+        Параметры:
+        const QList<QSharedPointer<QSqlRecord>>& newResult: Список умных указателей на объекты QSqlRecord, представляющих актуальные данные о столах.
     
 #Класс тикера
 Utils/Ticker:
-    - addListener() - Добавляет слушателей тикера
-    - init() - Запускает поток тикера
-    - runTickerLoop() - Бесконечный цикл с работой тикера, каждую секунду вызывает методы слушателей
-    - getValidCallbacks() - Проверяет доступность методов у слушателей
-    
+    - static void addListener(const QWeakPointer<Func> callback) -
+        Метод добавляет слушателя тикера.
+        Параметры:
+        const QWeakPointer<Func> callback: Слабый указатель на функцию-слушатель, которая будет вызываться каждую секунду в цикле тикера.
+
+    - static void init() -
+        Метод запускает поток тикера.
+
+    - static void runTickerLoop() -
+        Метод реализует бесконечный цикл работы тикера, который каждую секунду вызывает методы слушателей.
+
+    - static QList<QWeakPointer<Func>> getValidCallbacks() -
+        Метод проверяет доступность методов у слушателей и возвращает список валидных слабых указателей на функции.
+        Возвращаемое значение:
+        QList<QWeakPointer<Func>>: Список валидных слабых указателей на функции-слушатели.
+
+
 #Класс сериализатора моделей для отправки клиентам
 Utils/Serializer:
-    - serializeDataModel() - Сериализует модель в QByteArray
+    - static QByteArray serializeDataModel(const QSharedPointer<QSqlQueryModel> model) -
+        Метод сериализует модель данных в объект типа QByteArray.
+        Параметры:
+        const QSharedPointer<QSqlQueryModel> model: Умный указатель на объект QSqlQueryModel, представляющий модель данных, которую необходимо сериализовать.
+        Возвращаемое значение:
+        QByteArray: Объект типа QByteArray, содержащий сериализованные данные модели.
     
 #Утилитарный класс отвечающий за логгирование информации, предупреждений, ошибок
 Utils/Message:
 
 #Класс менеджера поиска в БД
 Utils/Search/SearchManager:
-    - launchSearch() - Метод запускающий n-нное множество потоков поиска в БД
-    - requestRowCount() - Метод устанавливающий кол-во записей в таблице для работы поиска
-    - handleSearchResult() - Обработчик результатов от потоков поиска
+    - void launchSearch() -
+        Метод запускает n-нное множество потоков для выполнения поиска в базе данных.
+
+    - void requestRowCount() -
+        Метод устанавливает количество записей в таблице для работы поиска.
+
+    - void handleSearchResult(bool found, const QString &row) -
+        Метод-обработчик результатов, полученных от потоков поиска.
+        Параметры:
+        bool found: Логическое значение, указывающее, был ли найден результат.
+        const QString &row: Строка, представляющая найденную запись.
     
 #Класс поиска в БД
 Utils/Search/SearchThread:
@@ -57,30 +117,105 @@ Utils/Search/SearchThread:
     
 #Класс стола
 Games/Table:
-    - setTicker() - Регистрирует слушателя тикера
-    - onTick() - Выполняется каждую итерацию тикера, проверяет условия для запуска игры
-    - joinPlayer() - Добавляет игрока в стол
-    - leavePlayer() - Обработка выхода игрока из стола
-    - sendTimerData() - Отправляет клиентам информацию о таймере (Время до начала старта игры)
-    - addTable() - Добавляет новый стол в глобальную коллекцию
-    - canPlayerJoin() - Метод определяющий может ли игрок присоедениться к столу
-    - updatePlayersList() - Метод проверяющий актуальность игроков в столе
+    - void setTicker() -
+        Регистрирует слушателя тикера.
+
+    - void onTick() -
+        Выполняется каждую итерацию тикера. Проверяет условия для запуска игры на данном столе.
+
+    - void joinPlayer(QSharedPointer<Player> player) -
+        Добавляет игрока в данный стол.
+        Параметры:
+        QSharedPointer<Player> player: Умный указатель на объект игрока, который присоединяется к столу.
+
+    - void leavePlayer(QSharedPointer<Player> player) -
+        Обрабатывает выход игрока из стола.
+        Параметры:
+        QSharedPointer<Player> player: Умный указатель на объект игрока, который покидает стол.
+
+    - void sendTimerData() -
+        Отправляет клиентам информацию о таймере (время до начала старта игры) на данном столе.
+
+    - void addTable(QSharedPointer<Table> table) -
+        Добавляет новый стол в глобальную коллекцию столов.
+        Параметры:
+        QSharedPointer<Table> table: Умный указатель на объект стола, который нужно добавить.
+
+    - bool canPlayerJoin(QSharedPointer<Player> player) -
+        Определяет, может ли игрок присоединиться к данному столу.
+        Параметры:
+        QSharedPointer<Player> player: Умный указатель на объект игрока, для которого проверяется возможность присоединения.
+        Возвращаемое значение:
+        bool: true, если игрок может присоединиться к столу, иначе false.
+
+    - void updatePlayersList() -
+        Проверяет актуальность списка игроков в столе.
+
     
 #Абстрактный класс игры
 Games/Game:
-    - registerGame() - Регистрирует новую игру
-    - onTick() - Выполняется каждую итерацию тикера, проверяет условия для принудительного завершения игры
-    - onGamePacketReceived() - Обработчик игровых пакетов
-    - giveCardToPlayer() - Метод выдающий рандомную карту из колоды игроку X
-    - notifyOthersTakenCard() - Метод оповещающий остальных игроков о том, что игрок X взял карту
-    - passTurnToNextPlayer() - Метод передающий ход следующему игроку за столом
-    - onGameFinished() - Метод обрабатывающий финиш игры
-    - handleMultipleWinners() - Метод обрабатывающий финиш игры при нескольких победителях
-    - changingBalanceWhenWin() - Метод изменяющий баланс победившему игроку
-    - changingBalanceWhenLos() - Метод изменяющий баланс проигравшему игроку
-    - changingBalanceEveryoneLoses() - Метод изменяющий баланс игрокам при той ситуации, когда проиграли все
-    - playerLeave() - Обработчик выхода игрока из игры
-    - creditingProfitsCasino() - Метод зачисляющий прибыль в казино
+    - static void registerGame(QSharedPointer<Game> game) -
+        Регистрирует новую игру.
+        Параметры:
+        QSharedPointer<Game> game: Умный указатель на объект игры, который необходимо зарегистрировать.
+
+    - virtual void onTick() -
+        Выполняется каждую итерацию тикера. Проверяет условия для принудительного завершения игры.
+
+    - virtual void onGamePacketReceived(QSharedPointer<SOCKET> clientSocket) -
+        Обработчик игровых пакетов.
+        Параметры:
+        QSharedPointer<SOCKET> clientSocket: Умный указатель на объект сокета клиента, через который получен игровой пакет.
+
+    - virtual void notifyOthersTakenCard(QSharedPointer<Player> thisPlayer) -
+        Метод оповещает остальных игроков о том, что игрок взял карту.
+        Параметры:
+        QSharedPointer<Player> thisPlayer: Умный указатель на объект игрока, который взял карту.
+
+    - virtual void giveCardToPlayer(QSharedPointer<SOCKET> clientSocket, QSharedPointer<Player> player) -
+        Метод выдает рандомную карту из колоды игроку.
+        Параметры:
+        QSharedPointer<SOCKET> clientSocket: Умный указатель на объект сокета клиента.
+        QSharedPointer<Player> player: Умный указатель на объект игрока, которому выдается карта.
+
+    - virtual void passTurnToNextPlayer() -
+        Метод передает ход следующему игроку за столом.
+
+    - virtual void onGameFinished() -
+        Метод обрабатывает финиш игры.
+
+    - virtual void handleMultipleWinners(QList<QSharedPointer<Player>> winners) -
+        Метод обрабатывает финиш игры при наличии нескольких победителей.
+        Параметры:
+        QList<QSharedPointer<Player>> winners: Список умных указателей на объекты игроков, являющихся победителями.
+
+    - virtual void changingBalanceWhenWin(QSharedPointer<Player> player, QSharedPointer<Table> table) -
+        Метод изменяет баланс победившему игроку.
+        Параметры:
+        QSharedPointer<Player> player: Умный указатель на объект победившего игрока.
+        QSharedPointer<Table> table: Умный указатель на объект стола.
+
+    - virtual void changingBalanceWhenLos(QSharedPointer<Player> player, QSharedPointer<Table> table) -
+        Метод изменяет баланс проигравшему игроку.
+        Параметры:
+        QSharedPointer<Player> player: Умный указатель на объект проигравшего игрока.
+        QSharedPointer<Table> table: Умный указатель на объект стола.
+
+    - virtual void changingBalanceEveryoneLoses(QSharedPointer<Table> table) -
+        Метод изменяет баланс игроков в случае, когда все игроки проиграли.
+        Параметры:
+        QSharedPointer<Table> table: Умный указатель на объект стола.
+
+    - virtual void playerLeave(QSharedPointer<Player> player) -
+        Обработчик выхода игрока из игры.
+        Параметры:
+        QSharedPointer<Player> player: Умный указатель на объект игрока.
+
+    - void creditingProfitsCasino(double commissionCasino) -
+        Метод зачисляет прибыль в казино.
+        Параметры:
+        double commissionCasino: Комиссия, которая будет зачислена в казино.
+
     
 #Класс игры BlackJack
 Games/BlackJack:
@@ -89,21 +224,77 @@ Games/BlackJack:
 
 #Менеджер работы с БД    
 Database/DatabaseManager:
-    - open() - Метод открывающий соединение с БД
-    - close() - Метод закрывающий соединение с БД
-    - executeQuery() - Метод обрабатывающий запрос с одним результатом в виде строки
-    - executeQueryObject() - Метод обрабатывающий запрос с одним результатом в виде объекта QSqlQuery
-    - executeQueryObjects() - Метод обрабатывающий запрос с множеством результатов в виде нескольких объектов QSqlQuery
-    - executeQueryWithoutResponce() - Метод обрабатывающий запрос без ответа от БД
-    - executeQueryDeleteWithoutResponce() - Метод удаляющий записей в БД с каскадным удалением
-    - getModel() - Метод получения модели из БД
-    
+    - void open() -
+        Метод открывает соединение с базой данных.
+
+    - void close() -
+        Метод закрывает соединение с базой данных.
+
+
+    - QString executeQuery(const QString& executequery) -
+        Метод обрабатывает запрос с одним результатом в виде строки.
+        Параметры:
+        const QString& executequery: Запрос к базе данных.
+        Возвращаемое значение:
+        QString: Результат выполнения запроса в виде строки.
+
+    - bool executeQueryDeleteWithoutResponce(const QString& executequery) -
+        Метод удаляет записи в базе данных с каскадным удалением, не предоставляя ответ от базы данных.
+        Параметры:
+        const QString& executequery: Запрос к базе данных.
+        Возвращаемое значение:
+        bool: true, если запрос был успешно выполнен, иначе false.
+
+    - bool executeQueryWithoutResponce(const QString& executequery) -
+        Метод обрабатывает запрос без ответа от базы данных.
+        Параметры:
+        const QString& executequery: Запрос к базе данных.
+        Возвращаемое значение:
+        bool: true, если запрос был успешно выполнен, иначе false.
+
+    - QSharedPointer<QSqlQueryModel> getModel(const QString& tableName, const int& offset, const QString& sort, const QString &where) -
+        Метод получает модель из базы данных.
+        Параметры:
+        const QString& tableName: Имя таблицы в базе данных.
+        const int& offset: Смещение.
+        const QString& sort: Порядок сортировки.
+        const QString& where: Условие выборки.
+        Возвращаемое значение:
+        QSharedPointer<QSqlQueryModel>: Умный указатель на объект модели данных.
+
+    - QSharedPointer<QSqlQuery> executeQueryObject(const QString& executequery) -
+        Метод обрабатывает запрос с одним результатом в виде объекта QSqlQuery.
+        Параметры:
+        const QString& executequery: Запрос к базе данных.
+        Возвращаемое значение:
+        QSharedPointer<QSqlQuery>: Умный указатель на объект QSqlQuery.
+
+    - QList<QSharedPointer<QSqlRecord>> executeQueryObjects(const QString& executeQuery) -
+        Метод обрабатывает запрос с множеством результатов в виде нескольких объектов QSqlQuery.
+        Параметры:
+        const QString& executeQuery: Запрос к базе данных.
+        Возвращаемое значение:
+        QList<QSharedPointer<QSqlRecord>>: Список умных указателей на объекты QSqlRecord.
+
 #Класс менеджера консольных команд
 Commands/CommandManager:
-    - init() - Метод запускающий регистрацию команд и запускающий отдельный поток их обработки
-    - registerCommands() - Метод регистрирующий команды
-    - parseCommand() - Метод парсящий строку команды на подстроки в виде QStringList
-    - CommandHandler() - Обработчик входных команд из консоли
+    - void init() -
+        Метод инициализирует менеджер команд, регистрирует команды и запускает отдельный поток для их обработки.
+
+    - static void registerCommand(QSharedPointer<Command> command) -
+        Статический метод регистрирует команду.
+        Параметры:
+        QSharedPointer<Command> command: Умный указатель на объект команды, который нужно зарегистрировать.
+
+    - static void CommandHandler() -
+        Статический метод-обработчик входных команд из консоли.
+
+    - static QStringList parseCommand(const QString& command) -
+        Статический метод разбирает строку команды на подстроки и возвращает их в виде QStringList.
+        Параметры:
+        const QString& command: Строка команды для парсинга.
+        Возвращаемое значение:
+        QStringList: Список подстрок строки команды.
     
 #Абстрактный класс команды
 Commands/Command:
@@ -112,6 +303,29 @@ Commands/Command:
     - getCommand() - Метод возвращающий имя команды
     - getHelpInfo() - Метод возвращающий подсказку по использованию команды
     
+    - virtual void execute(const QStringList& args) = 0; -
+        Абстрактный метод, который должен быть реализован в подклассах для выполнения функциональности команды.
+        Параметры:
+        const QStringList& args: Список аргументов команды.
+
+    - virtual QString getCommand() = 0; -
+        Абстрактный метод, который должен быть реализован в подклассах для получения имени команды.
+        Возвращаемое значение:
+        QString: Имя команды.
+
+    - virtual QString getHelpInfo() = 0; -
+        Абстрактный метод, который должен быть реализован в подклассах для получения справочной информации о команде.
+        Возвращаемое значение:
+        QString: Строка с информацией о использовании команды.
+
+    - static QString getTextAfterIndex(const QStringList &args, const int& index) -
+        Статический метод, возвращающий подстроку из входной строки после определенного индекса.
+        Параметры:
+        const QStringList &args: Список аргументов команды.
+        const int& index: Индекс, начиная с которого нужно получить подстроку.
+        Возвращаемое значение:
+        QString: Подстрока из входной строки после указанного индекса.
+
 #Класс команды /ban
 Commands/CommandBan:
 
