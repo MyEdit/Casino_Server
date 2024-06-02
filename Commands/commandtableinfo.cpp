@@ -31,7 +31,7 @@ void CommandTableInfo::execute(const QStringList& args)
     {
         if (player)
         {
-            playerNames << player->getName();
+            playerNames << player->getLogin();
         }
     }
 
