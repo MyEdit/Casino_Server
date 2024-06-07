@@ -294,16 +294,16 @@ void Game::creditingProfitsCasino(double commissionCasino)
 {
     QSharedPointer<DatabaseManager> databaseManager(new DatabaseManager());
 
-    QString data = QDate::currentDate().toString();
+    QString data = QDate::currentDate().toString("yyyy-MM-dd");
     QString summa = QString::number(commissionCasino);
     QString tableNum = QString::number(tableID);
+
     QString request = "INSERT INTO Profit (Data, Summa, TableNum) VALUES ('" + data + "', '" + summa + "', '" + tableNum + "');";
+    databaseManager->executeQueryWithoutResponce(request);
 
     QList<QSharedPointer<SOCKET>> adminSockets = NetworkServer::getAdminSockets();
     for(QSharedPointer<SOCKET> adminSocket : adminSockets)
     {
-        databaseManager->executeQueryWithoutResponce(request);
-
         PacketTypes packetTypes = PacketTypes::P_Update;
         ModelTypes modelTypes = ModelTypes::Profit;
 
