@@ -26,7 +26,7 @@ bool NetworkServer::init()
 void NetworkServer::configuration()
 {
     sizeofaddr = sizeof(serverAddress);
-    serverAddress.sin_addr.s_addr = inet_addr(ADDRESS);
+    serverAddress.sin_addr.s_addr = inet_addr(ADDRESS.toUtf8());
     serverAddress.sin_port = htons(PORT);
     serverAddress.sin_family = AF_INET; //Интернет протокол
 

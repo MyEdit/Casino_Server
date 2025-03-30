@@ -39,6 +39,8 @@ private:
     void initPacketHandlerFunction();
 
 public:
+    QString ADDRESS;
+
     bool init();
     void startListening();
     static void sendToClient(QSharedPointer<SOCKET> client, const QString& message);
